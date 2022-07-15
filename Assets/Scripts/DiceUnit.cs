@@ -13,12 +13,7 @@ public enum DiceSides
     DoubleMove,
     DoubleDefend,
     Nothing,
-    TripleAttack,
-    TripleMove,
-    TripleDefend,
-    Die, // Literally kills the unit
-    HalfHealth, // Haves your Unit's health
-    AttackFriendly, // Attack a friendly unit
+    HalfHealth, // Halves your Unit's health
 }
 
 public class Dice
@@ -33,6 +28,11 @@ public class Dice
     public DiceSides Roll()
     {
         return Sides[UnityEngine.Random.Range(0, Sides.Length - 1)];
+    }
+
+    public DiceSides[] GetSides() 
+    {
+        return Sides;
     }
 }
 
@@ -64,10 +64,13 @@ public class ActionAfterTime
 public class DiceUnit : MonoBehaviour
 {
     public static float StandardStepLengthSeconds = 1f;
+    public static int DiceSidesNum = 6;
 
     public string AttackDesc;
     public string MoveDesc;
     public string DefendDesc;
+
+    public DieDisplay DieDisplay;
 
     protected Dice Brain;
     protected Rigidbody Rigidbody;
@@ -108,7 +111,14 @@ public class DiceUnit : MonoBehaviour
         Brain = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleDefend });
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
+        DieDisplay.transform.parent = transform.parent;
+        DieDisplay.Setup(this);
         InheritableStart();
+    }
+
+    public DiceSides[] GetCurrentDiceSides()
+    {
+        return Brain.GetSides();
     }
 
     private void Update()
