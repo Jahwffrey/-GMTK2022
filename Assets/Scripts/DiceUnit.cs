@@ -1,0 +1,210 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Runtime;
+using System;
+
+public enum DiceSides
+{
+    Attack,
+    Defend,
+    Move,
+    DoubleAttack,
+    DoubleMove,
+    DoubleDefend,
+    Nothing,
+    TripleAttack,
+    TripleMove,
+    TripleDefend,
+    Die, // Literally kills the unit
+    HalfHealth, // Haves your Unit's health
+    AttackFriendly, // Attack a friendly unit
+}
+
+public class Dice
+{
+    protected DiceSides[] Sides;
+
+    public Dice(List<DiceSides> sides)
+    {
+        Sides = sides.ToArray();
+    }
+
+    public DiceSides Roll()
+    {
+        return Sides[UnityEngine.Random.Range(0, Sides.Length - 1)];
+    }
+}
+
+public class ActionAfterTime
+{
+    protected float TimeLeft;
+    protected Action Action;
+
+    public ActionAfterTime(float seconds, Action action)
+    {
+        TimeLeft = seconds;
+        Action = action;
+    }
+
+    public bool ExecuteIfPassTime(float seconds)
+    {
+        TimeLeft -= seconds;
+        if(TimeLeft <= 0)
+        {
+            Action();
+            return true;
+        }
+
+        return false;
+    }
+
+}
+
+public class DiceUnit : MonoBehaviour
+{
+    public static float StandardStepLengthSeconds = 1f;
+
+    public string AttackDesc;
+    public string MoveDesc;
+    public string DefendDesc;
+
+    protected Dice Brain;
+    protected Rigidbody Rigidbody;
+    protected UnitController Controller;
+    protected bool DuringStep;
+
+    // Game steps work by units adding several actions to a stack
+    // Once 'ExecuteNextAction' is called, the next item on the
+    // stack is executed. When there are no actions left, EndStep
+    // is called and the unit becomes idle until the next Step begins
+    protected List<Action> CurrentActions = new List<Action>();
+    protected List<ActionAfterTime> Timers = new List<ActionAfterTime>();
+
+    protected virtual void InheritableAwake()
+    {
+        
+    }
+
+    protected virtual void InheritableStart()
+    {
+
+    }
+
+    protected virtual void InheritableUpdate()
+    {
+
+    }
+
+    private void Awake()
+    {
+        Rigidbody = GetComponent<Rigidbody>();
+        InheritableAwake();
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        Brain = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleDefend });
+        Controller = GameObject.Find("GameController").GetComponent<UnitController>();
+        Controller.AddUnit(this);
+        InheritableStart();
+    }
+
+    private void Update()
+    {
+        // Execute any waiting actions
+        float secondsPassed = Time.deltaTime;
+        List<ActionAfterTime> completedActions = new List<ActionAfterTime>();
+        for(int i = 0;i < Timers.Count;i++)
+        {
+            var timer = Timers[i];
+            if (timer.ExecuteIfPassTime(secondsPassed))
+            {
+                completedActions.Add(timer);
+            }
+        }
+        
+        // Remove any actions that just happened from the list
+        foreach(var completed in completedActions)
+        {
+            Timers.Remove(completed);
+        }
+
+        InheritableUpdate();
+    }
+
+
+    protected void AddActionLast(Action action)
+    {
+        CurrentActions.Add(action);
+    }
+
+    protected void AddActionFirst(Action action)
+    {
+        CurrentActions.Insert(0, action);
+    }
+
+    // Have I completed the current step?
+    public bool StepComplete()
+    {
+        return !DuringStep;
+    }
+
+    public virtual void StartGameStep()
+    {
+        DuringStep = true;
+        switch (Brain.Roll())
+        {
+            case DiceSides.Attack: AddActionLast(Attack); break;
+            case DiceSides.Defend: AddActionLast(Defend); break;
+            case DiceSides.Move: AddActionLast(Move); break;
+            case DiceSides.DoubleAttack: AddActionLast(Attack); AddActionLast(Attack); break;
+            case DiceSides.DoubleDefend: AddActionLast(Defend); AddActionLast(Defend); break;
+            case DiceSides.DoubleMove: AddActionLast(Move); AddActionLast(Move); break;
+        }
+        ExecuteNextAction();
+    }
+
+    protected void ExecuteAfterTimer(float seconds, Action action)
+    {
+        Timers.Add(new ActionAfterTime(seconds, action));
+    }
+
+    protected void ExecuteNextAction()
+    {
+        if(CurrentActions.Count > 0)
+        {
+            var action = CurrentActions[0];
+            CurrentActions.RemoveAt(0);
+            action();
+        }
+        else
+        {
+            EndStep();
+        }
+    }
+
+    public virtual void EndStep()
+    {
+        Debug.Log("Turn ended");
+        Rigidbody.velocity = Vector3.zero;
+        DuringStep = false;
+        Controller.UnitEndedStep(this);
+    }
+
+    public virtual void Attack()
+    {
+
+    }
+
+    public virtual void Move()
+    {
+
+    }
+
+    public virtual void Defend()
+    {
+
+    }
+}
