@@ -77,6 +77,23 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         HidePlayerOneObj.SetActive(false);
     }
 
+    public void GameFinished(UnitController.Winner winner)
+    {
+        /*switch (winner)
+        {
+            case Winner.Player1:
+                WinnerUI.ShowWinner("Player 1 Wins!");
+                break;
+            case Winner.Player2:
+                WinnerUI.ShowWinner("Player 2 Wins!");
+                break;
+            case Winner.Tie:
+                WinnerUI.ShowWinner("Tie!");
+                break;
+
+        }*/
+    }
+
     private void Update()
     {
         // Swing the camera around which switching from player 1 to player 2

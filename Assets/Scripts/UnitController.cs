@@ -47,7 +47,6 @@ public class UnitController : MonoBehaviour
 
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
-    public WinnerUI WinnerUI;
     public TimerUI TimerUI;
     public PlayerControl PlayerControl1;
     public PlayerControl PlayerControl2;
@@ -138,18 +137,9 @@ public class UnitController : MonoBehaviour
 
     protected void ShowWinner(Winner winner)
     {
-        switch (winner)
+        if (TwoPlayerMode)
         {
-            case Winner.Player1: 
-                WinnerUI.ShowWinner("Player 1 Wins!");
-                break;
-            case Winner.Player2:
-                WinnerUI.ShowWinner("Player 2 Wins!");
-                break;
-            case Winner.Tie:
-                WinnerUI.ShowWinner("Tie!");
-                break;
-
+            TwoPlayerModeTransitions.GameFinished(winner);
         }
     }
 
