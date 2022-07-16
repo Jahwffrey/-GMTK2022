@@ -55,6 +55,7 @@ public class UnitController : MonoBehaviour
     public PlayerControl PlayerControl2;
 
     public TwoPlayerModeTransitions TwoPlayerModeTransitions;
+    public OnePlayerTransitions OnePlayerTransitions;
 
     protected int CurrentPlayerId = 0;
     public int GetCurrentPlayerId => CurrentPlayerId;
@@ -150,6 +151,10 @@ public class UnitController : MonoBehaviour
         {
             TwoPlayerModeTransitions.GameFinished(winner);
         }
+        else
+        {
+            OnePlayerTransitions.GameFinished(winner);
+        }
     }
 
     public void StartGameStep()
@@ -235,6 +240,10 @@ public class UnitController : MonoBehaviour
         {
             CurrentPlayerId = 1;
             TwoPlayerModeTransitions.SwitchToPlayerTwoSetup();
+        } 
+        else
+        {
+            OnePlayerTransitions.GameSetupFinished();
         }
     }
     public void PlayerTwoReady()
@@ -257,6 +266,11 @@ public class UnitController : MonoBehaviour
         {
             TwoPlayerModeTransitions.SetupGame();
             TwoPlayerModeTransitions.StartPlayerOneSetup();
+        }
+        else
+        {
+            OnePlayerTransitions.SetupGame();
+            OnePlayerTransitions.StartPlayerSetup();
         }
     }
 
