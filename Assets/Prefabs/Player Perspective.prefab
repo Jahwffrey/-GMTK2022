@@ -284,8 +284,9 @@ MonoBehaviour:
   pointerBounceSpeed: 5
   pointerBounceHeight: 0.2
   unitPrefabs:
-  - {fileID: 4611112261115350103, guid: 424dc56383cdbed42bec6ad169f41a90, type: 3}
-  - {fileID: 4556236447993368128, guid: 187a0bec65b0480469dfefbb95ee9b28, type: 3}
+  - {fileID: 5026180902463019654, guid: a3b59b624425fcb429c4f91737076773, type: 3}
+  - {fileID: 5026180902463019654, guid: a3b59b624425fcb429c4f91737076773, type: 3}
+  UnitController: {fileID: 0}
   unitRow: {fileID: 6886740481154556658}
   diceRow: {fileID: 3330090743966146833}
   uiModel: {fileID: 7748046913322023605, guid: 7ee88ea6837af6641a64266024361516, type: 3}
