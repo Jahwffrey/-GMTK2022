@@ -28,11 +28,14 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public GameObject AnnouncementObj;
     public Text AnnouncementText;
+    protected int level = 0;
 
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
     }
+
+    protected bool NextPregameSetup = false;
 
     public void SetupGame()
     {
@@ -57,6 +60,7 @@ public class OnePlayerTransitions : MonoBehaviour
             }
         }
 
+        Player1Control.SetInventories(PlayerUnitIds, PlayerDice);
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
     }
@@ -70,6 +74,11 @@ public class OnePlayerTransitions : MonoBehaviour
     public void HideAnnouncement()
     {
         AnnouncementObj.SetActive(false);
+
+        if (NextPregameSetup)
+        {
+            NextPregameSetup = false;
+        }
     }
 
 
@@ -89,12 +98,14 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void StartPlayerSetup()
     {
-
+        level += 1;
+        NextPregameSetup = true;
+        ShowAnnouncement($"Level {level}");
     }
 
     public void GameSetupFinished()
     {
-
+        UnitController.StartGame();
     }
 
 

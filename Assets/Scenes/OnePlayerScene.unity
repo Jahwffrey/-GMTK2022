@@ -148,7 +148,7 @@ PrefabInstance:
       objectReference: {fileID: 1228718188}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: TwoPlayerMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: UnitController
@@ -320,7 +320,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3666873768867591604, guid: 6d18fc585b40b46498cbfa9d6d6079b3, type: 3}
   m_PrefabInstance: {fileID: 1607297872}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &101124590
+--- !u!114 &101124589
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -329,16 +329,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 101124588}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7fb490843fbfaea4aa0162fa5f524985, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a1ed7a9dbf34814998b9221f31c9e42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 963194227}
-  AnnouncementObj: {fileID: 332227595}
-  HidePlayerOneObj: {fileID: 906189854}
-  AnnouncementText: {fileID: 8845925471331828091}
   UnitController: {fileID: 445147598}
   Player1Control: {fileID: 5016564390052196746}
   Player2Control: {fileID: 34185488}
+  AnnouncementObj: {fileID: 332227595}
+  AnnouncementText: {fileID: 8845925471331828091}
 --- !u!114 &101124591
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1264,7 +1263,7 @@ PrefabInstance:
       objectReference: {fileID: 1397589464}
     - target: {fileID: 3666873768867591603, guid: 6d18fc585b40b46498cbfa9d6d6079b3, type: 3}
       propertyPath: TwoPlayerMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3666873768867591603, guid: 6d18fc585b40b46498cbfa9d6d6079b3, type: 3}
       propertyPath: PlayerControl1
@@ -1275,9 +1274,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 34185488}
     - target: {fileID: 3666873768867591603, guid: 6d18fc585b40b46498cbfa9d6d6079b3, type: 3}
+      propertyPath: OnePlayerTransitions
+      value: 
+      objectReference: {fileID: 101124589}
+    - target: {fileID: 3666873768867591603, guid: 6d18fc585b40b46498cbfa9d6d6079b3, type: 3}
       propertyPath: TwoPlayerModeTransitions
       value: 
-      objectReference: {fileID: 101124590}
+      objectReference: {fileID: 0}
     - target: {fileID: 3666873768867591604, guid: 6d18fc585b40b46498cbfa9d6d6079b3, type: 3}
       propertyPath: m_Name
       value: GameController
@@ -1855,7 +1858,7 @@ PrefabInstance:
     - target: {fileID: 7497686821849525728, guid: 1be58f6fe6c0c0041a85f14b9e986200, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 101124590}
+      objectReference: {fileID: 101124589}
     - target: {fileID: 7497686821849525728, guid: 1be58f6fe6c0c0041a85f14b9e986200, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
@@ -1866,7 +1869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7497686821849525728, guid: 1be58f6fe6c0c0041a85f14b9e986200, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: TwoPlayerModeTransitions, Assembly-CSharp
+      value: OnePlayerTransitions, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7497686821849525728, guid: 1be58f6fe6c0c0041a85f14b9e986200, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -1891,7 +1894,7 @@ PrefabInstance:
       objectReference: {fileID: 1397589464}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: TwoPlayerMode
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: UnitController

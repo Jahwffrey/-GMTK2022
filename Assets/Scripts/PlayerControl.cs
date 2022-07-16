@@ -7,7 +7,6 @@ public class PlayerControl : MonoBehaviour
     static int SELECTABLE_LAYER = 8;
 
     [Header("GameSpace")]
-    public bool TwoPlayerMode;
     public int playerID = 0;
     public GameObject pointer;
     public GameObject pointerGhost;
@@ -74,16 +73,13 @@ public class PlayerControl : MonoBehaviour
 
     public void PregameSetup()
     {
-        if (TwoPlayerMode)
+        if (playerID == 0)
         {
-            if (playerID == 0)
-            {
-                placementMode = PlaceMode.PLACE_UNIT;
-            }
-            else
-            {
-                placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
-            }
+            placementMode = PlaceMode.PLACE_UNIT;
+        }
+        else
+        {
+            placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
         }
     }
 
