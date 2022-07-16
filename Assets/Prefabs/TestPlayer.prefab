@@ -5889,6 +5889,7 @@ MonoBehaviour:
   DefendMaterial: {fileID: 2100000, guid: 7f7685383a335824d940e8e9c7ce3658, type: 2}
   MoveMaterial: {fileID: 2100000, guid: 6ef7efe4871b81b4c8d6043878ec8833, type: 2}
   BadMaterial: {fileID: 2100000, guid: 860f878724eed99449cda3e95f4c7cd4, type: 2}
+  HealMaterial: {fileID: 2100000, guid: 7546bb032c70d6542a065d53980d6d94, type: 2}
   Particles: {fileID: 91250525}
   ParticlesRenderer: {fileID: 91250524}
 --- !u!1 &7520411438770154060

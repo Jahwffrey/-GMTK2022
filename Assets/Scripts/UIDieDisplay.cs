@@ -9,7 +9,8 @@ public class UIDieDisplay : MonoBehaviour
     public Material DefendMaterial;
     public Material MoveMaterial;
     public Material BadMaterial;
-    
+    public Material HealMaterial;
+
     private Dice die;
 
     protected Material GetSideMaterial(DiceSides side)
@@ -29,6 +30,8 @@ public class UIDieDisplay : MonoBehaviour
             case DiceSides.Lose1Hp:
             case DiceSides.Lose2Hp:
                 return BadMaterial;
+            case DiceSides.Heal1Hp:
+                return HealMaterial;
             default:
                 Debug.LogError("No material for this kind of side...");
                 return BadMaterial;
