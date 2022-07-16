@@ -17,6 +17,7 @@ public class UnitController : MonoBehaviour
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
     public WinnerUI WinnerUI;
+    public TimerUI TimerUI;
 
     public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
     public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
@@ -51,6 +52,7 @@ public class UnitController : MonoBehaviour
                 StartGameStep();
             }
             TimeGameHasBeenRunning += Time.deltaTime;
+            TimerUI.DisplayTime(GetGamePercentLeft());
 
             if (IsGameFinished())
             {
@@ -62,6 +64,11 @@ public class UnitController : MonoBehaviour
     protected bool IsGameFinished()
     {
         return GameActive && (TimeGameHasBeenRunning > MaxGameTimeSeconds || Units.Count == 0);
+    }
+
+    protected float GetGamePercentLeft()
+    {
+        return Mathf.Max(0f, 1f - (TimeGameHasBeenRunning / MaxGameTimeSeconds));
     }
 
     protected void EndGame()
