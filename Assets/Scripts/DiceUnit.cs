@@ -131,8 +131,16 @@ public class DiceUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var doublesDice = new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp };
-        Brain = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });//DiceSides.DoubleDefend });
+        var doublesDice = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp });
+        var prettyGoodDice = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });
+        var scout = new Dice(new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack });
+        var possibleDice = new List<Dice>()
+        {
+            doublesDice,
+            prettyGoodDice,
+            scout
+        };
+        Brain = possibleDice[UnityEngine.Random.Range(0, possibleDice.Count)];
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
@@ -294,7 +302,7 @@ public class DiceUnit : MonoBehaviour
 
     protected void ExecuteNextAction()
     {
-        if(Dead || PassedFinishLine || CurrentActions.Count > 0)
+        if(!Dead && !PassedFinishLine && CurrentActions.Count > 0)
         {
             var action = CurrentActions[0];
             CurrentActions.RemoveAt(0);
