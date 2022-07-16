@@ -20,9 +20,11 @@ public enum DiceSides
 public class Dice
 {
     protected DiceSides[] Sides;
+    public string Name;
 
-    public Dice(List<DiceSides> sides)
+    public Dice(string name, List<DiceSides> sides)
     {
+        Name = name;
         Sides = sides.ToArray();
     }
 
@@ -132,36 +134,7 @@ public class DiceUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var doublesDice = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Defend, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp });
-        var prettyGoodDice = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });
-        var scout = new Dice(new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack });
-        var sprinter = new Dice(new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Lose2Hp, DiceSides.Lose2Hp });
-        var greatDefender = new Dice(new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal1Hp });
-        var warrior = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend });
-        var balanced = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move });
-        var goForTheKill = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp });
-
-        var attacker = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move });
-        var defender = new Dice(new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Attack });
-        var runner = new Dice(new List<DiceSides>()   { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend });
-
-
-        var possibleDice = new List<Dice>()
-        {
-            doublesDice,
-            prettyGoodDice,
-            scout,
-            sprinter,
-            greatDefender,
-            warrior,
-            balanced,
-            goForTheKill,
-            attacker,
-            defender,
-            runner
-        };
-
-        Brain = possibleDice[UnityEngine.Random.Range(0, possibleDice.Count)];
+        Brain = UnitController.NothingDie();
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;

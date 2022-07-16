@@ -90,18 +90,11 @@ public class PlayerControl : MonoBehaviour
         AddToUnitInventory( UnitID.SQUIRREL );
         AddToUnitInventory( UnitID.BIRD );
 
-        var doublesDice = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp });
-        var prettyGoodDice = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });
-        var scout = new Dice(new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack });
-
-        AddToDiceInventory( doublesDice );
-        AddToDiceInventory( doublesDice );
-        AddToDiceInventory( doublesDice );
-        AddToDiceInventory( prettyGoodDice );
-        AddToDiceInventory( prettyGoodDice );
-        AddToDiceInventory( prettyGoodDice );
-        AddToDiceInventory( scout );
-        AddToDiceInventory( scout );
+        var allDice = UnitController.GetAllDice();
+        for(int i =0; i < 8; i++)
+        {
+            AddToDiceInventory(allDice[Random.Range(0, allDice.Count)]);
+        }
     }
 
     void Update()
