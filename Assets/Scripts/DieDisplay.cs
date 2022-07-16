@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DieDisplay : MonoBehaviour
 {
-    protected static float RollDurationSecs = 0.5f;
+    public static float RollDurationSecs = 0.5f;
 
     protected DiceUnit Unit;
     protected float XRotSpd = 0f;
@@ -16,6 +16,11 @@ public class DieDisplay : MonoBehaviour
     public Material DefendMaterial;
     public Material MoveMaterial;
     public Material BadMaterial;
+
+    protected float TimeStartedAnimation = 0f;
+    protected int ResultAfterAnimation = 0;
+
+    protected Vector3[] SideVects = new Vector3 [] { Vector3.up, Vector3.right, Vector3.forward, -Vector3.forward, -Vector3.right, -Vector3.up };
 
     protected Material GetSideMaterial(DiceSides side)
     {
@@ -41,9 +46,7 @@ public class DieDisplay : MonoBehaviour
 
     public void Setup(DiceUnit unit)
     {
-        Debug.Log("Setup!");
         Unit = unit;
-        ShowRoll(unit.GetCurrentDiceSides(),0);
     }
 
     protected float RangNed()
@@ -62,13 +65,23 @@ public class DieDisplay : MonoBehaviour
         {
             SideDisplays[i].material = GetSideMaterial(sides[i]);
         }
+
+        ResultAfterAnimation = result;
+        TimeStartedAnimation = Time.time;
     }
 
     private void Update()
     {
         transform.position = Unit.transform.position + Vector3.up * 2f;
-        transform.Rotate(Vector3.up, YRotSpd);
-        transform.Rotate(Vector3.right, XRotSpd);
-        transform.Rotate(Vector3.forward, ZRotSpd);
+        if (Time.time - TimeStartedAnimation > RollDurationSecs)
+        {
+            transform.up = -SideVects[ResultAfterAnimation];
+        }
+        else
+        {
+            transform.Rotate(Vector3.up, YRotSpd);
+            transform.Rotate(Vector3.right, XRotSpd);
+            transform.Rotate(Vector3.forward, ZRotSpd);
+        }
     }
 }

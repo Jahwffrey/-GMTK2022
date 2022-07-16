@@ -25,9 +25,14 @@ public class Dice
         Sides = sides.ToArray();
     }
 
-    public DiceSides Roll()
+    public int Roll()
     {
-        return Sides[UnityEngine.Random.Range(0, Sides.Length - 1)];
+        return UnityEngine.Random.Range(0, Sides.Length - 1);//Sides[UnityEngine.Random.Range(0, Sides.Length - 1)];
+    }
+
+    public DiceSides GetResult(int side)
+    {
+        return Sides[side];
     }
 
     public DiceSides[] GetSides() 
@@ -164,7 +169,8 @@ public class DiceUnit : MonoBehaviour
     public virtual void StartGameStep()
     {
         DuringStep = true;
-        switch (Brain.Roll())
+        int res = Brain.Roll();
+        switch (Brain.GetResult(res))
         {
             case DiceSides.Attack: AddActionLast(Attack); break;
             case DiceSides.Defend: AddActionLast(Defend); break;
@@ -173,7 +179,15 @@ public class DiceUnit : MonoBehaviour
             case DiceSides.DoubleDefend: AddActionLast(Defend); AddActionLast(Defend); break;
             case DiceSides.DoubleMove: AddActionLast(Move); AddActionLast(Move); break;
         }
-        ExecuteNextAction();
+        DieDisplay.gameObject.SetActive(true);
+        DieDisplay.ShowRoll(Brain.GetSides(), res);
+        ExecuteAfterTimer(DieDisplay.RollDurationSecs + 0.25f,
+            () =>
+            {
+                DieDisplay.gameObject.SetActive(false);
+                ExecuteNextAction();
+            }
+        );
     }
 
     protected void ExecuteAfterTimer(float seconds, Action action)
