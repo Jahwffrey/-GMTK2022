@@ -18,6 +18,8 @@ public class UnitController : MonoBehaviour
     public GameObject Player2ZCutoffObj;
     public WinnerUI WinnerUI;
     public TimerUI TimerUI;
+    public PlayerControl PlayerControl1;
+    public PlayerControl PlayerControl2;
 
     public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
     public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
@@ -125,6 +127,12 @@ public class UnitController : MonoBehaviour
         {
             EndGame();
         }
+    }
+
+    public void UnitFullyDestroyed(DiceUnit unit)
+    {
+        PlayerControl1.UnitWasFullyDestroyed(unit);
+        PlayerControl2.UnitWasFullyDestroyed(unit);
     }
 
     public void UnitEndedStep(DiceUnit unit) 

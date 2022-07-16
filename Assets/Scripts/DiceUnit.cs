@@ -234,7 +234,16 @@ public class DiceUnit : MonoBehaviour
         }
     }
 
-    protected void RemoveFromConsideration()
+    public void DoDestroy()
+    {
+        Controller.UnitFullyDestroyed(this);
+        RemoveFromConsideration();
+        Destroy(gameObject);
+        Destroy(DieDisplay.gameObject);
+        Destroy(HealthBar.gameObject);
+    }
+
+    public void RemoveFromConsideration()
     {
         var collider = GetComponent<Collider>();
         if (collider != null) collider.enabled = false;

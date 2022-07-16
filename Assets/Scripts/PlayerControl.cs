@@ -20,6 +20,7 @@ public class PlayerControl : MonoBehaviour
     public float pointerBounceSpeed = 0.1f;
     public float pointerBounceHeight = 0.1f;
     public List<GameObject> unitPrefabs;
+    public UnitController UnitController;
     
     [Header("UI")]
     public Transform unitRow;
@@ -37,7 +38,7 @@ public class PlayerControl : MonoBehaviour
     public Material cancelMaterial;
 
     private List<Transform> uiUnits;        //Units displayed in the UI
-    private List<Transform> activeUnits;    //Units on the battlefield  TODO
+    private List<DiceUnit> activeUnits;    //Units on the battlefield  TODO
     private UnitID lastPlacedUnit;
     private List<int> unitInventory;        //Integers corresponding to available units not yet on battlefield
     private List<Transform> diceInventory;
@@ -67,7 +68,7 @@ public class PlayerControl : MonoBehaviour
         cam = Camera.main;
         pointerAnim = 0;
         uiUnits = new List<Transform>();
-        activeUnits = new List<Transform>(); //TODO
+        activeUnits = new List<DiceUnit>();
         unitInventory = new List<int>();
         diceInventory = new List<Transform>();
         dice = new List<Transform>();
@@ -107,6 +108,14 @@ public class PlayerControl : MonoBehaviour
     {
         UpdateGameSpace();
         UpdateUI();
+    }
+
+    public void UnitWasFullyDestroyed(DiceUnit unit)
+    {
+        if (activeUnits.Contains(unit))
+        {
+            activeUnits.Remove(unit);
+        }
     }
 
     //Updates in actual gamespace
@@ -149,11 +158,11 @@ public class PlayerControl : MonoBehaviour
                     //PLACED A UNIT
                     if( !spaceInfo.HasUnit() && selectedElement != -1 )
                     {
-                        Transform newUnit = Instantiate( unitPrefabs[unitInventory[selectedElement]] ).transform;
+                        DiceUnit newUnit = Instantiate( unitPrefabs[unitInventory[selectedElement]].GetComponent<DiceUnit>() );
                         lastPlacedUnit = (UnitID)unitInventory[selectedElement];
                         Bounds bounds = newUnit.GetComponent<Collider>().bounds;
-                        newUnit.position = hit.transform.position + Vector3.up * bounds.size.y / 2 - (bounds.center - newUnit.position);
-                        newUnit.eulerAngles = new Vector3( newUnit.eulerAngles.x, transform.eulerAngles.y, newUnit.eulerAngles.z);
+                        newUnit.transform.position = hit.transform.position + Vector3.up * bounds.size.y / 2 - (bounds.center - newUnit.transform.position);
+                        newUnit.transform.eulerAngles = new Vector3( newUnit.transform.eulerAngles.x, transform.eulerAngles.y, newUnit.transform.eulerAngles.z);
                         activeUnits.Add( newUnit );
                         spaceInfo.AssignUnit( newUnit, unitInventory[selectedElement] );
                         RemoveFromUnitInventory( selectedElement );
@@ -164,7 +173,9 @@ public class PlayerControl : MonoBehaviour
                     //REMOVED A UNIT
                     else if( spaceInfo.HasUnit() )
                     {
-                        activeUnits.Remove( spaceInfo.GetUnit() );
+                        spaceInfo.GetUnit().DoDestroy();
+                        //DoDestroy already does this remove so we dont have to
+                        // activeUnits.Remove( spaceInfo.GetUnit() );
                         AddToUnitInventory( (UnitID)spaceInfo.unitType );
                         //TODO: Add spaceInfo.GetUnit()'s Dice back to inventory using AddToDiceInventory
                         spaceInfo.RemoveUnit();
@@ -278,7 +289,7 @@ public class PlayerControl : MonoBehaviour
 
         if( Input.GetMouseButtonDown(1) )
         {
-            Destroy( activeUnits[activeUnits.Count - 1].gameObject );
+            activeUnits[activeUnits.Count - 1].DoDestroy();
             activeUnits.RemoveAt( activeUnits.Count - 1 );
             AddToUnitInventory( lastPlacedUnit );
             lastPlacedUnit = UnitID.NONE;
