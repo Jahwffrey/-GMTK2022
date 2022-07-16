@@ -77,6 +77,9 @@ public class DiceUnit : MonoBehaviour
 
     public DieDisplay DieDisplay;
 
+    public bool Player1;
+    public bool Player2 => !Player1;
+
     protected Dice Brain;
     protected Rigidbody Rigidbody;
     protected UnitController Controller;
@@ -118,6 +121,7 @@ public class DiceUnit : MonoBehaviour
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
         DieDisplay.Setup(this);
+        DieDisplay.gameObject.SetActive(false);
         InheritableStart();
     }
 

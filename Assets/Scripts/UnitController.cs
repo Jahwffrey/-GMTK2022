@@ -5,17 +5,24 @@ using System.Linq;
 
 public class UnitController : MonoBehaviour
 {
+    public GameObject Player1ZCutoffObj;
+    public GameObject Player2ZCutoffObj;
+
     // All active units
     protected List<DiceUnit> Units = new List<DiceUnit>();
 
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
-
-    public bool GameActive = true;
+    protected bool GameActive = false;
 
     public void AddUnit(DiceUnit unit)
     {
         Units.Add(unit);
+    }
+
+    public void RemoveUnitFromConsideration(DiceUnit unit)
+    {
+        Units.Remove(unit);
     }
 
     private void Update()
@@ -52,5 +59,10 @@ public class UnitController : MonoBehaviour
         {
             EndGameStep();
         }
+    }
+
+    public void StartGame()
+    {
+        GameActive = true;
     }
 }
