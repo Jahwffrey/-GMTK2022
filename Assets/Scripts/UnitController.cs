@@ -43,12 +43,16 @@ public class UnitController : MonoBehaviour
 
     public static int MaxNumberGameSteps = 20;
 
+    public bool TwoPlayerMode;
+
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
     public WinnerUI WinnerUI;
     public TimerUI TimerUI;
     public PlayerControl PlayerControl1;
     public PlayerControl PlayerControl2;
+
+    public TwoPlayerModeTransitions TwoPlayerModeTransitions;
 
     protected int CurrentPlayerId = 0;
     public int GetCurrentPlayerId => CurrentPlayerId;
@@ -226,12 +230,21 @@ public class UnitController : MonoBehaviour
         UnitsThatPassedFinishLine.Add(unit);
     }
 
+    public void PlayerOneReady()
+    {
+        CurrentPlayerId = 1;
+    }
 
     public void PregameSetup()
     {
         TimerUI.gameObject.SetActive(false);
         PlayerControl1.PregameSetup();
         PlayerControl2.PregameSetup();
+
+        if (TwoPlayerMode)
+        {
+            TwoPlayerModeTransitions.StartPlayerOneSetup();
+        }
     }
 
     public void StartGame()

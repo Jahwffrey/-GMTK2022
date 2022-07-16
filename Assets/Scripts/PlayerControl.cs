@@ -64,10 +64,14 @@ public class PlayerControl : MonoBehaviour
     public void BeginGameplay()
     {
         placementMode = PlaceMode.GAMEPLAY;
+    }
+    
+    protected void HideAllUI()
+    {
         unitRow.gameObject.SetActive(false);
         diceRow.gameObject.SetActive(false);
     }
-    
+
     public void PregameSetup()
     {
         if (TwoPlayerMode)
@@ -139,6 +143,7 @@ public class PlayerControl : MonoBehaviour
         //Add check for "if in placing phase" and "if it's my turn" (multiplayer)
         if(playerID != UnitController.GetCurrentPlayerId)
         {
+            HideAllUI();
             return;
         }
 
@@ -153,6 +158,10 @@ public class PlayerControl : MonoBehaviour
         else if( placementMode == PlaceMode.PLACE_DIE )
         {
             DiePlacingMode( ray, layerMask );
+        }
+        else
+        {
+            HideAllUI();
         }
     }
 
@@ -268,6 +277,18 @@ public class PlayerControl : MonoBehaviour
         else
         {
             Player1ReadyButton.SetActive(false);
+        }
+    }
+
+    public void PlayerOneReady()
+    {
+        if (playerID == 0)
+        {
+            placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
+        }
+        else
+        {
+            placementMode = PlaceMode.PLACE_UNIT;
         }
     }
 
