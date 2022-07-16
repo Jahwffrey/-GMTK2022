@@ -143,6 +143,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: ReadyButton
+      value: 
+      objectReference: {fileID: 1228718188}
+    - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: TwoPlayerMode
       value: 1
       objectReference: {fileID: 0}
@@ -243,7 +247,7 @@ Transform:
   m_GameObject: {fileID: 41562062}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.34, z: 0}
-  m_LocalScale: {x: 12.293708, y: 0.555058, z: 30.726}
+  m_LocalScale: {x: 12.293708, y: 0.555058, z: 216.7975}
   m_Children: []
   m_Father: {fileID: 353292244}
   m_RootOrder: 3
@@ -329,12 +333,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 963194227}
-  Player1ReadyButton: {fileID: 1397589464}
-  Player2ReadyButton: {fileID: 1228718188}
   AnnouncementObj: {fileID: 332227595}
   HidePlayerOneObj: {fileID: 906189854}
   AnnouncementText: {fileID: 8845925471331828091}
   UnitController: {fileID: 445147598}
+  Player1Control: {fileID: 5016564390052196746}
+  Player2Control: {fileID: 34185488}
+--- !u!114 &101124591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 101124588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 719e1652b43257543a26c93441e8215e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CamSpeedH: 2
+  CamSpeedV: 2
 --- !u!1 &147314585
 GameObject:
   m_ObjectHideFlags: 0
@@ -799,7 +817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1974639953136018656, guid: c0b440569d1284948b3abf24753bfceb, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1974639953136018656, guid: c0b440569d1284948b3abf24753bfceb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1383,7 +1401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1974639953136018656, guid: c0b440569d1284948b3abf24753bfceb, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1974639953136018656, guid: c0b440569d1284948b3abf24753bfceb, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1744,7 +1762,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2255402298397915692, guid: 1be58f6fe6c0c0041a85f14b9e986200, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2255402298397915692, guid: 1be58f6fe6c0c0041a85f14b9e986200, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1867,6 +1885,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player 1 Perspective
       objectReference: {fileID: 0}
+    - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: ReadyButton
+      value: 
+      objectReference: {fileID: 1397589464}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: TwoPlayerMode
       value: 1
