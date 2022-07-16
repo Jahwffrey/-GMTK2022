@@ -11,6 +11,8 @@ public class UnitController : MonoBehaviour
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
 
+    public bool GameActive = true;
+
     public void AddUnit(DiceUnit unit)
     {
         Units.Add(unit);
@@ -18,15 +20,17 @@ public class UnitController : MonoBehaviour
 
     private void Update()
     {
-        if (!DuringGameStep)
+        if (GameActive)
         {
-            StartGameStep();
+            if (!DuringGameStep)
+            {
+                StartGameStep();
+            }
         }
     }
 
     public void StartGameStep()
     {
-        Debug.Log("Starting next step");
         DuringGameStep = true;
         foreach(var unit in Units)
         {
@@ -36,7 +40,6 @@ public class UnitController : MonoBehaviour
 
     public void EndGameStep()
     {
-        Debug.Log("All units finished");
         DuringGameStep = false;
     }
 

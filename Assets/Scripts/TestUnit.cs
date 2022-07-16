@@ -41,7 +41,7 @@ public class TestUnit : DiceUnit
 
     public override void Move()
     {
-        Rigidbody.velocity = transform.forward * 2f;
+        Rigidbody.velocity = transform.forward * 5f;
         ExecuteAfterTimer(StandardStepLengthSeconds, 
             () => {
                 EndMove();
