@@ -21,10 +21,12 @@ public class OnePlayerTransitions : MonoBehaviour
     protected bool WaitingForFirstUpdate = true;
     protected bool DecidedUnits = false;
 
-    protected int PlayerStartingUnits = 3;
-    protected int PlayerStartingDice = 5;
-    protected int EnemyStartingUnits = 2;
+    protected int PlayerStartingUnits = 2;
+    protected int PlayerStartingDice = 4;
+    protected int EnemyStartingUnits = 1;
 
+    protected int MaxPlayerUnits = 8;
+    protected int MaxPlayerDice = 8;
 
     protected List<PlayerControl.UnitID> PlayerUnitIds;
     protected List<Dice> PlayerDice;
@@ -59,6 +61,12 @@ public class OnePlayerTransitions : MonoBehaviour
     public void NewUnitSelected(PlayerControl.UnitID id)
     {
         PlayerUnitIds.Add(id);
+        MoveToNextLevel();
+    }
+
+    public void NewDieSelected(Dice die)
+    {
+        PlayerDice.Add(die);
         MoveToNextLevel();
     }
 
@@ -142,7 +150,7 @@ public class OnePlayerTransitions : MonoBehaviour
                     if (NewUnitRound)
                     {
                         NewUnitRound = !NewUnitRound;
-                        if (PlayerUnitIds.Count < 10)
+                        if (PlayerUnitIds.Count < MaxPlayerUnits)
                         {
                             ShowAnnouncement("Select A New Creature");
                             ResetCamera();
@@ -150,7 +158,7 @@ public class OnePlayerTransitions : MonoBehaviour
                             // Choose two units to be able to select
                             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
                             var unitOptions = new List<PlayerControl.UnitID>();
-                            for (int i = 0; i < 2; i++)
+                            for (int i = 0; i < 3; i++)
                             {
                                 unitOptions.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
                             }
@@ -165,7 +173,25 @@ public class OnePlayerTransitions : MonoBehaviour
                     }
                     else
                     {
-                        MoveToNextLevel();
+                        NewUnitRound = !NewUnitRound;
+                        if (PlayerDice.Count < MaxPlayerDice)
+                        {
+                            ShowAnnouncement("Select A New Die");
+                            ResetCamera();
+
+                            var allDice = UnitController.GetAllDice();
+                            var diceOptions = new List<Dice>();
+                            for (int i = 0; i < 4; i++)
+                            {
+                                diceOptions.Add(allDice[Random.Range(0, allDice.Count - 1)]); // -1 so not NONE
+                            }
+                            Player1Control.SetInventories(new List<PlayerControl.UnitID>(), diceOptions);
+                            Player1Control.BeginSelectNewDie();
+                        }
+                        else
+                        {
+                            MoveToNextLevel();
+                        }
                     }
                     break;
                 case UnitController.Winner.Player2:

@@ -279,6 +279,12 @@ public class UnitController : MonoBehaviour
         OnePlayerTransitions.NewUnitSelected(id);
     }
 
+
+    public void NewDieSelected(Dice die)
+    {
+        OnePlayerTransitions.NewDieSelected(die);
+    }
+
     public void StartGame()
     {
         PlayerControl1.BeginGameplay();

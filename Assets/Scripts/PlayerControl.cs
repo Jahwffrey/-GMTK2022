@@ -52,7 +52,8 @@ public class PlayerControl : MonoBehaviour
         PLACE_DIE,
         GAMEPLAY,
         WAIT_FOR_OTHER_PLAYER,
-        SELECT_NEW_UNIT
+        SELECT_NEW_UNIT,
+        SELECT_NEW_DIE
     }
     
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
@@ -170,7 +171,7 @@ public class PlayerControl : MonoBehaviour
         {
             UnitPlacingMode( ray, layerMask );
         }
-        else if( placementMode == PlaceMode.PLACE_DIE )
+        else if( placementMode == PlaceMode.PLACE_DIE  || placementMode == PlaceMode.SELECT_NEW_DIE)
         {
             DiePlacingMode( ray, layerMask );
         }
@@ -262,7 +263,7 @@ public class PlayerControl : MonoBehaviour
         {
             UpdateUnitUI();
         }
-        else if( placementMode == PlaceMode.PLACE_DIE )
+        else if( placementMode == PlaceMode.PLACE_DIE || placementMode == PlaceMode.SELECT_NEW_DIE )
         {
             UpdateDiceUI();
         }
@@ -347,11 +348,20 @@ public class PlayerControl : MonoBehaviour
         placementMode = PlaceMode.SELECT_NEW_UNIT;
     }
 
+    public void BeginSelectNewDie()
+    {
+        placementMode = PlaceMode.SELECT_NEW_DIE;
+    }
+
     //CALLED WHEN SELECTING DIE
     void UpdateDiceUI()
     {
-        AnimatePointer( true, false, false);
-        var currentUnit = activeUnits[activeUnits.Count - 1];
+        DiceUnit currentUnit = null;
+        if (placementMode == PlaceMode.PLACE_DIE)
+        {
+            AnimatePointer(true, false, false);
+            currentUnit = activeUnits[activeUnits.Count - 1];
+        }
 
         //PLACE UI ELEMENTS
         for ( int i = 0; i < diceInventory.Count; i++ )
@@ -363,15 +373,18 @@ public class PlayerControl : MonoBehaviour
             diceInventory[i].GetComponent<UIDieDisplay>().HideToolTip();
         }
 
-        if( Input.GetMouseButtonDown(1) )
+        if (placementMode == PlaceMode.PLACE_DIE)
         {
-            currentUnit.DoDestroy();
-            // We don't need to modify activeUnits after DoDestroy, DoDestroy already did it
-            // activeUnits.RemoveAt( activeUnits.Count - 1 );
-            AddToUnitInventory( lastPlacedUnit );
-            lastPlacedUnit = UnitID.NONE;
-            SwitchPlacementMode();
-            return;
+            if (Input.GetMouseButtonDown(1))
+            {
+                currentUnit.DoDestroy();
+                // We don't need to modify activeUnits after DoDestroy, DoDestroy already did it
+                // activeUnits.RemoveAt( activeUnits.Count - 1 );
+                AddToUnitInventory(lastPlacedUnit);
+                lastPlacedUnit = UnitID.NONE;
+                SwitchPlacementMode();
+                return;
+            }
         }
 
         //CHECK FOR CLICKING ON UI
@@ -385,13 +398,22 @@ public class PlayerControl : MonoBehaviour
             hit.transform.GetComponent<UIDieDisplay>().ShowToolTip();
             if( Input.GetMouseButtonDown(0) )
             {
-                selectedElement = diceInventory.IndexOf(hit.transform);
-                if (selectedElement != -1)
+                var selectedItem = diceInventory.IndexOf(hit.transform);
+
+                if (placementMode == PlaceMode.SELECT_NEW_DIE)
                 {
-                    currentUnit.SetDice(diceInventory[selectedElement].GetComponent<UIDieDisplay>().GetDie());
-                    RemoveFromDiceInventory(diceInventory[selectedElement]);
-                    spaceInfo.PlayDieEffect();
-                    SwitchPlacementMode();
+                    UnitController.NewDieSelected(diceInventory[selectedItem].GetComponent<UIDieDisplay>().GetDie());
+                }
+                else
+                {
+                    selectedElement = selectedItem;
+                    if (selectedElement != -1)
+                    {
+                        currentUnit.SetDice(diceInventory[selectedElement].GetComponent<UIDieDisplay>().GetDie());
+                        RemoveFromDiceInventory(diceInventory[selectedElement]);
+                        spaceInfo.PlayDieEffect();
+                        SwitchPlacementMode();
+                    }
                 }
             }
         }
