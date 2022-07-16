@@ -85,7 +85,12 @@ public class DieDisplay : MonoBehaviour
         TimeStartedAnimation = Time.time;
     }
 
-    private void Update()
+    public void ShowStaticDie( DiceSides[] sides )
+    {
+
+    }
+
+    private void Update( )
     {
         transform.position = Unit.transform.position + Vector3.up * 2.5f;
         if (Time.time - TimeStartedAnimation > RollDurationSecs)

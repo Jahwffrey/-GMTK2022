@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class StartingSpace : MonoBehaviour
 {
-    private Transform myUnit;
+    private Transform myUnit;   //TODO: change type to DiceUnit
     private bool canEdit = true;
     public int parentPlayerID;
     public int unitType;
@@ -19,7 +19,7 @@ public class StartingSpace : MonoBehaviour
     }
 
     //Returns whether or not successful
-    public bool AssignUnit( Transform t, int type, bool playDust = true )
+    public bool AssignUnit( Transform t, int type, bool playDust = true ) //TODO: change Transform t to a DiceUnit
     {
         if( !canEdit ) return false;
         myUnit = t;
@@ -44,7 +44,7 @@ public class StartingSpace : MonoBehaviour
         return true;
     }
 
-    public Transform GetUnit()
+    public Transform GetUnit() //TODO: change Transform to DiceUnit
     {
         return myUnit;
     }
