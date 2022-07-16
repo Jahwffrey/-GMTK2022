@@ -15,7 +15,6 @@ public enum DiceSides
     Lose1Hp,
     Lose2Hp,
     Heal1Hp,
-    Heal2Hp,
 }
 
 public class Dice
@@ -137,10 +136,15 @@ public class DiceUnit : MonoBehaviour
         var prettyGoodDice = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });
         var scout = new Dice(new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack });
         var sprinter = new Dice(new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Lose2Hp, DiceSides.Lose2Hp });
-        var greatDefender = new Dice(new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal2Hp });
+        var greatDefender = new Dice(new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal1Hp });
         var warrior = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend });
         var balanced = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move });
         var goForTheKill = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp });
+
+        var attacker = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move });
+        var defender = new Dice(new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Attack });
+        var runner = new Dice(new List<DiceSides>()   { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend });
+
 
         var possibleDice = new List<Dice>()
         {
@@ -151,7 +155,10 @@ public class DiceUnit : MonoBehaviour
             greatDefender,
             warrior,
             balanced,
-            goForTheKill
+            goForTheKill,
+            attacker,
+            defender,
+            runner
         };
 
         Brain = possibleDice[UnityEngine.Random.Range(0, possibleDice.Count)];
@@ -315,15 +322,6 @@ public class DiceUnit : MonoBehaviour
                         HealDamage(1f);
                         ExecuteNextAction();
                     }
-                );
-                break;
-            case DiceSides.Heal2Hp:
-                AddActionFirst(
-                () =>
-                {
-                    HealDamage(2f);
-                    ExecuteNextAction();
-                }
                 );
                 break;
         }
