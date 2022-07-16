@@ -76,7 +76,8 @@ public class DiceUnit : MonoBehaviour
     public string MoveDesc;
     public string DefendDesc;
 
-    public float Health;
+    public float MaxHealth;
+    protected float Health;
 
     public DieDisplay DieDisplay;
 
@@ -86,6 +87,7 @@ public class DiceUnit : MonoBehaviour
     protected Dice Brain;
     protected Rigidbody Rigidbody;
     protected UnitController Controller;
+    protected HealthBar HealthBar;
     protected bool DuringStep;
 
     // Game steps work by units adding several actions to a stack
@@ -119,6 +121,8 @@ public class DiceUnit : MonoBehaviour
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
+        HealthBar = GetComponentInChildren<HealthBar>();
+        Health = MaxHealth;
         InheritableAwake();
     }
 
@@ -130,8 +134,11 @@ public class DiceUnit : MonoBehaviour
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
+        HealthBar.transform.parent = transform.parent;
         DieDisplay.Setup(this);
+        HealthBar.Setup(this);
         DieDisplay.gameObject.SetActive(false);
+        HealthBar.gameObject.SetActive(false);
         InheritableStart();
     }
 
@@ -298,7 +305,18 @@ public class DiceUnit : MonoBehaviour
     {
         Health -= amt;
         Rigidbody.velocity += knockback;
-        if (Health <= 1)
+
+        if(Health < MaxHealth && MaxHealth > 0)
+        {
+            HealthBar.gameObject.SetActive(true);
+            HealthBar.DisplayAmt(Health / MaxHealth);
+        }
+        else
+        {
+            HealthBar.gameObject.SetActive(false);
+        }
+
+        if (Health <= 0)
         {
             Die();
         }

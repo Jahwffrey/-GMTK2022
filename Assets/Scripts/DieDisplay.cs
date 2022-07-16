@@ -87,7 +87,7 @@ public class DieDisplay : MonoBehaviour
 
     private void Update()
     {
-        transform.position = Unit.transform.position + Vector3.up * 2f;
+        transform.position = Unit.transform.position + Vector3.up * 2.5f;
         if (Time.time - TimeStartedAnimation > RollDurationSecs)
         {
             Particles.gameObject.SetActive(true);
