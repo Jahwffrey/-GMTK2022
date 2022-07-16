@@ -69,7 +69,7 @@ public class ActionAfterTime
 
 public class DiceUnit : MonoBehaviour
 {
-    public static float StandardStepLengthSeconds = 1f;
+    public static float StandardStepLengthSeconds = 2f;
     public static int DiceSidesNum = 6;
 
     public string AttackDesc;

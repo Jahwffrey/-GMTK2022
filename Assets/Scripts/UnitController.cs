@@ -12,7 +12,7 @@ public class UnitController : MonoBehaviour
         Tie
     }
 
-    public static float MaxGameTimeSeconds = 30f;
+    public static int MaxNumberGameSteps = 20;
 
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
@@ -31,7 +31,7 @@ public class UnitController : MonoBehaviour
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
     protected bool GameActive = false;
-    protected float TimeGameHasBeenRunning;
+    protected int GameStepsTaken;
 
     public void AddUnit(DiceUnit unit)
     {
@@ -47,28 +47,23 @@ public class UnitController : MonoBehaviour
     {
         if (GameActive)
         {
+            TimerUI.DisplayTime(GetGamePercentLeft());
+
             if (!DuringGameStep)
             {
                 StartGameStep();
-            }
-            TimeGameHasBeenRunning += Time.deltaTime;
-            TimerUI.DisplayTime(GetGamePercentLeft());
-
-            if (IsGameFinished())
-            {
-                EndGame();
             }
         }
     }
 
     protected bool IsGameFinished()
     {
-        return GameActive && (TimeGameHasBeenRunning > MaxGameTimeSeconds || Units.Count == 0);
+        return GameActive && (GameStepsTaken >= MaxNumberGameSteps || Units.Count == 0);
     }
 
     protected float GetGamePercentLeft()
     {
-        return Mathf.Max(0f, 1f - (TimeGameHasBeenRunning / MaxGameTimeSeconds));
+        return Mathf.Max(0f, 1f - (((float)GameStepsTaken) / ((float)MaxNumberGameSteps)));
     }
 
     protected void EndGame()
@@ -120,11 +115,16 @@ public class UnitController : MonoBehaviour
         {
             unit.StartGameStep();
         }
+        GameStepsTaken += 1;
     }
 
     public void EndGameStep()
     {
         DuringGameStep = false;
+        if (IsGameFinished())
+        {
+            EndGame();
+        }
     }
 
     public void UnitEndedStep(DiceUnit unit) 
@@ -145,7 +145,7 @@ public class UnitController : MonoBehaviour
 
     public void StartGame()
     {
-        TimeGameHasBeenRunning = 0f;
+        GameStepsTaken = 0;
         GameActive = true;
     }
 }
