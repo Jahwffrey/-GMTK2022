@@ -19,7 +19,7 @@ public class StartingSpace : MonoBehaviour
     }
 
     //Returns whether or not successful
-    public bool AssignUnit( DiceUnit t, int type, bool playDust = true ) //TODO: change Transform t to a DiceUnit
+    public bool AssignUnit( DiceUnit t, int type, bool playDust = true )
     {
         if( !canEdit ) return false;
         myUnit = t;

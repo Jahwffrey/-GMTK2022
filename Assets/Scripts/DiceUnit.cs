@@ -146,6 +146,16 @@ public class DiceUnit : MonoBehaviour
         InheritableStart();
     }
 
+    public void SetDice(Dice d)
+    {
+        Brain = d;
+    }
+
+    public Dice GetDice()
+    {
+        return Brain;
+    }
+
     public DiceSides[] GetCurrentDiceSides()
     {
         return Brain.GetSides();

@@ -2,12 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//TO DO:
-//(hint - ctrl+F and search for TODO)
-//-Change activeUnits to List<DiceUnit>
-//-in StartingSpace.cs, change myUnit to type DiceUnit
-//-update unitPrefabs in the inspector to contain actual dice units (make sure order is the same as the UnitID enum)
-
 public class PlayerControl : MonoBehaviour
 {
     static int SELECTABLE_LAYER = 8;
@@ -38,7 +32,7 @@ public class PlayerControl : MonoBehaviour
     public Material cancelMaterial;
 
     private List<Transform> uiUnits;        //Units displayed in the UI
-    private List<DiceUnit> activeUnits;    //Units on the battlefield  TODO
+    private List<DiceUnit> activeUnits;    //Units on the battlefield 
     private UnitID lastPlacedUnit;
     private List<int> unitInventory;        //Integers corresponding to available units not yet on battlefield
     private List<Transform> diceInventory;
@@ -168,11 +162,11 @@ public class PlayerControl : MonoBehaviour
                     //REMOVED A UNIT
                     else if( spaceInfo.HasUnit() )
                     {
+                        AddToDiceInventory(spaceInfo.GetUnit().GetDice());
                         spaceInfo.GetUnit().DoDestroy();
                         //DoDestroy already does this remove so we dont have to
                         // activeUnits.Remove( spaceInfo.GetUnit() );
                         AddToUnitInventory( (UnitID)spaceInfo.unitType );
-                        //TODO: Add spaceInfo.GetUnit()'s Dice back to inventory using AddToDiceInventory
                         spaceInfo.RemoveUnit();
                     }
                     pointer.SetActive(false);
@@ -258,9 +252,12 @@ public class PlayerControl : MonoBehaviour
             if( Input.GetMouseButtonDown(0) )
             {
                 selectedElement = uiUnits.IndexOf( hit.transform );
-                selectBox.SetActive( true );
-                pointerGhost.GetComponent<MeshFilter>().mesh = hit.transform.GetComponent<MeshFilter>().mesh;
-                pointerGhost.GetComponent<Renderer>().material = hit.transform.GetComponent<Renderer>().material;
+                if (selectedElement != -1)
+                {
+                    selectBox.SetActive(true);
+                    pointerGhost.GetComponent<MeshFilter>().mesh = hit.transform.GetComponent<MeshFilter>().mesh;
+                    pointerGhost.GetComponent<Renderer>().material = hit.transform.GetComponent<Renderer>().material;
+                }
             }
         }
 
@@ -273,8 +270,10 @@ public class PlayerControl : MonoBehaviour
     //CALLED WHEN SELECTING DIE
     void UpdateDiceUI()
     {
+        var currentUnit = activeUnits[activeUnits.Count - 1];
+
         //PLACE UI ELEMENTS
-        for( int i = 0; i < diceInventory.Count; i++ )
+        for ( int i = 0; i < diceInventory.Count; i++ )
         {
             float offset = i + (i * elementSpacing ) - ( ( diceInventory.Count - 1 + (diceInventory.Count - 1) * elementSpacing ) / 2 );
             diceInventory[i].localPosition = new Vector3(offset,0,0);
@@ -284,7 +283,7 @@ public class PlayerControl : MonoBehaviour
 
         if( Input.GetMouseButtonDown(1) )
         {
-            activeUnits[activeUnits.Count - 1].DoDestroy();
+            currentUnit.DoDestroy();
             // We don't need to modify activeUnits after DoDestroy, DoDestroy already did it
             // activeUnits.RemoveAt( activeUnits.Count - 1 );
             AddToUnitInventory( lastPlacedUnit );
@@ -303,13 +302,13 @@ public class PlayerControl : MonoBehaviour
             hit.transform.localScale = elementScalar;
             if( Input.GetMouseButtonDown(0) )
             {
-                selectedElement = diceInventory.IndexOf( hit.transform );
-                Dice dieToAssign = diceInventory[selectedElement].GetComponent<UIDieDisplay>().GetDie();
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                //TODO: ASSIGN DIE TO UNIT HERE
-                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                RemoveFromDiceInventory( diceInventory[selectedElement] );
-                SwitchPlacementMode();
+                selectedElement = diceInventory.IndexOf(hit.transform);
+                if (selectedElement != -1)
+                {
+                    currentUnit.SetDice(diceInventory[selectedElement].GetComponent<UIDieDisplay>().GetDie());
+                    RemoveFromDiceInventory(diceInventory[selectedElement]);
+                    SwitchPlacementMode();
+                }
             }
         }
 

@@ -11,7 +11,7 @@ public class UIDieDisplay : MonoBehaviour
     public Material BadMaterial;
     public Material HealMaterial;
 
-    private Dice die;
+    private Dice die = null;
 
     protected Material GetSideMaterial(DiceSides side)
     {
@@ -50,11 +50,6 @@ public class UIDieDisplay : MonoBehaviour
     public Dice GetDie()
     {
         return die;
-    }
-
-    void Start()
-    {
-        die = null;
     }
 
     // Update is called once per frame

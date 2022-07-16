@@ -16,7 +16,7 @@ public class UnitController : MonoBehaviour
             new Dice("Knight", new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Lose1Hp }),
             new Dice("Scout", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack }),
             new Dice("Sprinter", new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose2Hp }),
-            new Dice("Great Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal1Hp }),
+            new Dice("Great Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Heal1Hp }),
             new Dice("Fighter", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend }),
             new Dice("Balanced", new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move }),
             new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
