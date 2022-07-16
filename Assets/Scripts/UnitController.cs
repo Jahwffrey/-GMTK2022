@@ -274,6 +274,11 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void NewUnitSelected(PlayerControl.UnitID id)
+    {
+        OnePlayerTransitions.NewUnitSelected(id);
+    }
+
     public void StartGame()
     {
         PlayerControl1.BeginGameplay();

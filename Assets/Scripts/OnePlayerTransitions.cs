@@ -38,6 +38,8 @@ public class OnePlayerTransitions : MonoBehaviour
     protected int level = 0;
     protected UnitController.Winner RoundWinner;
 
+    protected bool NewUnitRound = true;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
@@ -52,6 +54,12 @@ public class OnePlayerTransitions : MonoBehaviour
         var allDice = UnitController.GetAllDice();
         EnemyUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
         EnemyDice.Add(allDice[Random.Range(0, allDice.Count)]);
+    }
+
+    public void NewUnitSelected(PlayerControl.UnitID id)
+    {
+        PlayerUnitIds.Add(id);
+        MoveToNextLevel();
     }
 
     public void SetupGame()
@@ -92,6 +100,11 @@ public class OnePlayerTransitions : MonoBehaviour
             u.transform.position = EnemySpawnPointBase.transform.position + new Vector3((i % 10) * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
         }
 
+        ResetCamera();
+    }
+
+    void ResetCamera()
+    {
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
     }
@@ -100,6 +113,14 @@ public class OnePlayerTransitions : MonoBehaviour
     {
         AnnouncementObj.SetActive(true);
         AnnouncementText.text = text;
+    }
+
+    public void MoveToNextLevel()
+    {
+        BoardGenerator.Cleanup();
+        BoardGenerator.PlaceObstacles();
+        UnitController.PostGameCleanup();
+        BeginNewGame();
     }
 
     public void HideAnnouncement()
@@ -118,10 +139,34 @@ public class OnePlayerTransitions : MonoBehaviour
             {
                 case UnitController.Winner.Player1:
                     // Continue
-                    BoardGenerator.Cleanup();
-                    BoardGenerator.PlaceObstacles();
-                    UnitController.PostGameCleanup();
-                    BeginNewGame();
+                    if (NewUnitRound)
+                    {
+                        NewUnitRound = !NewUnitRound;
+                        if (PlayerUnitIds.Count < 10)
+                        {
+                            ShowAnnouncement("Select A New Creature");
+                            ResetCamera();
+
+                            // Choose two units to be able to select
+                            var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+                            var unitOptions = new List<PlayerControl.UnitID>();
+                            for (int i = 0; i < 2; i++)
+                            {
+                                unitOptions.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+                            }
+                            Player1Control.SetInventories(unitOptions, new List<Dice>());
+
+                            Player1Control.BeginSelectNewUnit();
+                        }
+                        else
+                        {
+                            MoveToNextLevel();
+                        }
+                    }
+                    else
+                    {
+                        MoveToNextLevel();
+                    }
                     break;
                 case UnitController.Winner.Player2:
                     // Lose

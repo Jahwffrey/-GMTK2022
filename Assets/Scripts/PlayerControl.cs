@@ -51,7 +51,8 @@ public class PlayerControl : MonoBehaviour
         PLACE_UNIT,
         PLACE_DIE,
         GAMEPLAY,
-        WAIT_FOR_OTHER_PLAYER
+        WAIT_FOR_OTHER_PLAYER,
+        SELECT_NEW_UNIT
     }
     
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
@@ -165,7 +166,7 @@ public class PlayerControl : MonoBehaviour
         Ray ray = cam.ScreenPointToRay( Input.mousePosition );
         int layerMask = 1 << SELECTABLE_LAYER;
         
-        if( placementMode == PlaceMode.PLACE_UNIT )
+        if( placementMode == PlaceMode.PLACE_UNIT || placementMode == PlaceMode.SELECT_NEW_UNIT )
         {
             UnitPlacingMode( ray, layerMask );
         }
@@ -189,7 +190,7 @@ public class PlayerControl : MonoBehaviour
         unitRow.gameObject.SetActive(true);
         diceRow.gameObject.SetActive(false);
         RaycastHit hit;
-        if( Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
+        if(placementMode == PlaceMode.PLACE_UNIT && Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
         {
             //Check if we're selecting our own space
             spaceInfo = hit.transform.GetComponent<StartingSpace>();
@@ -257,7 +258,7 @@ public class PlayerControl : MonoBehaviour
     void UpdateUI()
     {
         UpdateCanvasUI();
-        if( placementMode == PlaceMode.PLACE_UNIT)
+        if( placementMode == PlaceMode.PLACE_UNIT || placementMode == PlaceMode.SELECT_NEW_UNIT)
         {
             UpdateUnitUI();
         }
@@ -317,12 +318,20 @@ public class PlayerControl : MonoBehaviour
             hit.transform.localScale = elementScalar;
             if( Input.GetMouseButtonDown(0) )
             {
-                selectedElement = uiUnits.IndexOf( hit.transform );
-                if (selectedElement != -1)
+                int hitElement = uiUnits.IndexOf(hit.transform);
+                if (placementMode == PlaceMode.SELECT_NEW_UNIT)
                 {
-                    selectBox.SetActive(true);
-                    pointerGhost.GetComponent<MeshFilter>().mesh = hit.transform.GetComponent<MeshFilter>().mesh;
-                    pointerGhost.GetComponent<Renderer>().material = hit.transform.GetComponent<Renderer>().material;
+                    UnitController.NewUnitSelected((UnitID) unitInventory[hitElement]);
+                }
+                else
+                {
+                    selectedElement = hitElement;
+                    if (selectedElement != -1)
+                    {
+                        selectBox.SetActive(true);
+                        pointerGhost.GetComponent<MeshFilter>().mesh = hit.transform.GetComponent<MeshFilter>().mesh;
+                        pointerGhost.GetComponent<Renderer>().material = hit.transform.GetComponent<Renderer>().material;
+                    }
                 }
             }
         }
@@ -331,6 +340,11 @@ public class PlayerControl : MonoBehaviour
         {
             selectBox.transform.position = uiUnits[selectedElement].position + Vector3.forward;
         }
+    }
+    
+    public void BeginSelectNewUnit()
+    {
+        placementMode = PlaceMode.SELECT_NEW_UNIT;
     }
 
     //CALLED WHEN SELECTING DIE
