@@ -16,6 +16,7 @@ public class DieDisplay : MonoBehaviour
     public Material DefendMaterial;
     public Material MoveMaterial;
     public Material BadMaterial;
+    public Material HealMaterial;
 
     public ParticleSystem Particles;
     public ParticleSystemRenderer ParticlesRenderer;
@@ -50,6 +51,8 @@ public class DieDisplay : MonoBehaviour
             case DiceSides.Lose1Hp:
             case DiceSides.Lose2Hp:
                 return BadMaterial;
+            case DiceSides.Heal1Hp:
+                return HealMaterial;
             default:
                 Debug.LogError("No material for this kind of side...");
                 return BadMaterial;
@@ -85,9 +88,14 @@ public class DieDisplay : MonoBehaviour
         TimeStartedAnimation = Time.time;
     }
 
-    private void Update()
+    public void ShowStaticDie( DiceSides[] sides )
     {
-        transform.position = Unit.transform.position + Vector3.up * 2.5f;
+
+    }
+
+    private void Update( )
+    {
+        transform.position = Unit.transform.position + Vector3.up * 1.25f;
         if (Time.time - TimeStartedAnimation > RollDurationSecs)
         {
             Particles.gameObject.SetActive(true);

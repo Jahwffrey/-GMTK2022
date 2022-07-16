@@ -27,9 +27,9 @@ public class TestUnit : DiceUnit
             Vector3 dir = (closest.transform.position - transform.position).normalized;
             Rigidbody.velocity = dir * 0.5f;
             var g = Instantiate(Projectile);
-            g.transform.position = transform.position + dir * 0.5f;
+            g.transform.position = transform.position + dir * 0.25f;
             g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
-            g.GetComponent<Rigidbody>().velocity = dir * 20f + Vector3.up * 4f;
+            g.GetComponent<Rigidbody>().velocity = dir * 5f + Vector3.up * 4f;
             g.GetComponent<Projectile>().Setup(dir + Vector3.up, this);
         }
 
@@ -51,8 +51,6 @@ public class TestUnit : DiceUnit
         Invulnerable = true;
         ExecuteAfterTimer(StandardStepLengthSeconds * 2f,
             () => {
-                TurnOffShield();
-                Invulnerable = false;
                 ExecuteNextAction();
             }
         );
@@ -70,7 +68,7 @@ public class TestUnit : DiceUnit
 
     public override void Move()
     {
-        Rigidbody.velocity = (transform.forward + new Vector3((Random.value - 0.5f) * 0.2f, 0f, (Random.value - 0.5f) * 0.2f)).normalized * 4f;
+        Rigidbody.velocity = (transform.forward + new Vector3((Random.value - 0.5f) * 0.2f, 0f, (Random.value - 0.5f) * 0.2f)).normalized * 2f;
         ExecuteAfterTimer(StandardStepLengthSeconds, 
             () => {
                 EndMove();
@@ -84,9 +82,10 @@ public class TestUnit : DiceUnit
         StopIfOnGround();
     }
 
-    protected override void InheritableStepEnded()
+    public override void AllUnitsStepEnded()
     {
-        base.InheritableStepEnded();
+        base.AllUnitsStepEnded();
         Invulnerable = false;
+        TurnOffShield();
     }
 }

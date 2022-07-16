@@ -14,14 +14,17 @@ public enum DiceSides
     Nothing,
     Lose1Hp,
     Lose2Hp,
+    Heal1Hp,
 }
 
 public class Dice
 {
     protected DiceSides[] Sides;
+    public string Name;
 
-    public Dice(List<DiceSides> sides)
+    public Dice(string name, List<DiceSides> sides)
     {
+        Name = name;
         Sides = sides.ToArray();
     }
 
@@ -131,16 +134,7 @@ public class DiceUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var doublesDice = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp });
-        var prettyGoodDice = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });
-        var scout = new Dice(new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack });
-        var possibleDice = new List<Dice>()
-        {
-            doublesDice,
-            prettyGoodDice,
-            scout
-        };
-        Brain = possibleDice[UnityEngine.Random.Range(0, possibleDice.Count)];
+        Brain = UnitController.NothingDie();
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
@@ -150,6 +144,16 @@ public class DiceUnit : MonoBehaviour
         DieDisplay.gameObject.SetActive(false);
         HealthBar.gameObject.SetActive(false);
         InheritableStart();
+    }
+
+    public void SetDice(Dice d)
+    {
+        Brain = d;
+    }
+
+    public Dice GetDice()
+    {
+        return Brain;
     }
 
     public DiceSides[] GetCurrentDiceSides()
@@ -213,7 +217,16 @@ public class DiceUnit : MonoBehaviour
         }
     }
 
-    protected void RemoveFromConsideration()
+    public void DoDestroy()
+    {
+        Controller.UnitFullyDestroyed(this);
+        RemoveFromConsideration();
+        Destroy(gameObject);
+        Destroy(DieDisplay.gameObject);
+        Destroy(HealthBar.gameObject);
+    }
+
+    public void RemoveFromConsideration()
     {
         var collider = GetComponent<Collider>();
         if (collider != null) collider.enabled = false;
@@ -278,6 +291,31 @@ public class DiceUnit : MonoBehaviour
             //case DiceSides.DoubleDefend: AddActionLast(Defend); AddActionLast(Defend); break;
             case DiceSides.DoubleMove: AddActionLast(Move); AddActionLast(Move); break;
             case DiceSides.Nothing: AddActionFirst(ExecuteNextAction); break;
+            case DiceSides.Lose1Hp: AddActionFirst(
+                    () =>
+                    {
+                        TakeDamage(1f, Vector3.zero);
+                        ExecuteNextAction();
+                    }
+                );
+                break;
+            case DiceSides.Lose2Hp:
+                AddActionFirst(
+                () =>
+                {
+                    TakeDamage(2f, Vector3.zero);
+                    ExecuteNextAction();
+                }
+                );
+                break;
+            case DiceSides.Heal1Hp: AddActionFirst(
+                    () =>
+                    {
+                        HealDamage(1f);
+                        ExecuteNextAction();
+                    }
+                );
+                break;
         }
         DieDisplay.gameObject.SetActive(true);
         DieDisplay.ShowRoll(Brain.GetSides(), res);
@@ -315,7 +353,12 @@ public class DiceUnit : MonoBehaviour
     }
 
 
-    protected virtual void InheritableStepEnded()
+    protected virtual void InheritableMyStepEnded()
+    {
+
+    }
+
+    public virtual void AllUnitsStepEnded()
     {
 
     }
@@ -324,16 +367,32 @@ public class DiceUnit : MonoBehaviour
     {
         StopIfOnGround();
         DuringStep = false;
-        InheritableStepEnded();
+        InheritableMyStepEnded();
         Controller.UnitEndedStep(this);
+    }
+
+    public virtual void HealDamage(float amt)
+    {
+        Health += amt;
+        if (Health > MaxHealth) Health = MaxHealth;
+        DisplayHealth();
     }
 
     public virtual void TakeDamage(float amt, Vector3 knockback)
     {
         Health -= amt;
         Rigidbody.velocity += knockback;
+        DisplayHealth();
 
-        if(Health < MaxHealth && MaxHealth > 0)
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    protected void DisplayHealth()
+    {
+        if (Health < MaxHealth && MaxHealth > 0)
         {
             HealthBar.gameObject.SetActive(true);
             HealthBar.DisplayAmt(Health / MaxHealth);
@@ -341,11 +400,6 @@ public class DiceUnit : MonoBehaviour
         else
         {
             HealthBar.gameObject.SetActive(false);
-        }
-
-        if (Health <= 0)
-        {
-            Die();
         }
     }
 

@@ -14,11 +14,13 @@ public class PlayerControl : MonoBehaviour
     public float pointerBounceSpeed = 0.1f;
     public float pointerBounceHeight = 0.1f;
     public List<GameObject> unitPrefabs;
+    public UnitController UnitController;
     
     [Header("UI")]
     public Transform unitRow;
     public Transform diceRow;
     public GameObject uiModel;
+    public GameObject uiDiePrefab;
     public GameObject selectBox;
     public Camera uiCam;
     public float elementSpacing = 1f;
@@ -30,19 +32,29 @@ public class PlayerControl : MonoBehaviour
     public Material cancelMaterial;
 
     private List<Transform> uiUnits;        //Units displayed in the UI
-    private List<Transform> activeUnits;    //Units on the battlefield
+    private List<DiceUnit> activeUnits;    //Units on the battlefield 
+    private UnitID lastPlacedUnit;
     private List<int> unitInventory;        //Integers corresponding to available units not yet on battlefield
+    private List<Transform> diceInventory;
     private List<Transform> dice;
     private Vector3 elementScalar;
     private int selectedElement;
     private Camera cam;
     private float pointerAnim;
+    private PlaceMode placementMode;
+
+    public enum PlaceMode
+    {
+        PLACE_UNIT,
+        PLACE_DIE
+    }
     
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
     public enum UnitID
     {
         SQUIRREL,
-        BIRD
+        BIRD,
+        NONE
     }
 
     void Start()
@@ -50,13 +62,19 @@ public class PlayerControl : MonoBehaviour
         cam = Camera.main;
         pointerAnim = 0;
         uiUnits = new List<Transform>();
-        activeUnits = new List<Transform>();
+        activeUnits = new List<DiceUnit>();
         unitInventory = new List<int>();
+        diceInventory = new List<Transform>();
         dice = new List<Transform>();
         elementScalar = new Vector3( elementHoverScale, elementHoverScale, elementHoverScale );
         selectedElement = -1;
         selectBox.SetActive(false);
-        //TEST
+        placementMode = PlaceMode.PLACE_UNIT;
+        lastPlacedUnit = UnitID.NONE;
+        
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //~~~~FILLING INVENTORY TEST~~~~
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         AddToUnitInventory( UnitID.SQUIRREL );
         AddToUnitInventory( UnitID.BIRD );
         AddToUnitInventory( UnitID.SQUIRREL );
@@ -65,6 +83,12 @@ public class PlayerControl : MonoBehaviour
         AddToUnitInventory( UnitID.BIRD );
         AddToUnitInventory( UnitID.SQUIRREL );
         AddToUnitInventory( UnitID.BIRD );
+
+        var allDice = UnitController.GetAllDice();
+        for(int i =0; i < 8; i++)
+        {
+            AddToDiceInventory(allDice[Random.Range(0, allDice.Count)]);
+        }
     }
 
     void Update()
@@ -73,20 +97,44 @@ public class PlayerControl : MonoBehaviour
         UpdateUI();
     }
 
+    public void UnitWasFullyDestroyed(DiceUnit unit)
+    {
+        if (unit == null || activeUnits == null) return;
+
+        if (activeUnits.Contains(unit))
+        {
+            activeUnits.Remove(unit);
+        }
+    }
+
     //Updates in actual gamespace
     void UpdateGameSpace()
     {
         //Add check for "if in placing phase" and "if it's my turn" (multiplayer)
-        if(playerID == 2) //FOR TESTING PURPOSES, DELETE LATER
+        if(playerID == 2) //FOR TESTING PURPOSES, change to if(currentPlayerID != playerID) when a global current player id is implemented
         {
             return;
         }
 
         //MOUSE CONTROL
-        RaycastHit hit;
         Ray ray = cam.ScreenPointToRay( Input.mousePosition );
         int layerMask = 1 << SELECTABLE_LAYER;
         
+        if( placementMode == PlaceMode.PLACE_UNIT )
+        {
+            UnitPlacingMode( ray, layerMask );
+        }
+        else if( placementMode == PlaceMode.PLACE_DIE )
+        {
+            DiePlacingMode( ray, layerMask );
+        }
+    }
+
+    void UnitPlacingMode( Ray ray, int layerMask )
+    {
+        unitRow.gameObject.SetActive(true);
+        diceRow.gameObject.SetActive(false);
+        RaycastHit hit;
         if( Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
         {
             //Check if we're selecting our own space
@@ -99,20 +147,25 @@ public class PlayerControl : MonoBehaviour
                     //PLACED A UNIT
                     if( !spaceInfo.HasUnit() && selectedElement != -1 )
                     {
-                        Transform newUnit = Instantiate( unitPrefabs[unitInventory[selectedElement]] ).transform;
+                        DiceUnit newUnit = Instantiate( unitPrefabs[unitInventory[selectedElement]].GetComponent<DiceUnit>() );
+                        lastPlacedUnit = (UnitID)unitInventory[selectedElement];
                         Bounds bounds = newUnit.GetComponent<Collider>().bounds;
-                        newUnit.position = hit.transform.position + Vector3.up * bounds.size.y / 2 - (bounds.center - newUnit.position);
-                        newUnit.eulerAngles = new Vector3( newUnit.eulerAngles.x, transform.eulerAngles.y, newUnit.eulerAngles.z);
+                        newUnit.transform.position = hit.transform.position + Vector3.up * bounds.size.y / 2 - (bounds.center - newUnit.transform.position);
+                        newUnit.transform.eulerAngles = new Vector3( newUnit.transform.eulerAngles.x, transform.eulerAngles.y, newUnit.transform.eulerAngles.z);
                         activeUnits.Add( newUnit );
                         spaceInfo.AssignUnit( newUnit, unitInventory[selectedElement] );
                         RemoveFromUnitInventory( selectedElement );
                         selectedElement = -1;
                         selectBox.SetActive(false);
+                        SwitchPlacementMode();
                     }
                     //REMOVED A UNIT
                     else if( spaceInfo.HasUnit() )
                     {
-                        activeUnits.Remove( spaceInfo.GetUnit() );
+                        AddToDiceInventory(spaceInfo.GetUnit().GetDice());
+                        spaceInfo.GetUnit().DoDestroy();
+                        //DoDestroy already does this remove so we dont have to
+                        // activeUnits.Remove( spaceInfo.GetUnit() );
                         AddToUnitInventory( (UnitID)spaceInfo.unitType );
                         spaceInfo.RemoveUnit();
                     }
@@ -121,7 +174,7 @@ public class PlayerControl : MonoBehaviour
                 }
 
                 //Move pointer to selected space and animate, if the space is empty
-                if( !spaceInfo.HasUnit() && selectedElement != -1 )
+                else if( !spaceInfo.HasUnit() && selectedElement != -1 )
                 {
                     pointer.SetActive(true);
                     pointer.GetComponent<Renderer>().material = pointerMaterial;
@@ -157,8 +210,27 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    void DiePlacingMode( Ray ray, int layerMask )
+    {
+        unitRow.gameObject.SetActive(false);
+        diceRow.gameObject.SetActive(true);
+    }
+
     //Updates on UI layer
     void UpdateUI()
+    {
+        if( placementMode == PlaceMode.PLACE_UNIT )
+        {
+            UpdateUnitUI();
+        }
+        else if( placementMode == PlaceMode.PLACE_DIE )
+        {
+            UpdateDiceUI();
+        }
+    }
+
+    //CALLED WHEN SELECTING UNITS
+    void UpdateUnitUI()
     {
         //PLACE UI ELEMENTS
         for( int i = 0; i < uiUnits.Count; i++ )
@@ -180,16 +252,69 @@ public class PlayerControl : MonoBehaviour
             if( Input.GetMouseButtonDown(0) )
             {
                 selectedElement = uiUnits.IndexOf( hit.transform );
-                selectBox.SetActive( true );
-                pointerGhost.GetComponent<MeshFilter>().mesh = hit.transform.GetComponent<MeshFilter>().mesh;
-                pointerGhost.GetComponent<Renderer>().material = hit.transform.GetComponent<Renderer>().material;
-                Debug.Log("Clicked " + hit.transform.name + "!");
+                if (selectedElement != -1)
+                {
+                    selectBox.SetActive(true);
+                    pointerGhost.GetComponent<MeshFilter>().mesh = hit.transform.GetComponent<MeshFilter>().mesh;
+                    pointerGhost.GetComponent<Renderer>().material = hit.transform.GetComponent<Renderer>().material;
+                }
             }
         }
 
         if( selectedElement != -1 )
         {
             selectBox.transform.position = uiUnits[selectedElement].position + Vector3.forward;
+        }
+    }
+
+    //CALLED WHEN SELECTING DIE
+    void UpdateDiceUI()
+    {
+        var currentUnit = activeUnits[activeUnits.Count - 1];
+
+        //PLACE UI ELEMENTS
+        for ( int i = 0; i < diceInventory.Count; i++ )
+        {
+            float offset = i + (i * elementSpacing ) - ( ( diceInventory.Count - 1 + (diceInventory.Count - 1) * elementSpacing ) / 2 );
+            diceInventory[i].localPosition = new Vector3(offset,0,0);
+            diceInventory[i].localScale = Vector3.one;
+            diceInventory[i].Rotate( new Vector3( elementRotateSpeed, elementRotateSpeed / 2, elementRotateSpeed / 3 ) );
+        }
+
+        if( Input.GetMouseButtonDown(1) )
+        {
+            currentUnit.DoDestroy();
+            // We don't need to modify activeUnits after DoDestroy, DoDestroy already did it
+            // activeUnits.RemoveAt( activeUnits.Count - 1 );
+            AddToUnitInventory( lastPlacedUnit );
+            lastPlacedUnit = UnitID.NONE;
+            SwitchPlacementMode();
+            return;
+        }
+
+        //CHECK FOR CLICKING ON UI
+        RaycastHit hit;
+        Ray ray = uiCam.ScreenPointToRay( Input.mousePosition );
+        int layerMask = 1 << 6;
+        
+        if( Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
+        {
+            hit.transform.localScale = elementScalar;
+            if( Input.GetMouseButtonDown(0) )
+            {
+                selectedElement = diceInventory.IndexOf(hit.transform);
+                if (selectedElement != -1)
+                {
+                    currentUnit.SetDice(diceInventory[selectedElement].GetComponent<UIDieDisplay>().GetDie());
+                    RemoveFromDiceInventory(diceInventory[selectedElement]);
+                    SwitchPlacementMode();
+                }
+            }
+        }
+
+        if( selectedElement != -1 )
+        {
+            selectBox.transform.position = diceInventory[selectedElement].position + Vector3.forward;
         }
     }
 
@@ -209,5 +334,31 @@ public class PlayerControl : MonoBehaviour
         uiUnits.Remove( toDestroy );
         unitInventory.RemoveAt( index );
         Destroy( toDestroy.gameObject );
+    }
+
+    public void AddToDiceInventory( Dice d )
+    {
+        Transform newUID = Instantiate( uiDiePrefab, diceRow, false ).transform;
+        newUID.GetComponent<UIDieDisplay>().SetDie( d );
+        diceInventory.Add( newUID );
+    }
+
+    public void RemoveFromDiceInventory( Transform d )
+    {
+        diceInventory.Remove( d );
+        Destroy( d.gameObject );
+    }
+
+    private void SwitchPlacementMode()
+    {
+        selectedElement = -1;
+        if(placementMode == PlaceMode.PLACE_UNIT)
+        {
+            placementMode = PlaceMode.PLACE_DIE;
+        }
+        else
+        {
+            placementMode = PlaceMode.PLACE_UNIT;
+        }
     }
 }

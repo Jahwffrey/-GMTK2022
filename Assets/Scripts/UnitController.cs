@@ -5,6 +5,35 @@ using System.Linq;
 
 public class UnitController : MonoBehaviour
 {
+    public static Dice NothingDie() {
+        return new Dice("Nothing", new List<DiceSides>() { DiceSides.Nothing, DiceSides.Nothing, DiceSides.Nothing, DiceSides.Nothing, DiceSides.Nothing, DiceSides.Nothing });
+    }
+    public static List<Dice> GetAllDice()
+    {
+        return new List<Dice>()
+        {
+            new Dice("Reckless",new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp }),
+            new Dice("Knight", new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Lose1Hp }),
+            new Dice("Scout", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack }),
+            new Dice("Sprinter", new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose2Hp }),
+            new Dice("Great Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Heal1Hp }),
+            new Dice("Fighter", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend }),
+            new Dice("Balanced", new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move }),
+            new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
+            new Dice("Rogue", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Nothing, DiceSides.Heal1Hp }),
+
+            new Dice("Paladin", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Heal1Hp, DiceSides.Move, DiceSides.Nothing, DiceSides.Nothing }),
+            new Dice("Fencer", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Nothing }),
+            new Dice("Aggressive", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose2Hp }),
+            new Dice("Careful", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal1Hp, DiceSides.Heal1Hp }),
+            new Dice("All Or Nothing", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Defend, DiceSides.Heal1Hp, DiceSides.Nothing, DiceSides.Nothing }),
+
+            new Dice("Attacker", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move }),
+            new Dice("Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Attack }),
+            new Dice("Runner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend }),
+        };
+    }
+
     public enum Winner
     {
         Player1,
@@ -18,6 +47,9 @@ public class UnitController : MonoBehaviour
     public GameObject Player2ZCutoffObj;
     public WinnerUI WinnerUI;
     public TimerUI TimerUI;
+    public GameObject StartGameBtn;
+    public PlayerControl PlayerControl1;
+    public PlayerControl PlayerControl2;
 
     public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
     public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
@@ -26,7 +58,7 @@ public class UnitController : MonoBehaviour
     protected List<DiceUnit> Units = new List<DiceUnit>();
     
     // Units that have passed the finish line
-    protected List<DiceUnit> UnitThatPassedFinishLine = new List<DiceUnit>();
+    protected List<DiceUnit> UnitsThatPassedFinishLine = new List<DiceUnit>();
 
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
@@ -40,15 +72,22 @@ public class UnitController : MonoBehaviour
 
     public void RemoveUnitFromConsideration(DiceUnit unit)
     {
-        Units.Remove(unit);
+        if (unit == null) return;
+        if (Units.Contains(unit))
+        {
+            Units.Remove(unit);
+        }
+    }
+
+    private void Start()
+    {
+        PregameSetup();
     }
 
     private void Update()
     {
         if (GameActive)
         {
-            TimerUI.DisplayTime(GetGamePercentLeft());
-
             if (!DuringGameStep)
             {
                 StartGameStep();
@@ -72,7 +111,7 @@ public class UnitController : MonoBehaviour
 
         int player1Wins = 0;
         int player2Wins = 0;
-        foreach (var unit in UnitThatPassedFinishLine)
+        foreach (var unit in UnitsThatPassedFinishLine)
         {
             if (unit.Player1)
             {
@@ -120,11 +159,33 @@ public class UnitController : MonoBehaviour
 
     public void EndGameStep()
     {
+        // Update the timer ui before update # of steps so that it stays full
+        // for all of the first turn and goes full empty the moment the game ends
+        TimerUI.DisplayTime(GetGamePercentLeft());
         DuringGameStep = false;
+        foreach(var unit in Units)
+        {
+            unit.AllUnitsStepEnded();
+        }
         if (IsGameFinished())
         {
             EndGame();
         }
+    }
+
+    public void UnitFullyDestroyed(DiceUnit unit)
+    {
+        if (unit == null) return;
+        if (Units.Contains(unit))
+        {
+            Units.Remove(unit);
+        }
+        if (UnitsThatPassedFinishLine.Contains(unit))
+        {
+            UnitsThatPassedFinishLine.Remove(unit);
+        }
+        PlayerControl1.UnitWasFullyDestroyed(unit);
+        PlayerControl2.UnitWasFullyDestroyed(unit);
     }
 
     public void UnitEndedStep(DiceUnit unit) 
@@ -160,12 +221,33 @@ public class UnitController : MonoBehaviour
 
     public void UnitPassedFinishLine(DiceUnit unit)
     {
-        UnitThatPassedFinishLine.Add(unit);
+        UnitsThatPassedFinishLine.Add(unit);
+    }
+
+
+    public void PregameSetup()
+    {
+        StartGameBtn.SetActive(true);
+        TimerUI.gameObject.SetActive(false);
     }
 
     public void StartGame()
     {
+        StartGameBtn.SetActive(false);
+        TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;
+    }
+
+    public void PostGameCleanup()
+    {
+        while(Units.Count > 0)
+        {
+            Units[0].DoDestroy();
+        }
+        while(UnitsThatPassedFinishLine.Count > 0)
+        {
+            UnitsThatPassedFinishLine[0].DoDestroy();
+        }
     }
 }
