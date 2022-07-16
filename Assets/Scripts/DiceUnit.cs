@@ -161,6 +161,7 @@ public class DiceUnit : MonoBehaviour
             if (CheckIfPassedFinishLine())
             {
                 PassedFinishLine = true;
+                Controller.UnitPassedFinishLine(this);
                 PositionWhenPassedFinishLine = transform.position;
                 TimeWhenPassedFinishLine = Time.time;
                 var collider = GetComponent<Collider>();

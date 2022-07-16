@@ -5,18 +5,32 @@ using System.Linq;
 
 public class UnitController : MonoBehaviour
 {
+    public enum Winner
+    {
+        Player1,
+        Player2,
+        Tie
+    }
+
+    public static float MaxGameTimeSeconds = 30f;
+
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
+    public WinnerUI WinnerUI;
 
     public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
     public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
 
     // All active units
     protected List<DiceUnit> Units = new List<DiceUnit>();
+    
+    // Units that have passed the finish line
+    protected List<DiceUnit> UnitThatPassedFinishLine = new List<DiceUnit>();
 
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
     protected bool GameActive = false;
+    protected float TimeGameHasBeenRunning;
 
     public void AddUnit(DiceUnit unit)
     {
@@ -36,6 +50,59 @@ public class UnitController : MonoBehaviour
             {
                 StartGameStep();
             }
+            TimeGameHasBeenRunning += Time.deltaTime;
+
+            if (IsGameFinished())
+            {
+                EndGame();
+            }
+        }
+    }
+
+    protected bool IsGameFinished()
+    {
+        return GameActive && (TimeGameHasBeenRunning > MaxGameTimeSeconds || Units.Count == 0);
+    }
+
+    protected void EndGame()
+    {
+        GameActive = false;
+
+        int player1Wins = 0;
+        int player2Wins = 0;
+        foreach (var unit in UnitThatPassedFinishLine)
+        {
+            if (unit.Player1)
+            {
+                player1Wins += 1;
+            }
+            else
+            {
+                player2Wins += 1;
+            }
+        }
+
+        Winner winner = Winner.Tie;
+        if (player1Wins > player2Wins) winner = Winner.Player1;
+        if (player2Wins > player1Wins) winner = Winner.Player2;
+
+        ShowWinner(winner);
+    }
+
+    protected void ShowWinner(Winner winner)
+    {
+        switch (winner)
+        {
+            case Winner.Player1: 
+                WinnerUI.ShowWinner("Player 1 Wins!");
+                break;
+            case Winner.Player2:
+                WinnerUI.ShowWinner("Player 2 Wins!");
+                break;
+            case Winner.Tie:
+                WinnerUI.ShowWinner("Tie!");
+                break;
+
         }
     }
 
@@ -64,8 +131,14 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void UnitPassedFinishLine(DiceUnit unit)
+    {
+        UnitThatPassedFinishLine.Add(unit);
+    }
+
     public void StartGame()
     {
+        TimeGameHasBeenRunning = 0f;
         GameActive = true;
     }
 }
