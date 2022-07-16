@@ -41,16 +41,23 @@ public class DieDisplay : MonoBehaviour
 
     public void Setup(DiceUnit unit)
     {
+        Debug.Log("Setup!");
         Unit = unit;
         ShowRoll(unit.GetCurrentDiceSides(),0);
     }
 
+    protected float RangNed()
+    {
+        return (Random.value - 0.5f) * 2f;
+    }
+
     public void ShowRoll(DiceSides[] sides, int result) 
     {
-        XRotSpd = Random.value + 1f;
-        YRotSpd = Random.value + 1f;
-        ZRotSpd = Random.value + 1f;
-        
+        var rollVect = new Vector3(RangNed(), RangNed(), RangNed()).normalized;
+        XRotSpd = rollVect.x * 3f;
+        YRotSpd = rollVect.y * 3f;
+        ZRotSpd = rollVect.z * 3f;
+
         for (int i = 0;i < DiceUnit.DiceSidesNum; i++)
         {
             SideDisplays[i].material = GetSideMaterial(sides[i]);
