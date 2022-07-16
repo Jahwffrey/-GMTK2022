@@ -14,6 +14,8 @@ public enum DiceSides
     Nothing,
     Lose1Hp,
     Lose2Hp,
+    Heal1Hp,
+    Heal2Hp,
 }
 
 public class Dice
@@ -131,15 +133,27 @@ public class DiceUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        var doublesDice = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp });
+        var doublesDice = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Defend, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp });
         var prettyGoodDice = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });
         var scout = new Dice(new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack });
+        var sprinter = new Dice(new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Lose2Hp, DiceSides.Lose2Hp });
+        var greatDefender = new Dice(new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal2Hp });
+        var warrior = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend });
+        var balanced = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move });
+        var goForTheKill = new Dice(new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp });
+
         var possibleDice = new List<Dice>()
         {
             doublesDice,
             prettyGoodDice,
-            scout
+            scout,
+            sprinter,
+            greatDefender,
+            warrior,
+            balanced,
+            goForTheKill
         };
+
         Brain = possibleDice[UnityEngine.Random.Range(0, possibleDice.Count)];
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
@@ -278,6 +292,40 @@ public class DiceUnit : MonoBehaviour
             //case DiceSides.DoubleDefend: AddActionLast(Defend); AddActionLast(Defend); break;
             case DiceSides.DoubleMove: AddActionLast(Move); AddActionLast(Move); break;
             case DiceSides.Nothing: AddActionFirst(ExecuteNextAction); break;
+            case DiceSides.Lose1Hp: AddActionFirst(
+                    () =>
+                    {
+                        TakeDamage(1f, Vector3.zero);
+                        ExecuteNextAction();
+                    }
+                );
+                break;
+            case DiceSides.Lose2Hp:
+                AddActionFirst(
+                () =>
+                {
+                    TakeDamage(2f, Vector3.zero);
+                    ExecuteNextAction();
+                }
+                );
+                break;
+            case DiceSides.Heal1Hp: AddActionFirst(
+                    () =>
+                    {
+                        HealDamage(1f);
+                        ExecuteNextAction();
+                    }
+                );
+                break;
+            case DiceSides.Heal2Hp:
+                AddActionFirst(
+                () =>
+                {
+                    HealDamage(2f);
+                    ExecuteNextAction();
+                }
+                );
+                break;
         }
         DieDisplay.gameObject.SetActive(true);
         DieDisplay.ShowRoll(Brain.GetSides(), res);
@@ -328,12 +376,28 @@ public class DiceUnit : MonoBehaviour
         Controller.UnitEndedStep(this);
     }
 
+    public virtual void HealDamage(float amt)
+    {
+        Health += amt;
+        if (Health > MaxHealth) Health = MaxHealth;
+        DisplayHealth();
+    }
+
     public virtual void TakeDamage(float amt, Vector3 knockback)
     {
         Health -= amt;
         Rigidbody.velocity += knockback;
+        DisplayHealth();
 
-        if(Health < MaxHealth && MaxHealth > 0)
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    protected void DisplayHealth()
+    {
+        if (Health < MaxHealth && MaxHealth > 0)
         {
             HealthBar.gameObject.SetActive(true);
             HealthBar.DisplayAmt(Health / MaxHealth);
@@ -341,11 +405,6 @@ public class DiceUnit : MonoBehaviour
         else
         {
             HealthBar.gameObject.SetActive(false);
-        }
-
-        if (Health <= 0)
-        {
-            Die();
         }
     }
 
