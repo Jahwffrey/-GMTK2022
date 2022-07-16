@@ -84,11 +84,6 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        PregameSetup();
-    }
-
     private void Update()
     {
         if (GameActive)
@@ -245,6 +240,7 @@ public class UnitController : MonoBehaviour
 
         if (TwoPlayerMode)
         {
+            TwoPlayerModeTransitions.SetupGame();
             TwoPlayerModeTransitions.StartPlayerOneSetup();
         }
     }
@@ -272,5 +268,7 @@ public class UnitController : MonoBehaviour
         {
             UnitsThatPassedFinishLine[0].DoDestroy();
         }
+        PlayerControl1.PostgameCleanup();
+        PlayerControl2.PostgameCleanup();
     }
 }

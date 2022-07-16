@@ -18,6 +18,7 @@ public class PlayerControl : MonoBehaviour
     public UnitController UnitController;
 
     [Header("UI")]
+    public GameObject ReadyButton;
     public Transform unitRow;
     public Transform diceRow;
     public GameObject uiModel;
@@ -100,23 +101,38 @@ public class PlayerControl : MonoBehaviour
         selectBox.SetActive(false);
         placementMode = PlaceMode.PLACE_UNIT;
         lastPlacedUnit = UnitID.NONE;
-        
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        //~~~~FILLING INVENTORY TEST~~~~
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
+    }
 
-        var allDice = UnitController.GetAllDice();
-        for(int i =0; i < 8; i++)
+    public void ClearBothInventories()
+    {
+        while(uiUnits.Count > 0)
         {
-            AddToDiceInventory(allDice[Random.Range(0, allDice.Count)]);
+            RemoveFromUnitInventory(0);
+        }
+        while(diceInventory.Count > 0)
+        {
+            RemoveFromDiceInventory(diceInventory[0]);
+        }
+    }
+
+    public void PostgameCleanup()
+    {
+        ClearBothInventories();
+    }
+
+    public void SetInventories(List<UnitID> units, List<Dice> dice)
+    {
+        ClearBothInventories();
+
+        foreach(var unit in units)
+        {
+            AddToUnitInventory(unit);
+        }
+
+
+        foreach (var die in dice)
+        {
+            AddToDiceInventory(die);
         }
     }
 
@@ -254,6 +270,7 @@ public class PlayerControl : MonoBehaviour
     //Updates on UI layer
     void UpdateUI()
     {
+        UpdateCanvasUI();
         if( placementMode == PlaceMode.PLACE_UNIT)
         {
             UpdateUnitUI();
@@ -261,6 +278,18 @@ public class PlayerControl : MonoBehaviour
         else if( placementMode == PlaceMode.PLACE_DIE )
         {
             UpdateDiceUI();
+        }
+    }
+
+    protected void UpdateCanvasUI()
+    {
+        if (placementMode == PlaceMode.PLACE_UNIT)
+        {
+            ReadyButton.SetActive(true);
+        }
+        else
+        {
+            ReadyButton.SetActive(false);
         }
     }
 

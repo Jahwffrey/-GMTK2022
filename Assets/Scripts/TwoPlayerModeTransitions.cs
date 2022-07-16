@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,13 +8,13 @@ using UnityEngine.UI;
 public class TwoPlayerModeTransitions : MonoBehaviour
 {
     public Camera MainCamera;
-    public GameObject Player1ReadyButton;
-    public GameObject Player2ReadyButton;
     public GameObject AnnouncementObj;
     public GameObject HidePlayerOneObj;
     public Text AnnouncementText;
 
     public UnitController UnitController;
+    public PlayerControl Player1Control;
+    public PlayerControl Player2Control;
 
     protected Vector3 CameraOrigPosition;
     protected float TimeSwitchedToPlayer2 = -1000f;
@@ -22,11 +23,38 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     int TwoPlayerModeState = 0;
 
+    protected List<PlayerControl.UnitID> UnitIds;
+    protected List<Dice> Dice;
+
+    protected bool WaitingForFirstUpdate = true;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
-        Player1ReadyButton.SetActive(false);
-        Player2ReadyButton.SetActive(false);
+    }
+    
+    public void BeginNewGame()
+    {
+        UnitController.PregameSetup();
+    }
+
+    public void SetupGame()
+    {
+        UnitIds = new List<PlayerControl.UnitID>();
+        Dice = new List<Dice>();
+        var numUnits = Random.Range(5, 13);
+        var numDice = numUnits + Random.Range(0,6);
+
+        var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+        var allDice = UnitController.GetAllDice();
+        for (int i = 0;i < numUnits; i++)
+        {
+            UnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+        }
+        for(int i = 0;i < numDice; i++)
+        {
+            Dice.Add(allDice[Random.Range(0, allDice.Count)]);
+        }
     }
 
     protected void ShowAnnouncement(string text)
@@ -40,12 +68,10 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         AnnouncementObj.SetActive(false);
         if (TwoPlayerModeState == 0)
         {
-            Player1ReadyButton.SetActive(true);
             TwoPlayerModeState = 1;
         }
         else if(TwoPlayerModeState == 1)
         {
-            Player2ReadyButton.SetActive(true);
             TwoPlayerModeState = 2;
         }
         else
@@ -56,6 +82,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     public void StartPlayerOneSetup()
     {
+        Player1Control.SetInventories(UnitIds, Dice);
+        Player2Control.SetInventories(UnitIds, Dice);
         TwoPlayerModeState = 0;
         HidePlayerOneObj.SetActive(false);
         ShowAnnouncement("Player 1 Setup\nPlayer 2, Don't look!");
@@ -66,14 +94,12 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         ShowAnnouncement("Player 2 Setup\nPlayer 1, Get lost!");
         TimeSwitchedToPlayer2 = Time.time;
         SwingingCameraAround = true;
-        Player1ReadyButton.SetActive(false);
         HidePlayerOneObj.SetActive(true);
     }
 
     public void SwitchToGameSetupIsReady()
     {
         ShowAnnouncement("Begin Game?");
-        Player2ReadyButton.SetActive(false);
         HidePlayerOneObj.SetActive(false);
     }
 
@@ -96,6 +122,12 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     private void Update()
     {
+        if (WaitingForFirstUpdate)
+        {
+            WaitingForFirstUpdate = false;
+            BeginNewGame();
+        }
+
         // Swing the camera around which switching from player 1 to player 2
         if (SwingingCameraAround)
         {
@@ -103,7 +135,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             var finalCameraPos = new Vector3(CameraOrigPosition.x, CameraOrigPosition.y, -CameraOrigPosition.z);
             if (swingPct < 1)
             {
-                var origPointVect = new Vector3(CameraOrigPosition.x - 0.001f, 0, CameraOrigPosition.z);
+                var origPointVect = new Vector3(CameraOrigPosition.x + 0.001f, 0, CameraOrigPosition.z);
                 
                 var finalPointVect = new Vector3(finalCameraPos.x, 0, finalCameraPos.z).normalized;
                 var newVect = Vector3.Slerp(origPointVect.normalized, finalPointVect, swingPct) * origPointVect.magnitude ;
