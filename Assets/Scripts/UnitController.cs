@@ -51,6 +51,9 @@ public class UnitController : MonoBehaviour
     public PlayerControl PlayerControl1;
     public PlayerControl PlayerControl2;
 
+    protected int CurrentPlayerId = 0;
+    public int GetCurrentPlayerId => CurrentPlayerId;
+
     public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
     public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
 
@@ -233,10 +236,16 @@ public class UnitController : MonoBehaviour
 
     public void StartGame()
     {
+        PlayerControl1.BeginGameplay();
+        PlayerControl2.BeginGameplay();
         StartGameBtn.SetActive(false);
         TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;
+        foreach(var unit in Units)
+        {
+            unit.StartGame();
+        }
     }
 
     public void PostGameCleanup()

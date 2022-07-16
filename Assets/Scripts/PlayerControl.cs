@@ -46,7 +46,8 @@ public class PlayerControl : MonoBehaviour
     public enum PlaceMode
     {
         PLACE_UNIT,
-        PLACE_DIE
+        PLACE_DIE,
+        GAMEPLAY
     }
     
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
@@ -55,6 +56,18 @@ public class PlayerControl : MonoBehaviour
         SQUIRREL,
         BIRD,
         NONE
+    }
+    
+    public void BeginGameplay()
+    {
+        placementMode = PlaceMode.GAMEPLAY;
+        unitRow.gameObject.SetActive(false);
+        diceRow.gameObject.SetActive(false);
+    }
+    
+    public void PregameSetup()
+    {
+
     }
 
     void Start()
@@ -111,7 +124,7 @@ public class PlayerControl : MonoBehaviour
     void UpdateGameSpace()
     {
         //Add check for "if in placing phase" and "if it's my turn" (multiplayer)
-        if(playerID == 2) //FOR TESTING PURPOSES, change to if(currentPlayerID != playerID) when a global current player id is implemented
+        if(playerID != UnitController.GetCurrentPlayerId)
         {
             return;
         }
@@ -148,6 +161,7 @@ public class PlayerControl : MonoBehaviour
                     if( !spaceInfo.HasUnit() && selectedElement != -1 )
                     {
                         DiceUnit newUnit = Instantiate( unitPrefabs[unitInventory[selectedElement]].GetComponent<DiceUnit>() );
+                        newUnit.SetPlayer(playerID);
                         lastPlacedUnit = (UnitID)unitInventory[selectedElement];
                         Bounds bounds = newUnit.GetComponent<Collider>().bounds;
                         newUnit.transform.position = hit.transform.position + Vector3.up * bounds.size.y / 2 - (bounds.center - newUnit.transform.position);
