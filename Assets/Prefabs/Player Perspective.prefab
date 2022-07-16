@@ -65,7 +65,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 96
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -289,6 +289,7 @@ MonoBehaviour:
   unitRow: {fileID: 6886740481154556658}
   diceRow: {fileID: 3330090743966146833}
   uiModel: {fileID: 7748046913322023605, guid: 7ee88ea6837af6641a64266024361516, type: 3}
+  uiDiePrefab: {fileID: 2141282747663669842, guid: 9ef3a31c7db151f4cb1af0d68a27c6af, type: 3}
   selectBox: {fileID: 2327888737464133504}
   uiCam: {fileID: 3957416966429038697}
   elementSpacing: 1
@@ -322,7 +323,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6666169293018207112}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 4, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 7332745363592627576}
