@@ -47,7 +47,6 @@ public class UnitController : MonoBehaviour
     public GameObject Player2ZCutoffObj;
     public WinnerUI WinnerUI;
     public TimerUI TimerUI;
-    public GameObject StartGameBtn;
     public PlayerControl PlayerControl1;
     public PlayerControl PlayerControl2;
 
@@ -230,15 +229,15 @@ public class UnitController : MonoBehaviour
 
     public void PregameSetup()
     {
-        StartGameBtn.SetActive(true);
         TimerUI.gameObject.SetActive(false);
+        PlayerControl1.PregameSetup();
+        PlayerControl2.PregameSetup();
     }
 
     public void StartGame()
     {
         PlayerControl1.BeginGameplay();
         PlayerControl2.BeginGameplay();
-        StartGameBtn.SetActive(false);
         TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;

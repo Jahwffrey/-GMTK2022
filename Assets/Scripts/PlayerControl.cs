@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     static int SELECTABLE_LAYER = 8;
-    
+
     [Header("GameSpace")]
+    public bool TwoPlayerMode;
     public int playerID = 0;
     public GameObject pointer;
     public GameObject pointerGhost;
@@ -15,8 +16,9 @@ public class PlayerControl : MonoBehaviour
     public float pointerBounceHeight = 0.1f;
     public List<GameObject> unitPrefabs;
     public UnitController UnitController;
-    
+
     [Header("UI")]
+    public GameObject Player1ReadyButton;
     public Transform unitRow;
     public Transform diceRow;
     public GameObject uiModel;
@@ -47,7 +49,8 @@ public class PlayerControl : MonoBehaviour
     {
         PLACE_UNIT,
         PLACE_DIE,
-        GAMEPLAY
+        GAMEPLAY,
+        WAIT_FOR_OTHER_PLAYER
     }
     
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
@@ -67,7 +70,17 @@ public class PlayerControl : MonoBehaviour
     
     public void PregameSetup()
     {
-
+        if (TwoPlayerMode)
+        {
+            if (playerID == 0)
+            {
+                placementMode = PlaceMode.PLACE_UNIT;
+            }
+            else
+            {
+                placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
+            }
+        }
     }
 
     void Start()
@@ -233,13 +246,28 @@ public class PlayerControl : MonoBehaviour
     //Updates on UI layer
     void UpdateUI()
     {
-        if( placementMode == PlaceMode.PLACE_UNIT )
+        UpdateTwoPlayerControls();
+        if( placementMode == PlaceMode.PLACE_UNIT)
         {
             UpdateUnitUI();
         }
         else if( placementMode == PlaceMode.PLACE_DIE )
         {
             UpdateDiceUI();
+        }
+    }
+
+    protected void UpdateTwoPlayerControls() 
+    {
+        if (!TwoPlayerMode) return;
+
+        if (placementMode == PlaceMode.PLACE_UNIT && playerID == 0)
+        { 
+            Player1ReadyButton.SetActive(true);
+        }
+        else
+        {
+            Player1ReadyButton.SetActive(false);
         }
     }
 
