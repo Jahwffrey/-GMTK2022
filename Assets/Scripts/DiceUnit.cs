@@ -294,7 +294,7 @@ public class DiceUnit : MonoBehaviour
         Controller.UnitEndedStep(this);
     }
 
-    public void TakeDamage(float amt, Vector3 knockback)
+    public virtual void TakeDamage(float amt, Vector3 knockback)
     {
         Health -= amt;
         Rigidbody.velocity += knockback;
@@ -336,7 +336,11 @@ public class DiceUnit : MonoBehaviour
 
     public virtual void GotHitByProjectile(Projectile p)
     {
-
+        if (p.Parent.Player1 != Player1) // Dont git hit by your own team's attacks
+        {
+            TakeDamage(p.GetDamage(), p.GetKnockback());
+            p.TouchedUnit(this);
+        }
     }
 
     public virtual void Attack()

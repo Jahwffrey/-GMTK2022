@@ -7,9 +7,15 @@ public class Projectile : MonoBehaviour
     public float LifetimeSeconds;
     public float Damage;
     public float Knockback;
+    public DiceUnit Parent;
 
     protected float TimeSpawned;
     protected Vector3 KnockbackDir;
+
+    private void Start()
+    {
+        TimeSpawned = Time.time;
+    }
 
     // Update is called once per frame
     void Update()
@@ -20,9 +26,20 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    public void SetKnockbackDir(Vector3 v)
+    public void Setup(Vector3 knockbackDir, DiceUnit parent)
     {
-        KnockbackDir = v.normalized;
+        KnockbackDir = knockbackDir.normalized;
+        Parent = parent;
+    }
+
+    public virtual float GetDamage()
+    {
+        return Damage;
+    }
+
+    public virtual Vector3 GetKnockback()
+    {
+        return KnockbackDir * Knockback;
     }
 
     public virtual void TouchedUnit(DiceUnit unit)

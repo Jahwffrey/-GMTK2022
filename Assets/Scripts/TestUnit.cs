@@ -30,11 +30,19 @@ public class TestUnit : DiceUnit
             g.transform.position = transform.position + dir * 0.5f;
             g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
             g.GetComponent<Rigidbody>().velocity = dir * 20f + Vector3.up * 3f;
+            g.GetComponent<Projectile>().Setup(dir + Vector3.up, this);
         }
 
         ExecuteAfterTimer(StandardStepLengthSeconds, ExecuteNextAction);
     }
 
+    public override void TakeDamage(float amt, Vector3 knockback)
+    {
+        if (!Invulnerable)
+        {
+            base.TakeDamage(amt, knockback);
+        }
+    }
 
     public override void Defend()
     {
