@@ -18,7 +18,6 @@ public class PlayerControl : MonoBehaviour
     public UnitController UnitController;
 
     [Header("UI")]
-    public GameObject Player1ReadyButton;
     public Transform unitRow;
     public Transform diceRow;
     public GameObject uiModel;
@@ -255,7 +254,6 @@ public class PlayerControl : MonoBehaviour
     //Updates on UI layer
     void UpdateUI()
     {
-        UpdateTwoPlayerControls();
         if( placementMode == PlaceMode.PLACE_UNIT)
         {
             UpdateUnitUI();
@@ -263,20 +261,6 @@ public class PlayerControl : MonoBehaviour
         else if( placementMode == PlaceMode.PLACE_DIE )
         {
             UpdateDiceUI();
-        }
-    }
-
-    protected void UpdateTwoPlayerControls() 
-    {
-        if (!TwoPlayerMode) return;
-
-        if (placementMode == PlaceMode.PLACE_UNIT && playerID == 0)
-        { 
-            Player1ReadyButton.SetActive(true);
-        }
-        else
-        {
-            Player1ReadyButton.SetActive(false);
         }
     }
 
@@ -290,6 +274,10 @@ public class PlayerControl : MonoBehaviour
         {
             placementMode = PlaceMode.PLACE_UNIT;
         }
+    }
+    public void PlayerTwoReady()
+    {
+        placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
     }
 
     //CALLED WHEN SELECTING UNITS

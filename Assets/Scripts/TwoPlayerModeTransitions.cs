@@ -7,18 +7,26 @@ using UnityEngine.UI;
 public class TwoPlayerModeTransitions : MonoBehaviour
 {
     public Camera MainCamera;
+    public GameObject Player1ReadyButton;
+    public GameObject Player2ReadyButton;
     public GameObject AnnouncementObj;
     public GameObject HidePlayerOneObj;
     public Text AnnouncementText;
+
+    public UnitController UnitController;
 
     protected Vector3 CameraOrigPosition;
     protected float TimeSwitchedToPlayer2 = -1000f;
     protected float DurationToSwingCameraAround = 5f;
     protected bool SwingingCameraAround;
 
+    int TwoPlayerModeState = 0;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
+        Player1ReadyButton.SetActive(false);
+        Player2ReadyButton.SetActive(false);
     }
 
     protected void ShowAnnouncement(string text)
@@ -30,10 +38,25 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public void HideAnnouncement()
     {
         AnnouncementObj.SetActive(false);
+        if (TwoPlayerModeState == 0)
+        {
+            Player1ReadyButton.SetActive(true);
+            TwoPlayerModeState = 1;
+        }
+        else if(TwoPlayerModeState == 1)
+        {
+            Player2ReadyButton.SetActive(true);
+            TwoPlayerModeState = 2;
+        }
+        else
+        {
+            UnitController.StartGame();
+        }
     }
 
     public void StartPlayerOneSetup()
     {
+        TwoPlayerModeState = 0;
         HidePlayerOneObj.SetActive(false);
         ShowAnnouncement("Player 1 Setup\nPlayer 2, Don't look!");
     }
@@ -43,7 +66,15 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         ShowAnnouncement("Player 2 Setup\nPlayer 1, Get lost!");
         TimeSwitchedToPlayer2 = Time.time;
         SwingingCameraAround = true;
+        Player1ReadyButton.SetActive(false);
         HidePlayerOneObj.SetActive(true);
+    }
+
+    public void SwitchToGameSetupIsReady()
+    {
+        ShowAnnouncement("Begin Game?");
+        Player2ReadyButton.SetActive(false);
+        HidePlayerOneObj.SetActive(false);
     }
 
     private void Update()

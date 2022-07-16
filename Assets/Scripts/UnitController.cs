@@ -238,6 +238,14 @@ public class UnitController : MonoBehaviour
             TwoPlayerModeTransitions.SwitchToPlayerTwoSetup();
         }
     }
+    public void PlayerTwoReady()
+    {
+        if (TwoPlayerMode)
+        {
+            CurrentPlayerId = 1;
+            TwoPlayerModeTransitions.SwitchToGameSetupIsReady();
+        }
+    }
 
     public void PregameSetup()
     {
