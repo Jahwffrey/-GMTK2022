@@ -68,10 +68,17 @@ public class UnitController : MonoBehaviour
     // Units that have passed the finish line
     protected List<DiceUnit> UnitsThatPassedFinishLine = new List<DiceUnit>();
 
+    protected CameraController CamControl;
+
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
     protected bool GameActive = false;
     protected int GameStepsTaken;
+
+    private void Awake()
+    {
+        CamControl = GetComponent<CameraController> ();
+    }
 
     public void AddUnit(DiceUnit unit)
     {
@@ -91,6 +98,8 @@ public class UnitController : MonoBehaviour
     {
         if (GameActive)
         {
+            CamControl.ControlCam();
+
             if (!DuringGameStep)
             {
                 StartGameStep();
@@ -111,6 +120,8 @@ public class UnitController : MonoBehaviour
     protected void EndGame()
     {
         GameActive = false;
+
+        CamControl.UnlockCursor();
 
         int player1Wins = 0;
         int player2Wins = 0;
