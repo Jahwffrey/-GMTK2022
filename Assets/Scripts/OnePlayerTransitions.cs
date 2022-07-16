@@ -10,6 +10,8 @@ public class OnePlayerTransitions : MonoBehaviour
     public Camera MainCamera;
     protected Vector3 CameraOrigPosition;
 
+    public BoardGen BoardGenerator;
+
     public GameObject EnemySpawnPointBase;
     protected float DistanceBetweenEnemies = 1;
 
@@ -116,6 +118,8 @@ public class OnePlayerTransitions : MonoBehaviour
             {
                 case UnitController.Winner.Player1:
                     // Continue
+                    BoardGenerator.Cleanup();
+                    BoardGenerator.PlaceObstacles();
                     UnitController.PostGameCleanup();
                     BeginNewGame();
                     break;
