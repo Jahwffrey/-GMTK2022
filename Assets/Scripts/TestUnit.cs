@@ -7,6 +7,18 @@ public class TestUnit : DiceUnit
     public GameObject Shield;
     public GameObject Projectile;
 
+    protected bool Invulnerable;
+    protected Vector3 InvulnPos;
+
+    protected override void InheritableUpdate()
+    {
+        base.InheritableUpdate();
+        if (Invulnerable)
+        {
+            transform.position = InvulnPos;
+        }
+    }
+
     public override void Attack()
     {
         var g = Instantiate(Projectile);
@@ -21,9 +33,12 @@ public class TestUnit : DiceUnit
     public override void Defend()
     {
         TurnOnShield();
+        InvulnPos = transform.position;
+        Invulnerable = true;
         ExecuteAfterTimer(StandardStepLengthSeconds * 2f,
             () => {
                 TurnOffShield();
+                Invulnerable = false;
                 ExecuteNextAction();
             }
         );
@@ -41,7 +56,7 @@ public class TestUnit : DiceUnit
 
     public override void Move()
     {
-        Rigidbody.velocity = transform.forward * 10f;
+        Rigidbody.velocity = (transform.forward + new Vector3((Random.value - 0.5f) * 0.2f, 0f, (Random.value - 0.5f) * 0.2f)).normalized * 2f;
         ExecuteAfterTimer(StandardStepLengthSeconds, 
             () => {
                 EndMove();
@@ -53,5 +68,11 @@ public class TestUnit : DiceUnit
     protected void EndMove()
     {
         Rigidbody.velocity = Vector3.zero;
+    }
+
+    protected override void InheritableStepEnded()
+    {
+        base.InheritableStepEnded();
+        Invulnerable = false;
     }
 }

@@ -138,6 +138,11 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void GetNearestEnemyUnit()
+    {
+
+    }
+
     public void UnitPassedFinishLine(DiceUnit unit)
     {
         UnitThatPassedFinishLine.Add(unit);

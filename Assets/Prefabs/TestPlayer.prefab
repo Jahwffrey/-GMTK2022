@@ -5196,10 +5196,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d7aca13a0921f44a741bc38dd4682f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AttackDesc: 
-  MoveDesc: 
-  DefendDesc: 
+  AttackDesc: Throw a projectile at the nearest enemy
+  MoveDesc: Dashes towards the enemy side
+  DefendDesc: Become invulnerable and immovable
   DieDisplay: {fileID: 6392118146761097450}
+  Player1: 1
   Shield: {fileID: 5026180902903708594}
   Projectile: {fileID: 5405588207258556351, guid: 4a10400ff0cf4b14ebf397840fbd08f0, type: 3}
 --- !u!1 &5026180902895871062

@@ -11,7 +11,6 @@ public enum DiceSides
     Move,
     DoubleAttack,
     DoubleMove,
-    DoubleDefend,
     Nothing,
     Lose1Hp,
     Lose2Hp,
@@ -28,7 +27,7 @@ public class Dice
 
     public int Roll()
     {
-        return UnityEngine.Random.Range(0, Sides.Length - 1);//Sides[UnityEngine.Random.Range(0, Sides.Length - 1)];
+        return UnityEngine.Random.Range(0, Sides.Length);//Sides[UnityEngine.Random.Range(0, Sides.Length - 1)];
     }
 
     public DiceSides GetResult(int side)
@@ -72,9 +71,12 @@ public class DiceUnit : MonoBehaviour
     public static float StandardStepLengthSeconds = 2f;
     public static int DiceSidesNum = 6;
 
+    public string GeneralDesc;
     public string AttackDesc;
     public string MoveDesc;
     public string DefendDesc;
+
+    public float Health;
 
     public DieDisplay DieDisplay;
 
@@ -121,7 +123,8 @@ public class DiceUnit : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Brain = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleDefend });
+        var doublesDice = new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp };
+        Brain = new Dice(new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Nothing });//DiceSides.DoubleDefend });
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
@@ -221,6 +224,7 @@ public class DiceUnit : MonoBehaviour
 
     public virtual void StartGameStep()
     {
+        Rigidbody.velocity = Vector3.zero;
         DuringStep = true;
         int res = Brain.Roll();
         switch (Brain.GetResult(res))
@@ -229,8 +233,9 @@ public class DiceUnit : MonoBehaviour
             case DiceSides.Defend: AddActionLast(Defend); break;
             case DiceSides.Move: AddActionLast(Move); break;
             case DiceSides.DoubleAttack: AddActionLast(Attack); AddActionLast(Attack); break;
-            case DiceSides.DoubleDefend: AddActionLast(Defend); AddActionLast(Defend); break;
+            //case DiceSides.DoubleDefend: AddActionLast(Defend); AddActionLast(Defend); break;
             case DiceSides.DoubleMove: AddActionLast(Move); AddActionLast(Move); break;
+            case DiceSides.Nothing: AddActionFirst(ExecuteNextAction); break;
         }
         DieDisplay.gameObject.SetActive(true);
         DieDisplay.ShowRoll(Brain.GetSides(), res);
@@ -267,10 +272,17 @@ public class DiceUnit : MonoBehaviour
         }
     }
 
-    public virtual void EndStep()
+
+    protected virtual void InheritableStepEnded()
+    {
+
+    }
+
+    public void EndStep()
     {
         Rigidbody.velocity = Vector3.zero;
         DuringStep = false;
+        InheritableStepEnded();
         Controller.UnitEndedStep(this);
     }
 

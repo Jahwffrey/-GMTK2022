@@ -30,7 +30,7 @@ public class DieDisplay : MonoBehaviour
         if (side == 2) transform.forward = Vector3.up;
         if (side == 3) transform.forward = -Vector3.up;
         if (side == 4) transform.right = -Vector3.up;
-        if (side == 5) transform.up = Vector3.up;
+        if (side == 5) transform.up = -Vector3.up;
     }
 
     protected Material GetSideMaterial(DiceSides side)
@@ -41,7 +41,7 @@ public class DieDisplay : MonoBehaviour
             case DiceSides.DoubleAttack:
                 return AttackMaterial;
             case DiceSides.Defend:
-            case DiceSides.DoubleDefend:
+            //case DiceSides.DoubleDefend:
                 return DefendMaterial;
             case DiceSides.Move:
             case DiceSides.DoubleMove:
