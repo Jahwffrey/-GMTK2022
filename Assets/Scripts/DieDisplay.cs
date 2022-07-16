@@ -47,7 +47,8 @@ public class DieDisplay : MonoBehaviour
             case DiceSides.DoubleMove:
                 return MoveMaterial;
             case DiceSides.Nothing:
-            case DiceSides.HalfHealth:
+            case DiceSides.Lose1Hp:
+            case DiceSides.Lose2Hp:
                 return BadMaterial;
             default:
                 Debug.LogError("No material for this kind of side...");

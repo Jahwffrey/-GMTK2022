@@ -12,7 +12,7 @@ public class TestUnit : DiceUnit
         var g = Instantiate(Projectile);
         g.transform.position = transform.position + transform.forward * 0.5f;
         g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
-        g.GetComponent<Rigidbody>().velocity = transform.forward * 5f;
+        g.GetComponent<Rigidbody>().velocity = transform.forward * 20f;
 
         ExecuteAfterTimer(StandardStepLengthSeconds, ExecuteNextAction);
     }
@@ -41,7 +41,7 @@ public class TestUnit : DiceUnit
 
     public override void Move()
     {
-        Rigidbody.velocity = transform.forward * 5f;
+        Rigidbody.velocity = transform.forward * 20f;
         ExecuteAfterTimer(StandardStepLengthSeconds, 
             () => {
                 EndMove();

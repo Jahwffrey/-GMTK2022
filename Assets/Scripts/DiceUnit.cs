@@ -13,7 +13,8 @@ public enum DiceSides
     DoubleMove,
     DoubleDefend,
     Nothing,
-    HalfHealth, // Halves your Unit's health
+    Lose1Hp,
+    Lose2Hp,
 }
 
 public class Dice
@@ -92,6 +93,10 @@ public class DiceUnit : MonoBehaviour
     protected List<Action> CurrentActions = new List<Action>();
     protected List<ActionAfterTime> Timers = new List<ActionAfterTime>();
 
+    protected float TimeWhenPassedFinishLine;
+    protected bool PassedFinishLine;
+    protected Vector3 PositionWhenPassedFinishLine;
+
     protected virtual void InheritableAwake()
     {
         
@@ -150,9 +155,52 @@ public class DiceUnit : MonoBehaviour
             Timers.Remove(completed);
         }
 
+        // Passing finish line
+        if (!PassedFinishLine)
+        {
+            if (CheckIfPassedFinishLine())
+            {
+                PassedFinishLine = true;
+                PositionWhenPassedFinishLine = transform.position;
+                TimeWhenPassedFinishLine = Time.time;
+                var collider = GetComponent<Collider>();
+                if(collider != null) collider.enabled = false;
+                foreach(var coll in GetComponentsInChildren<Collider>())
+                {
+                    coll.enabled = false;
+                }
+                RemoveFromConsideration();
+            }
+        }
+
         InheritableUpdate();
+
+        // Animate if passed finish line
+        if (PassedFinishLine)
+        {
+            Rigidbody.velocity = Vector3.zero;
+            transform.position = PositionWhenPassedFinishLine + Vector3.up * (Mathf.Sin(Time.time - TimeWhenPassedFinishLine) + 1f) * 0.5f;
+            transform.Rotate(Vector3.up, 1f);
+        }
     }
 
+    protected void RemoveFromConsideration()
+    {
+        EndStep();
+        Controller.RemoveUnitFromConsideration(this);
+    }
+
+    protected bool CheckIfPassedFinishLine()
+    {
+        if (Player1)
+        {
+            return transform.position.z >= Controller.Player1WinZ;
+        }
+        else
+        {
+            return transform.position.z <= Controller.Player2WinZ;
+        }
+    }
 
     protected void AddActionLast(Action action)
     {
@@ -220,7 +268,6 @@ public class DiceUnit : MonoBehaviour
 
     public virtual void EndStep()
     {
-        Debug.Log("Turn ended");
         Rigidbody.velocity = Vector3.zero;
         DuringStep = false;
         Controller.UnitEndedStep(this);

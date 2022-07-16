@@ -8,6 +8,9 @@ public class UnitController : MonoBehaviour
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
 
+    public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
+    public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
+
     // All active units
     protected List<DiceUnit> Units = new List<DiceUnit>();
 
