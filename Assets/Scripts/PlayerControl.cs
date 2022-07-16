@@ -179,6 +179,11 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+    public GameObject GetUnitPrefab(UnitID id)
+    {
+        return unitPrefabs[(int)id];
+    }
+
     void UnitPlacingMode( Ray ray, int layerMask )
     {
         unitRow.gameObject.SetActive(true);

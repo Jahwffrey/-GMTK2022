@@ -133,10 +133,14 @@ public class DiceUnit : MonoBehaviour
         InheritableAwake();
     }
 
+    protected bool DiceSet = false;
     // Start is called before the first frame update
     void Start()
     {
-        Brain = UnitController.NothingDie();
+        if (!DiceSet)
+        {
+            Brain = UnitController.NothingDie();
+        }
         Controller = GameObject.Find("GameController").GetComponent<UnitController>();
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
@@ -163,6 +167,7 @@ public class DiceUnit : MonoBehaviour
 
     public void SetDice(Dice d)
     {
+        DiceSet = true;
         Brain = d;
     }
 

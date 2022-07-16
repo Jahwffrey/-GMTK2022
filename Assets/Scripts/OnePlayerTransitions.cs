@@ -19,8 +19,9 @@ public class OnePlayerTransitions : MonoBehaviour
     protected bool WaitingForFirstUpdate = true;
     protected bool DecidedUnits = false;
 
-    protected int StartingUnits = 3;
-    protected int StartingDice = 5;
+    protected int PlayerStartingUnits = 3;
+    protected int PlayerStartingDice = 5;
+    protected int EnemyStartingUnits = 2;
 
 
     protected List<PlayerControl.UnitID> PlayerUnitIds;
@@ -43,6 +44,14 @@ public class OnePlayerTransitions : MonoBehaviour
     protected bool NextPregameSetup = false;
     protected bool NextIsEndRoundAndGoToNext = false;
 
+    protected void AddAnotherEnemyUnit()
+    {
+        var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+        var allDice = UnitController.GetAllDice();
+        EnemyUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+        EnemyDice.Add(allDice[Random.Range(0, allDice.Count)]);
+    }
+
     public void SetupGame()
     {
         if (!DecidedUnits)
@@ -54,22 +63,32 @@ public class OnePlayerTransitions : MonoBehaviour
             EnemyDice = new List<Dice>();
             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
             var allDice = UnitController.GetAllDice();
-            for (int i = 0; i < StartingUnits; i++)
+            for (int i = 0; i < PlayerStartingUnits; i++)
             {
                 PlayerUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
-                EnemyUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
             }
-            for (int i = 0; i < StartingDice; i++)
+            for (int i = 0; i < PlayerStartingDice; i++)
             {
                 PlayerDice.Add(allDice[Random.Range(0, allDice.Count)]);
-                EnemyDice.Add(allDice[Random.Range(0, allDice.Count)]);
+            }
+            for (int i = 0; i < EnemyStartingUnits; i++)
+            {
+                AddAnotherEnemyUnit();
             }
         }
 
         Player1Control.SetInventories(PlayerUnitIds, PlayerDice);
 
         // Place the enemy units
-
+        for(int i = 0;i < EnemyUnitIds.Count; i++)
+        {
+            var g = Instantiate(Player2Control.GetUnitPrefab(EnemyUnitIds[i]));
+            g.transform.forward = Vector3.back;
+            var u = g.GetComponent<DiceUnit>();
+            u.SetDice(EnemyDice[i]);
+            u.SetPlayer(1);
+            u.transform.position = EnemySpawnPointBase.transform.position + new Vector3((i % 10) * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
+        }
 
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
@@ -150,6 +169,7 @@ public class OnePlayerTransitions : MonoBehaviour
         {
             case UnitController.Winner.Player1:
                 ShowAnnouncement("Victory!");
+                AddAnotherEnemyUnit();
                 break;
             case UnitController.Winner.Player2:
                 ShowAnnouncement($"-Failure-\nReached Level {level}");
