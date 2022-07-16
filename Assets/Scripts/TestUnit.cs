@@ -21,10 +21,16 @@ public class TestUnit : DiceUnit
 
     public override void Attack()
     {
-        var g = Instantiate(Projectile);
-        g.transform.position = transform.position + transform.forward * 0.5f;
-        g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
-        g.GetComponent<Rigidbody>().velocity = transform.forward * 20f;
+        DiceUnit closest;
+        if (Controller.TryGetNearestEnemyUnit(this, out closest))
+        {
+            Vector3 dir = (closest.transform.position - transform.position).normalized;
+            Rigidbody.velocity = dir * 0.5f;
+            var g = Instantiate(Projectile);
+            g.transform.position = transform.position + dir * 0.5f;
+            g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
+            g.GetComponent<Rigidbody>().velocity = dir * 20f + Vector3.up * 3f;
+        }
 
         ExecuteAfterTimer(StandardStepLengthSeconds, ExecuteNextAction);
     }

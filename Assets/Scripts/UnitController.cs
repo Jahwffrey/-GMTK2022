@@ -138,9 +138,24 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    public void GetNearestEnemyUnit()
+    public bool TryGetNearestEnemyUnit(DiceUnit unit, out DiceUnit closest)
     {
+        float minDist = float.PositiveInfinity;
+        closest = null;
+        foreach(var otherUnit in Units)
+        {
+            if(unit.Player1 != otherUnit.Player1)
+            {
+                var dist = (otherUnit.transform.position - unit.transform.position).magnitude;
+                if(dist < minDist)
+                {
+                    minDist = dist;
+                    closest = otherUnit;
+                }
+            }
+        }
 
+        return closest != null;
     }
 
     public void UnitPassedFinishLine(DiceUnit unit)
