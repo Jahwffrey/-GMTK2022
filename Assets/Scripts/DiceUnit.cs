@@ -99,6 +99,8 @@ public class DiceUnit : MonoBehaviour
     protected bool PassedFinishLine;
     protected Vector3 PositionWhenPassedFinishLine;
 
+    protected bool Dead;
+
     protected virtual void InheritableAwake()
     {
         
@@ -140,6 +142,12 @@ public class DiceUnit : MonoBehaviour
 
     private void Update()
     {
+        if (Dead)
+        {
+            transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f,Time.deltaTime));
+            transform.position -= Vector3.down * Time.deltaTime;
+        }
+
         // Execute any waiting actions
         float secondsPassed = Time.deltaTime;
         List<ActionAfterTime> completedActions = new List<ActionAfterTime>();
@@ -167,12 +175,6 @@ public class DiceUnit : MonoBehaviour
                 Controller.UnitPassedFinishLine(this);
                 PositionWhenPassedFinishLine = transform.position;
                 TimeWhenPassedFinishLine = Time.time;
-                var collider = GetComponent<Collider>();
-                if(collider != null) collider.enabled = false;
-                foreach(var coll in GetComponentsInChildren<Collider>())
-                {
-                    coll.enabled = false;
-                }
                 RemoveFromConsideration();
             }
         }
@@ -190,6 +192,12 @@ public class DiceUnit : MonoBehaviour
 
     protected void RemoveFromConsideration()
     {
+        var collider = GetComponent<Collider>();
+        if (collider != null) collider.enabled = false;
+        foreach (var coll in GetComponentsInChildren<Collider>())
+        {
+            coll.enabled = false;
+        }
         EndStep();
         Controller.RemoveUnitFromConsideration(this);
     }
@@ -284,6 +292,51 @@ public class DiceUnit : MonoBehaviour
         DuringStep = false;
         InheritableStepEnded();
         Controller.UnitEndedStep(this);
+    }
+
+    public void TakeDamage(float amt, Vector3 knockback)
+    {
+        Health -= amt;
+        Rigidbody.velocity += knockback;
+        if (Health <= 1)
+        {
+            Die();
+        }
+    }
+
+    public void Die()
+    {
+        RemoveFromConsideration();
+        Dead = true;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision != null && collision.gameObject != null)
+        {
+            var proj = collision.gameObject.GetComponent<Projectile>();
+            if(proj != null)
+            {
+                GotHitByProjectile(proj);
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other != null && other.gameObject != null)
+        {
+            var proj = other.gameObject.GetComponent<Projectile>();
+            if (proj != null)
+            {
+                GotHitByProjectile(proj);
+            }
+        }
+    }
+
+    public virtual void GotHitByProjectile(Projectile p)
+    {
+
     }
 
     public virtual void Attack()
