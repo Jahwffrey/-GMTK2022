@@ -82,6 +82,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &1607753288643796906
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3041468395342328023}
+  m_Layer: 5
+  m_Name: Tooltip
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3041468395342328023
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607753288643796906}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1, y: -1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2281968867307248016}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2141282747663669842
 GameObject:
   m_ObjectHideFlags: 0
@@ -110,7 +140,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2141282747663669842}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.926461, y: 4.6699996, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 136099120496920134}
@@ -119,6 +149,7 @@ Transform:
   - {fileID: 1507696223054024566}
   - {fileID: 8618343082732608414}
   - {fileID: 359084525952679561}
+  - {fileID: 3041468395342328023}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -196,6 +227,24 @@ MonoBehaviour:
   MoveMaterial: {fileID: 2100000, guid: 6ef7efe4871b81b4c8d6043878ec8833, type: 2}
   BadMaterial: {fileID: 2100000, guid: 860f878724eed99449cda3e95f4c7cd4, type: 2}
   HealMaterial: {fileID: 2100000, guid: 7546bb032c70d6542a065d53980d6d94, type: 2}
+  AttackSprite: {fileID: 21300000, guid: 7e4431243f29ae940bce3fc3d7fda79f, type: 3}
+  DefendSprite: {fileID: 21300000, guid: 3d99039effc5bde4bbeaf39e56944c45, type: 3}
+  MoveSprite: {fileID: 21300000, guid: 6d26e5ce6909b2b4bb163567c5afa609, type: 3}
+  DoubleAttackSprite: {fileID: 21300000, guid: b948f36b6936f2341b28cc7dbb1a2e5e, type: 3}
+  DoubleMoveSprite: {fileID: 21300000, guid: 918422ec1bc00d24ca9d894b2e038de0, type: 3}
+  DoNothingSprite: {fileID: 21300000, guid: 026d2de1e39be8e4fac1bf34daa380e7, type: 3}
+  HealSprite: {fileID: 21300000, guid: 687c1dfef00599a4fb81ebb2ab95e4e7, type: 3}
+  HurtSprite: {fileID: 21300000, guid: 8ed14df01fdaff143965fceb5c1df11d, type: 3}
+  DoubleHurtSprite: {fileID: 21300000, guid: d8e58435420d5a345abf58c4f9bd6fde, type: 3}
+  RedBox: {fileID: 21300000, guid: 8e9c3853fd659034d98c8da3642a9414, type: 3}
+  BlueBox: {fileID: 21300000, guid: 2ca2ca4cd95dabe4196bf9d3dc8bae59, type: 3}
+  GreenBox: {fileID: 21300000, guid: 68312ce38f2cb4b4bb2144abfee5e50a, type: 3}
+  PinkBox: {fileID: 21300000, guid: 5261c58672686e142b51e689a507a47a, type: 3}
+  BlackBox: {fileID: 21300000, guid: 03be9c7e9e126154daf0b6cdb4a79a92, type: 3}
+  toolTipSprite: {fileID: 2853145924250458784, guid: b74b02b2e356f0d41a5cbfb52556c54b, type: 3}
+  toolTip: {fileID: 3041468395342328023}
+  toolTipLineSpacing: 0.5
+  toolTipIconSpacing: 0.5
 --- !u!65 &68965319065414405
 BoxCollider:
   m_ObjectHideFlags: 0
