@@ -181,11 +181,16 @@ public class DiceUnit : MonoBehaviour
         }
         DieDisplay.gameObject.SetActive(true);
         DieDisplay.ShowRoll(Brain.GetSides(), res);
-        ExecuteAfterTimer(DieDisplay.RollDurationSecs + 0.25f,
+        ExecuteAfterTimer(DieDisplay.RollDurationSecs + 0.5f,
+            () =>
+            {
+                ExecuteNextAction();
+            }
+        );
+        ExecuteAfterTimer(DieDisplay.RollDurationSecs + 1.5f,
             () =>
             {
                 DieDisplay.gameObject.SetActive(false);
-                ExecuteNextAction();
             }
         );
     }

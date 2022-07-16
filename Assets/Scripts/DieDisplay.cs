@@ -17,10 +17,21 @@ public class DieDisplay : MonoBehaviour
     public Material MoveMaterial;
     public Material BadMaterial;
 
+    public ParticleSystem Particles;
+    public ParticleSystemRenderer ParticlesRenderer;
+
     protected float TimeStartedAnimation = 0f;
     protected int ResultAfterAnimation = 0;
 
-    protected Vector3[] SideVects = new Vector3 [] { Vector3.up, Vector3.right, Vector3.forward, -Vector3.forward, -Vector3.right, -Vector3.up };
+    protected void PointSideUp(int side)
+    {
+        if (side == 0) transform.up = Vector3.up;
+        if (side == 1) transform.right = Vector3.up;
+        if (side == 2) transform.forward = Vector3.up;
+        if (side == 3) transform.forward = -Vector3.up;
+        if (side == 4) transform.right = -Vector3.up;
+        if (side == 5) transform.up = Vector3.up;
+    }
 
     protected Material GetSideMaterial(DiceSides side)
     {
@@ -66,6 +77,9 @@ public class DieDisplay : MonoBehaviour
             SideDisplays[i].material = GetSideMaterial(sides[i]);
         }
 
+        Particles.gameObject.SetActive(false);
+        ParticlesRenderer.material = GetSideMaterial(sides[result]);
+
         ResultAfterAnimation = result;
         TimeStartedAnimation = Time.time;
     }
@@ -75,7 +89,8 @@ public class DieDisplay : MonoBehaviour
         transform.position = Unit.transform.position + Vector3.up * 2f;
         if (Time.time - TimeStartedAnimation > RollDurationSecs)
         {
-            transform.up = -SideVects[ResultAfterAnimation];
+            Particles.gameObject.SetActive(true);
+            PointSideUp(ResultAfterAnimation);
         }
         else
         {
