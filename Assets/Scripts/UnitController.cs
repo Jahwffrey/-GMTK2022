@@ -285,6 +285,10 @@ public class UnitController : MonoBehaviour
         {
             unit.StartGame();
         }
+        if(Units.Count == 0)
+        {
+            EndGame();
+        }
     }
 
     public void PostGameCleanup()

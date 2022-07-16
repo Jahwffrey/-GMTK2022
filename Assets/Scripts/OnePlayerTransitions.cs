@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class OnePlayerTransitions : MonoBehaviour
 {
@@ -29,6 +30,7 @@ public class OnePlayerTransitions : MonoBehaviour
     public GameObject AnnouncementObj;
     public Text AnnouncementText;
     protected int level = 0;
+    protected UnitController.Winner RoundWinner;
 
     private void Start()
     {
@@ -36,6 +38,7 @@ public class OnePlayerTransitions : MonoBehaviour
     }
 
     protected bool NextPregameSetup = false;
+    protected bool NextIsEndRoundAndGoToNext = false;
 
     public void SetupGame()
     {
@@ -79,6 +82,30 @@ public class OnePlayerTransitions : MonoBehaviour
         {
             NextPregameSetup = false;
         }
+
+        if (NextIsEndRoundAndGoToNext)
+        {
+            NextIsEndRoundAndGoToNext = false;
+            switch (RoundWinner)
+            {
+                case UnitController.Winner.Player1:
+                    // Continue
+                    UnitController.PostGameCleanup();
+                    BeginNewGame();
+                    break;
+                case UnitController.Winner.Player2:
+                    // Lose
+                    Scene scene = SceneManager.GetActiveScene();
+                    SceneManager.LoadScene(scene.name);
+                    break;
+                case UnitController.Winner.Tie:
+                    // Retry
+                    level -= 1; // It will increment again in StartPlayerSetup
+                    UnitController.PostGameCleanup();
+                    BeginNewGame();
+                    break;
+            }
+        }
     }
 
 
@@ -108,8 +135,21 @@ public class OnePlayerTransitions : MonoBehaviour
         UnitController.StartGame();
     }
 
-
     public void GameFinished(UnitController.Winner winner)
     {
+        NextIsEndRoundAndGoToNext = true;
+        RoundWinner = winner;
+        switch (winner)
+        {
+            case UnitController.Winner.Player1:
+                ShowAnnouncement("Victory!");
+                break;
+            case UnitController.Winner.Player2:
+                ShowAnnouncement($"-Failure-\nReached Level {level}");
+                break;
+            case UnitController.Winner.Tie:
+                ShowAnnouncement("Stalemate");
+                break;
+        }
     }
 }
