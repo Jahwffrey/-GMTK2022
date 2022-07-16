@@ -81,7 +81,7 @@ public class TestUnit : DiceUnit
 
     protected void EndMove()
     {
-        Rigidbody.velocity = Vector3.zero;
+        StopIfOnGround();
     }
 
     protected override void InheritableStepEnded()

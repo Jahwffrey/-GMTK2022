@@ -80,6 +80,7 @@ public class DiceUnit : MonoBehaviour
     protected float Health;
 
     public DieDisplay DieDisplay;
+    public Collider MainCollider;
 
     public bool Player1;
     public bool Player2 => !Player1;
@@ -89,6 +90,7 @@ public class DiceUnit : MonoBehaviour
     protected UnitController Controller;
     protected HealthBar HealthBar;
     protected bool DuringStep;
+    protected bool StopNextOnGound;
 
     // Game steps work by units adding several actions to a stack
     // Once 'ExecuteNextAction' is called, the next item on the
@@ -105,7 +107,7 @@ public class DiceUnit : MonoBehaviour
 
     protected virtual void InheritableAwake()
     {
-        
+
     }
 
     protected virtual void InheritableStart()
@@ -151,14 +153,20 @@ public class DiceUnit : MonoBehaviour
     {
         if (Dead)
         {
-            transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f,Time.deltaTime));
+            transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f, Time.deltaTime));
             transform.position -= Vector3.down * Time.deltaTime;
+        }
+
+        if(StopNextOnGound && OnGround())
+        {
+            Rigidbody.velocity = Vector3.zero;
+            StopNextOnGound = false;
         }
 
         // Execute any waiting actions
         float secondsPassed = Time.deltaTime;
         List<ActionAfterTime> completedActions = new List<ActionAfterTime>();
-        for(int i = 0;i < Timers.Count;i++)
+        for (int i = 0; i < Timers.Count; i++)
         {
             var timer = Timers[i];
             if (timer.ExecuteIfPassTime(secondsPassed))
@@ -166,9 +174,9 @@ public class DiceUnit : MonoBehaviour
                 completedActions.Add(timer);
             }
         }
-        
+
         // Remove any actions that just happened from the list
-        foreach(var completed in completedActions)
+        foreach (var completed in completedActions)
         {
             Timers.Remove(completed);
         }
@@ -237,9 +245,20 @@ public class DiceUnit : MonoBehaviour
         return !DuringStep;
     }
 
+    public bool OnGround()
+    {
+        // https://answers.unity.com/questions/196381/how-do-i-check-if-my-rigidbody-player-is-grounded.html
+        return Physics.Raycast(transform.position, -Vector3.up, MainCollider.bounds.extents.y + 0.1f);
+    }
+
+    public void StopIfOnGround()
+    {
+        StopNextOnGound = true;
+    }
+
     public virtual void StartGameStep()
     {
-        Rigidbody.velocity = Vector3.zero;
+        StopIfOnGround();
         DuringStep = true;
         int res = Brain.Roll();
         switch (Brain.GetResult(res))
@@ -275,7 +294,7 @@ public class DiceUnit : MonoBehaviour
 
     protected void ExecuteNextAction()
     {
-        if(CurrentActions.Count > 0)
+        if(Dead || PassedFinishLine || CurrentActions.Count > 0)
         {
             var action = CurrentActions[0];
             CurrentActions.RemoveAt(0);
@@ -295,7 +314,7 @@ public class DiceUnit : MonoBehaviour
 
     public void EndStep()
     {
-        Rigidbody.velocity = Vector3.zero;
+        StopIfOnGround();
         DuringStep = false;
         InheritableStepEnded();
         Controller.UnitEndedStep(this);
