@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-
+using UnityEngine.SceneManagement;
 
 public class TwoPlayerModeTransitions : MonoBehaviour
 {
@@ -27,6 +27,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     protected List<Dice> Dice;
 
     protected bool WaitingForFirstUpdate = true;
+    protected bool DecidedUnits = false;
+    protected bool ReloadScene = false;
 
     private void Start()
     {
@@ -40,21 +42,25 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     public void SetupGame()
     {
-        UnitIds = new List<PlayerControl.UnitID>();
-        Dice = new List<Dice>();
-        var numUnits = Random.Range(5, 13);
-        var numDice = numUnits + Random.Range(0,6);
-
-        var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
-        var allDice = UnitController.GetAllDice();
-        for (int i = 0;i < numUnits; i++)
+        if (!DecidedUnits)
         {
-            UnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+            UnitIds = new List<PlayerControl.UnitID>();
+            Dice = new List<Dice>();
+            var numUnits = Random.Range(5, 13);
+            var numDice = numUnits + Random.Range(0, 6);
+            var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+            var allDice = UnitController.GetAllDice();
+            for (int i = 0; i < numUnits; i++)
+            {
+                UnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+            }
+            for (int i = 0; i < numDice; i++)
+            {
+                Dice.Add(allDice[Random.Range(0, allDice.Count)]);
+            }
         }
-        for(int i = 0;i < numDice; i++)
-        {
-            Dice.Add(allDice[Random.Range(0, allDice.Count)]);
-        }
+        MainCamera.transform.position = CameraOrigPosition;
+        MainCamera.transform.LookAt(Vector3.zero);
     }
 
     protected void ShowAnnouncement(string text)
@@ -74,9 +80,24 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         {
             TwoPlayerModeState = 2;
         }
+        else if (TwoPlayerModeState == 2)
+        {
+            TwoPlayerModeState = 3;
+            UnitController.StartGame();
+        }
         else
         {
-            UnitController.StartGame();
+            if (ReloadScene)
+            {
+                Scene scene = SceneManager.GetActiveScene(); 
+                SceneManager.LoadScene(scene.name);
+            }
+            else
+            {
+                TwoPlayerModeState = 0;
+                UnitController.PostGameCleanup();
+                BeginNewGame();
+            }
         }
     }
 
@@ -103,21 +124,40 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         HidePlayerOneObj.SetActive(false);
     }
 
+    protected int Player1Wins = 0;
+    protected int Player2Wins = 0;
     public void GameFinished(UnitController.Winner winner)
     {
-        /*switch (winner)
+        string winnerStr = "";
+        switch (winner)
         {
-            case Winner.Player1:
-                WinnerUI.ShowWinner("Player 1 Wins!");
+            case UnitController.Winner.Player1:
+                Player1Wins += 1;
+                winnerStr = "Player 1 Wins!";
                 break;
-            case Winner.Player2:
-                WinnerUI.ShowWinner("Player 2 Wins!");
+            case UnitController.Winner.Player2:
+                Player2Wins += 1;
+                winnerStr = "Player 2 Wins!";
                 break;
-            case Winner.Tie:
-                WinnerUI.ShowWinner("Tie!");
+            case UnitController.Winner.Tie:
+                winnerStr = "Tie!";
                 break;
+        }
 
-        }*/
+        if (Player1Wins >= 2)
+        {
+            ShowAnnouncement("Player 1 Is Victorious!");
+            ReloadScene = true;
+        }
+        else if (Player2Wins >= 2)
+        {
+            ShowAnnouncement("Player 2 Is Victorious!");
+            ReloadScene = true;
+        }
+        else
+        {
+            ShowAnnouncement($"{winnerStr}\nScore:{Player1Wins} - {Player2Wins}");
+        }
     }
 
     private void Update()
