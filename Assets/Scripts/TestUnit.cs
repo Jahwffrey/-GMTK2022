@@ -68,7 +68,7 @@ public class TestUnit : DiceUnit
 
     public override void Move()
     {
-        Rigidbody.velocity = (transform.forward + new Vector3((Random.value - 0.5f) * 0.2f, 0f, (Random.value - 0.5f) * 0.2f)).normalized * 2f;
+        Rigidbody.velocity = (transform.forward + new Vector3((Random.value - 0.5f) * 0.2f, 0f, (Random.value - 0.5f) * 0.2f)).normalized * 4f;
         ExecuteAfterTimer(StandardStepLengthSeconds, 
             () => {
                 EndMove();

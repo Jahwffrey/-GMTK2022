@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerControl : MonoBehaviour
 {
     static int SELECTABLE_LAYER = 8;
-    
+
     [Header("GameSpace")]
     public int playerID = 0;
     public GameObject pointer;
@@ -15,8 +15,9 @@ public class PlayerControl : MonoBehaviour
     public float pointerBounceHeight = 0.1f;
     public List<GameObject> unitPrefabs;
     public UnitController UnitController;
-    
+
     [Header("UI")]
+    public GameObject ReadyButton;
     public Transform unitRow;
     public Transform diceRow;
     public GameObject uiModel;
@@ -48,7 +49,9 @@ public class PlayerControl : MonoBehaviour
     public enum PlaceMode
     {
         PLACE_UNIT,
-        PLACE_DIE
+        PLACE_DIE,
+        GAMEPLAY,
+        WAIT_FOR_OTHER_PLAYER
     }
     
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
@@ -57,6 +60,29 @@ public class PlayerControl : MonoBehaviour
         SQUIRREL,
         BIRD,
         NONE
+    }
+    
+    public void BeginGameplay()
+    {
+        placementMode = PlaceMode.GAMEPLAY;
+    }
+    
+    protected void HideAllUI()
+    {
+        unitRow.gameObject.SetActive(false);
+        diceRow.gameObject.SetActive(false);
+    }
+
+    public void PregameSetup()
+    {
+        if (playerID == 0)
+        {
+            placementMode = PlaceMode.PLACE_UNIT;
+        }
+        else
+        {
+            placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
+        }
     }
 
     void Start()
@@ -68,29 +94,44 @@ public class PlayerControl : MonoBehaviour
         unitInventory = new List<int>();
         diceInventory = new List<Transform>();
         dice = new List<Transform>();
-        elementScalar = new Vector3( elementHoverScale, elementHoverScale, elementHoverScale );
+        elementScalar = new Vector3(elementHoverScale, elementHoverScale, elementHoverScale);
         selectedElement = -1;
         selectBox.SetActive(false);
         placementMode = PlaceMode.PLACE_UNIT;
         lastPlacedUnit = UnitID.NONE;
         spaceInfo = null;
-        
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        //~~~~FILLING INVENTORY TEST~~~~
-        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
-        AddToUnitInventory( UnitID.SQUIRREL );
-        AddToUnitInventory( UnitID.BIRD );
+    }
 
-        var allDice = UnitController.GetAllDice();
-        for(int i =0; i < 8; i++)
+    public void ClearBothInventories()
+    {
+        while(uiUnits.Count > 0)
         {
-            AddToDiceInventory(allDice[Random.Range(0, allDice.Count)]);
+            RemoveFromUnitInventory(0);
+        }
+        while(diceInventory.Count > 0)
+        {
+            RemoveFromDiceInventory(diceInventory[0]);
+        }
+    }
+
+    public void PostgameCleanup()
+    {
+        ClearBothInventories();
+    }
+
+    public void SetInventories(List<UnitID> units, List<Dice> dice)
+    {
+        ClearBothInventories();
+
+        foreach(var unit in units)
+        {
+            AddToUnitInventory(unit);
+        }
+
+
+        foreach (var die in dice)
+        {
+            AddToDiceInventory(die);
         }
     }
 
@@ -114,8 +155,9 @@ public class PlayerControl : MonoBehaviour
     void UpdateGameSpace()
     {
         //Add check for "if in placing phase" and "if it's my turn" (multiplayer)
-        if(playerID == 2) //FOR TESTING PURPOSES, change to if(currentPlayerID != playerID) when a global current player id is implemented
+        if(playerID != UnitController.GetCurrentPlayerId)
         {
+            HideAllUI();
             return;
         }
 
@@ -130,6 +172,10 @@ public class PlayerControl : MonoBehaviour
         else if( placementMode == PlaceMode.PLACE_DIE )
         {
             DiePlacingMode( ray, layerMask );
+        }
+        else
+        {
+            HideAllUI();
         }
     }
 
@@ -151,6 +197,7 @@ public class PlayerControl : MonoBehaviour
                     if( !spaceInfo.HasUnit() && selectedElement != -1 )
                     {
                         DiceUnit newUnit = Instantiate( unitPrefabs[unitInventory[selectedElement]].GetComponent<DiceUnit>() );
+                        newUnit.SetPlayer(playerID);
                         lastPlacedUnit = (UnitID)unitInventory[selectedElement];
                         Bounds bounds = newUnit.GetComponent<Collider>().bounds;
                         newUnit.transform.position = hit.transform.position + Vector3.up * bounds.size.y / 2 - (bounds.center - newUnit.transform.position);
@@ -204,7 +251,8 @@ public class PlayerControl : MonoBehaviour
     //Updates on UI layer
     void UpdateUI()
     {
-        if( placementMode == PlaceMode.PLACE_UNIT )
+        UpdateCanvasUI();
+        if( placementMode == PlaceMode.PLACE_UNIT)
         {
             UpdateUnitUI();
         }
@@ -212,6 +260,34 @@ public class PlayerControl : MonoBehaviour
         {
             UpdateDiceUI();
         }
+    }
+
+    protected void UpdateCanvasUI()
+    {
+        if (placementMode == PlaceMode.PLACE_UNIT)
+        {
+            ReadyButton.SetActive(true);
+        }
+        else
+        {
+            ReadyButton.SetActive(false);
+        }
+    }
+
+    public void PlayerOneReady()
+    {
+        if (playerID == 0)
+        {
+            placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
+        }
+        else
+        {
+            placementMode = PlaceMode.PLACE_UNIT;
+        }
+    }
+    public void PlayerTwoReady()
+    {
+        placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
     }
 
     //CALLED WHEN SELECTING UNITS

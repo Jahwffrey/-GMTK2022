@@ -92,6 +92,7 @@ public class DiceUnit : MonoBehaviour
     protected Rigidbody Rigidbody;
     protected UnitController Controller;
     protected HealthBar HealthBar;
+    protected WhichPlayerIndicator WhichPlayerIndicator;
     protected bool DuringStep;
     protected bool StopNextOnGound;
 
@@ -127,6 +128,7 @@ public class DiceUnit : MonoBehaviour
     {
         Rigidbody = GetComponent<Rigidbody>();
         HealthBar = GetComponentInChildren<HealthBar>();
+        WhichPlayerIndicator = GetComponentInChildren<WhichPlayerIndicator>();
         Health = MaxHealth;
         InheritableAwake();
     }
@@ -139,11 +141,24 @@ public class DiceUnit : MonoBehaviour
         Controller.AddUnit(this);
         DieDisplay.transform.parent = transform.parent;
         HealthBar.transform.parent = transform.parent;
+        WhichPlayerIndicator.transform.parent = transform.parent;
         DieDisplay.Setup(this);
         HealthBar.Setup(this);
         DieDisplay.gameObject.SetActive(false);
         HealthBar.gameObject.SetActive(false);
+        WhichPlayerIndicator.gameObject.SetActive(false);
         InheritableStart();
+    }
+
+    public void SetPlayer(int playerId)
+    {
+        Player1 = playerId == 0;
+        WhichPlayerIndicator.Setup(this);
+    }
+
+    public virtual void StartGame()
+    {
+        WhichPlayerIndicator.gameObject.SetActive(true);
     }
 
     public void SetDice(Dice d)
@@ -224,6 +239,7 @@ public class DiceUnit : MonoBehaviour
         Destroy(gameObject);
         Destroy(DieDisplay.gameObject);
         Destroy(HealthBar.gameObject);
+        Destroy(WhichPlayerIndicator.gameObject);
     }
 
     public void RemoveFromConsideration()

@@ -31,6 +31,9 @@ public class UnitController : MonoBehaviour
             new Dice("Attacker", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move }),
             new Dice("Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Attack }),
             new Dice("Runner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend }),
+
+            new Dice("Commoner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Nothing, DiceSides.Nothing }),
+            new Dice("Squire", new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Nothing }),
         };
     }
 
@@ -43,13 +46,19 @@ public class UnitController : MonoBehaviour
 
     public static int MaxNumberGameSteps = 20;
 
+    public bool TwoPlayerMode;
+
     public GameObject Player1ZCutoffObj;
     public GameObject Player2ZCutoffObj;
-    public WinnerUI WinnerUI;
     public TimerUI TimerUI;
-    public GameObject StartGameBtn;
     public PlayerControl PlayerControl1;
     public PlayerControl PlayerControl2;
+
+    public TwoPlayerModeTransitions TwoPlayerModeTransitions;
+    public OnePlayerTransitions OnePlayerTransitions;
+
+    protected int CurrentPlayerId = 0;
+    public int GetCurrentPlayerId => CurrentPlayerId;
 
     public float Player1WinZ => Player1ZCutoffObj.transform.position.z;
     public float Player2WinZ => Player2ZCutoffObj.transform.position.z;
@@ -60,10 +69,17 @@ public class UnitController : MonoBehaviour
     // Units that have passed the finish line
     protected List<DiceUnit> UnitsThatPassedFinishLine = new List<DiceUnit>();
 
+    protected CameraController CamControl;
+
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
     protected bool GameActive = false;
     protected int GameStepsTaken;
+
+    private void Awake()
+    {
+        CamControl = GetComponent<CameraController> ();
+    }
 
     public void AddUnit(DiceUnit unit)
     {
@@ -79,15 +95,12 @@ public class UnitController : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        PregameSetup();
-    }
-
     private void Update()
     {
         if (GameActive)
         {
+            CamControl.ControlCam();
+
             if (!DuringGameStep)
             {
                 StartGameStep();
@@ -108,6 +121,8 @@ public class UnitController : MonoBehaviour
     protected void EndGame()
     {
         GameActive = false;
+
+        CamControl.UnlockCursor();
 
         int player1Wins = 0;
         int player2Wins = 0;
@@ -132,18 +147,13 @@ public class UnitController : MonoBehaviour
 
     protected void ShowWinner(Winner winner)
     {
-        switch (winner)
+        if (TwoPlayerMode)
         {
-            case Winner.Player1: 
-                WinnerUI.ShowWinner("Player 1 Wins!");
-                break;
-            case Winner.Player2:
-                WinnerUI.ShowWinner("Player 2 Wins!");
-                break;
-            case Winner.Tie:
-                WinnerUI.ShowWinner("Tie!");
-                break;
-
+            TwoPlayerModeTransitions.GameFinished(winner);
+        }
+        else
+        {
+            OnePlayerTransitions.GameFinished(winner);
         }
     }
 
@@ -224,19 +234,61 @@ public class UnitController : MonoBehaviour
         UnitsThatPassedFinishLine.Add(unit);
     }
 
+    public void PlayerOneReady()
+    {
+        if (TwoPlayerMode)
+        {
+            CurrentPlayerId = 1;
+            TwoPlayerModeTransitions.SwitchToPlayerTwoSetup();
+        } 
+        else
+        {
+            OnePlayerTransitions.GameSetupFinished();
+        }
+    }
+    public void PlayerTwoReady()
+    {
+        if (TwoPlayerMode)
+        {
+            CurrentPlayerId = 1;
+            TwoPlayerModeTransitions.SwitchToGameSetupIsReady();
+        }
+    }
 
     public void PregameSetup()
     {
-        StartGameBtn.SetActive(true);
+        CurrentPlayerId = 0;
         TimerUI.gameObject.SetActive(false);
+        PlayerControl1.PregameSetup();
+        PlayerControl2.PregameSetup();
+
+        if (TwoPlayerMode)
+        {
+            TwoPlayerModeTransitions.SetupGame();
+            TwoPlayerModeTransitions.StartPlayerOneSetup();
+        }
+        else
+        {
+            OnePlayerTransitions.SetupGame();
+            OnePlayerTransitions.StartPlayerSetup();
+        }
     }
 
     public void StartGame()
     {
-        StartGameBtn.SetActive(false);
+        PlayerControl1.BeginGameplay();
+        PlayerControl2.BeginGameplay();
         TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;
+        foreach(var unit in Units)
+        {
+            unit.StartGame();
+        }
+        if(Units.Count == 0)
+        {
+            EndGame();
+        }
     }
 
     public void PostGameCleanup()
@@ -249,5 +301,7 @@ public class UnitController : MonoBehaviour
         {
             UnitsThatPassedFinishLine[0].DoDestroy();
         }
+        PlayerControl1.PostgameCleanup();
+        PlayerControl2.PostgameCleanup();
     }
 }
