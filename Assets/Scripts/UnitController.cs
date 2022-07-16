@@ -134,6 +134,10 @@ public class UnitController : MonoBehaviour
         // for all of the first turn and goes full empty the moment the game ends
         TimerUI.DisplayTime(GetGamePercentLeft());
         DuringGameStep = false;
+        foreach(var unit in Units)
+        {
+            unit.AllUnitsStepEnded();
+        }
         if (IsGameFinished())
         {
             EndGame();

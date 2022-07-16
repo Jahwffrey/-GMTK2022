@@ -370,7 +370,12 @@ public class DiceUnit : MonoBehaviour
     }
 
 
-    protected virtual void InheritableStepEnded()
+    protected virtual void InheritableMyStepEnded()
+    {
+
+    }
+
+    public virtual void AllUnitsStepEnded()
     {
 
     }
@@ -379,7 +384,7 @@ public class DiceUnit : MonoBehaviour
     {
         StopIfOnGround();
         DuringStep = false;
-        InheritableStepEnded();
+        InheritableMyStepEnded();
         Controller.UnitEndedStep(this);
     }
 
