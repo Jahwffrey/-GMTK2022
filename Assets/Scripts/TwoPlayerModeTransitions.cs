@@ -8,6 +8,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 {
     public Camera MainCamera;
     public GameObject AnnouncementObj;
+    public GameObject HidePlayerOneObj;
     public Text AnnouncementText;
 
     protected Vector3 CameraOrigPosition;
@@ -33,6 +34,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     public void StartPlayerOneSetup()
     {
+        HidePlayerOneObj.SetActive(false);
         ShowAnnouncement("Player 1 Setup\nPlayer 2, Don't look!");
     }
 
@@ -41,6 +43,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         ShowAnnouncement("Player 2 Setup\nPlayer 1, Get lost!");
         TimeSwitchedToPlayer2 = Time.time;
         SwingingCameraAround = true;
+        HidePlayerOneObj.SetActive(true);
     }
 
     private void Update()
