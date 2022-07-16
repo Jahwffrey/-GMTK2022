@@ -44,10 +44,11 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     {
         if (!DecidedUnits)
         {
+            DecidedUnits = true;
             UnitIds = new List<PlayerControl.UnitID>();
             Dice = new List<Dice>();
-            var numUnits = Random.Range(5, 13);
-            var numDice = numUnits + Random.Range(0, 6);
+            var numUnits = Random.Range(3, 7);
+            var numDice = numUnits + Random.Range(0, 4);
             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
             var allDice = UnitController.GetAllDice();
             for (int i = 0; i < numUnits; i++)
