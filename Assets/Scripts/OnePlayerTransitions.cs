@@ -10,6 +10,9 @@ public class OnePlayerTransitions : MonoBehaviour
     public Camera MainCamera;
     protected Vector3 CameraOrigPosition;
 
+    public GameObject EnemySpawnPointBase;
+    protected float DistanceBetweenEnemies = 1;
+
     public UnitController UnitController;
     public PlayerControl Player1Control;
     public PlayerControl Player2Control;
@@ -64,6 +67,10 @@ public class OnePlayerTransitions : MonoBehaviour
         }
 
         Player1Control.SetInventories(PlayerUnitIds, PlayerDice);
+
+        // Place the enemy units
+
+
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
     }
