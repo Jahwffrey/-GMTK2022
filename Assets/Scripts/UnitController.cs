@@ -18,6 +18,7 @@ public class UnitController : MonoBehaviour
     public GameObject Player2ZCutoffObj;
     public WinnerUI WinnerUI;
     public TimerUI TimerUI;
+    public GameObject StartGameBtn;
     public PlayerControl PlayerControl1;
     public PlayerControl PlayerControl2;
 
@@ -28,7 +29,7 @@ public class UnitController : MonoBehaviour
     protected List<DiceUnit> Units = new List<DiceUnit>();
     
     // Units that have passed the finish line
-    protected List<DiceUnit> UnitThatPassedFinishLine = new List<DiceUnit>();
+    protected List<DiceUnit> UnitsThatPassedFinishLine = new List<DiceUnit>();
 
     // Is the game currently simulating and all we should do is wait?
     protected bool DuringGameStep = false;
@@ -42,15 +43,22 @@ public class UnitController : MonoBehaviour
 
     public void RemoveUnitFromConsideration(DiceUnit unit)
     {
-        Units.Remove(unit);
+        if (unit == null) return;
+        if (Units.Contains(unit))
+        {
+            Units.Remove(unit);
+        }
+    }
+
+    private void Start()
+    {
+        PregameSetup();
     }
 
     private void Update()
     {
         if (GameActive)
         {
-            TimerUI.DisplayTime(GetGamePercentLeft());
-
             if (!DuringGameStep)
             {
                 StartGameStep();
@@ -74,7 +82,7 @@ public class UnitController : MonoBehaviour
 
         int player1Wins = 0;
         int player2Wins = 0;
-        foreach (var unit in UnitThatPassedFinishLine)
+        foreach (var unit in UnitsThatPassedFinishLine)
         {
             if (unit.Player1)
             {
@@ -122,6 +130,9 @@ public class UnitController : MonoBehaviour
 
     public void EndGameStep()
     {
+        // Update the timer ui before update # of steps so that it stays full
+        // for all of the first turn and goes full empty the moment the game ends
+        TimerUI.DisplayTime(GetGamePercentLeft());
         DuringGameStep = false;
         if (IsGameFinished())
         {
@@ -131,6 +142,15 @@ public class UnitController : MonoBehaviour
 
     public void UnitFullyDestroyed(DiceUnit unit)
     {
+        if (unit == null) return;
+        if (Units.Contains(unit))
+        {
+            Units.Remove(unit);
+        }
+        if (UnitsThatPassedFinishLine.Contains(unit))
+        {
+            UnitsThatPassedFinishLine.Remove(unit);
+        }
         PlayerControl1.UnitWasFullyDestroyed(unit);
         PlayerControl2.UnitWasFullyDestroyed(unit);
     }
@@ -168,12 +188,33 @@ public class UnitController : MonoBehaviour
 
     public void UnitPassedFinishLine(DiceUnit unit)
     {
-        UnitThatPassedFinishLine.Add(unit);
+        UnitsThatPassedFinishLine.Add(unit);
+    }
+
+
+    public void PregameSetup()
+    {
+        StartGameBtn.SetActive(true);
+        TimerUI.gameObject.SetActive(false);
     }
 
     public void StartGame()
     {
+        StartGameBtn.SetActive(false);
+        TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;
+    }
+
+    public void PostGameCleanup()
+    {
+        while(Units.Count > 0)
+        {
+            Units[0].DoDestroy();
+        }
+        while(UnitsThatPassedFinishLine.Count > 0)
+        {
+            UnitsThatPassedFinishLine[0].DoDestroy();
+        }
     }
 }

@@ -112,6 +112,8 @@ public class PlayerControl : MonoBehaviour
 
     public void UnitWasFullyDestroyed(DiceUnit unit)
     {
+        if (unit == null || activeUnits == null) return;
+
         if (activeUnits.Contains(unit))
         {
             activeUnits.Remove(unit);
@@ -290,7 +292,8 @@ public class PlayerControl : MonoBehaviour
         if( Input.GetMouseButtonDown(1) )
         {
             activeUnits[activeUnits.Count - 1].DoDestroy();
-            activeUnits.RemoveAt( activeUnits.Count - 1 );
+            // We don't need to modify activeUnits after DoDestroy, DoDestroy already did it
+            // activeUnits.RemoveAt( activeUnits.Count - 1 );
             AddToUnitInventory( lastPlacedUnit );
             lastPlacedUnit = UnitID.NONE;
             SwitchPlacementMode();

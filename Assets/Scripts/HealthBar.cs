@@ -21,7 +21,7 @@ public class HealthBar : MonoBehaviour
 
     private void Update()
     {
-        transform.position = Unit.transform.position + Vector3.up * 1.5f;
+        transform.position = Unit.transform.position + Vector3.up * 0.75f;
         transform.forward = -Camera.main.transform.forward;
     }
 }
