@@ -43,6 +43,8 @@ public class PlayerControl : MonoBehaviour
     private float pointerAnim;
     private PlaceMode placementMode;
 
+    private StartingSpace spaceInfo;
+
     public enum PlaceMode
     {
         PLACE_UNIT,
@@ -71,6 +73,7 @@ public class PlayerControl : MonoBehaviour
         selectBox.SetActive(false);
         placementMode = PlaceMode.PLACE_UNIT;
         lastPlacedUnit = UnitID.NONE;
+        spaceInfo = null;
         
         //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         //~~~~FILLING INVENTORY TEST~~~~
@@ -138,7 +141,7 @@ public class PlayerControl : MonoBehaviour
         if( Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
         {
             //Check if we're selecting our own space
-            StartingSpace spaceInfo = hit.transform.GetComponent<StartingSpace>();
+            spaceInfo = hit.transform.GetComponent<StartingSpace>();
             if( spaceInfo.parentPlayerID == playerID )
             {
                 if( Input.GetMouseButtonUp(0) )
@@ -176,30 +179,12 @@ public class PlayerControl : MonoBehaviour
                 //Move pointer to selected space and animate, if the space is empty
                 else if( !spaceInfo.HasUnit() && selectedElement != -1 )
                 {
-                    pointer.SetActive(true);
-                    pointer.GetComponent<Renderer>().material = pointerMaterial;
-                    pointer.GetComponent<MeshFilter>().mesh = pointerMesh;
-                    pointerAnim += (Time.deltaTime * pointerBounceSpeed) % Mathf.PI;
-                    float currentBounceHeight = Mathf.Abs( Mathf.Sin( pointerAnim ) ) * pointerBounceHeight;
-                    pointer.transform.position = hit.transform.position + Vector3.up * currentBounceHeight;;
-                    pointer.transform.Rotate( 0, 0, pointerRotateSpeed );
-
-                    pointerGhost.SetActive(true);
-                    pointerGhost.transform.position = hit.transform.position + Vector3.up * ( pointerBounceHeight + 0.5f );
+                    AnimatePointer( false, false, true );
                 }
                 //if hovering over existing element, show X
                 else if( spaceInfo.HasUnit() )
                 {
-                    pointer.SetActive(true);
-                    pointer.GetComponent<Renderer>().material = cancelMaterial;
-                    pointer.GetComponent<MeshFilter>().mesh = cancelMesh;
-                    pointerAnim += (Time.deltaTime * pointerBounceSpeed) % Mathf.PI;
-                    float currentBounceHeight = Mathf.Abs( Mathf.Sin( pointerAnim ) ) * pointerBounceHeight;
-                    Vector3 addHeight = Vector3.up * spaceInfo.GetUnit().GetComponent<Collider>().bounds.size.y;
-                    pointer.transform.position = hit.transform.position + addHeight + Vector3.up * currentBounceHeight;;
-                    pointer.transform.Rotate( 0, 0, pointerRotateSpeed );
-
-                    pointerGhost.SetActive(false);
+                    AnimatePointer( true, true, false);
                 }
             }
         }
@@ -270,6 +255,7 @@ public class PlayerControl : MonoBehaviour
     //CALLED WHEN SELECTING DIE
     void UpdateDiceUI()
     {
+        AnimatePointer( true, false, false);
         var currentUnit = activeUnits[activeUnits.Count - 1];
 
         //PLACE UI ELEMENTS
@@ -279,6 +265,7 @@ public class PlayerControl : MonoBehaviour
             diceInventory[i].localPosition = new Vector3(offset,0,0);
             diceInventory[i].localScale = Vector3.one;
             diceInventory[i].Rotate( new Vector3( elementRotateSpeed, elementRotateSpeed / 2, elementRotateSpeed / 3 ) );
+            diceInventory[i].GetComponent<UIDieDisplay>().HideToolTip();
         }
 
         if( Input.GetMouseButtonDown(1) )
@@ -300,6 +287,7 @@ public class PlayerControl : MonoBehaviour
         if( Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
         {
             hit.transform.localScale = elementScalar;
+            hit.transform.GetComponent<UIDieDisplay>().ShowToolTip();
             if( Input.GetMouseButtonDown(0) )
             {
                 selectedElement = diceInventory.IndexOf(hit.transform);
@@ -307,6 +295,7 @@ public class PlayerControl : MonoBehaviour
                 {
                     currentUnit.SetDice(diceInventory[selectedElement].GetComponent<UIDieDisplay>().GetDie());
                     RemoveFromDiceInventory(diceInventory[selectedElement]);
+                    spaceInfo.PlayDieEffect();
                     SwitchPlacementMode();
                 }
             }
@@ -359,6 +348,28 @@ public class PlayerControl : MonoBehaviour
         else
         {
             placementMode = PlaceMode.PLACE_UNIT;
+        }
+    }
+
+    void AnimatePointer( bool spaceFilled = false, bool cancel = false, bool showPointerGhost = true )
+    {
+        pointer.SetActive(true);
+        pointer.GetComponent<Renderer>().material = cancel ? cancelMaterial : pointerMaterial;
+        pointer.GetComponent<MeshFilter>().mesh = cancel ? cancelMesh : pointerMesh;
+        pointerAnim += (Time.deltaTime * pointerBounceSpeed) % Mathf.PI;
+        float currentBounceHeight = Mathf.Abs( Mathf.Sin( pointerAnim ) ) * pointerBounceHeight;
+        Vector3 addHeight = spaceFilled ? Vector3.up * spaceInfo.GetUnit().GetComponent<Collider>().bounds.size.y : Vector3.zero;
+        pointer.transform.position = spaceInfo.transform.position + addHeight + Vector3.up * currentBounceHeight;;
+        pointer.transform.Rotate( 0, 0, pointerRotateSpeed );
+
+        if(showPointerGhost)
+        {
+            pointerGhost.SetActive(true);
+            pointerGhost.transform.position = spaceInfo.transform.position + Vector3.up * ( pointerBounceHeight + 0.5f );
+        }
+        else
+        {
+            pointerGhost.SetActive(false);
         }
     }
 }

@@ -9,6 +9,7 @@ public class StartingSpace : MonoBehaviour
     public int parentPlayerID;
     public int unitType;
     public ParticleSystem dust;
+    public ParticleSystem diePlaced;
     
     // Start is called before the first frame update
     void Start()
@@ -42,6 +43,11 @@ public class StartingSpace : MonoBehaviour
         myUnit = null;
         unitType = -1;
         return true;
+    }
+
+    public void PlayDieEffect()
+    {
+        diePlaced.Play();
     }
 
     public DiceUnit GetUnit()
