@@ -292,6 +292,7 @@ public class UnitController : MonoBehaviour
         TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;
+        TimerUI.DisplayTime(1);
         foreach(var unit in Units)
         {
             unit.StartGame();
