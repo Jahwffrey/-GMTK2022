@@ -232,7 +232,11 @@ public class UnitController : MonoBehaviour
 
     public void PlayerOneReady()
     {
-        CurrentPlayerId = 1;
+        if (TwoPlayerMode)
+        {
+            CurrentPlayerId = 1;
+            TwoPlayerModeTransitions.SwitchToPlayerTwoSetup();
+        }
     }
 
     public void PregameSetup()
