@@ -67,6 +67,9 @@ public class UIDieDisplay : MonoBehaviour
     {
         die = d;
 
+        toolTip.GetChild(0).GetComponent<TextMesh>().text = d.Name;
+        toolTip.GetChild(0).GetChild(0).GetComponent<TextMesh>().text = d.Name;
+
         sideCounts = new int[9];
         for( int i = 0; i < sideCounts.Length; i++ )
         {
@@ -86,7 +89,7 @@ public class UIDieDisplay : MonoBehaviour
                 GameObject spr = Instantiate( toolTipSprite );
                 spr.GetComponent<SpriteRenderer>().sprite = GetSideSprite( (DiceSides)i );
                 spr.transform.parent = toolTip;
-                spr.transform.localPosition = new Vector3( toolTipIconSpacing * columnOn, -toolTipLineSpacing * lineOn, 0 );
+                spr.transform.localPosition = new Vector3( toolTipIconSpacing * ( columnOn - 2 ), -toolTipLineSpacing * lineOn, 0 );
                 spr.transform.localRotation = Quaternion.identity;
                 columnOn++;
                 for( int j = 0; j < sideCounts[i]; j++ )
@@ -94,7 +97,7 @@ public class UIDieDisplay : MonoBehaviour
                     spr = Instantiate( toolTipSprite );
                     spr.GetComponent<SpriteRenderer>().sprite = GetSideColorSprite( (DiceSides)i );
                     spr.transform.parent = toolTip;
-                    spr.transform.localPosition = new Vector3( toolTipIconSpacing * columnOn, -toolTipLineSpacing * lineOn, 0 );
+                    spr.transform.localPosition = new Vector3( toolTipIconSpacing * ( columnOn - 2 ), -toolTipLineSpacing * lineOn, 0 );
                     spr.transform.localRotation = Quaternion.identity;
                     columnOn++;
                 }
