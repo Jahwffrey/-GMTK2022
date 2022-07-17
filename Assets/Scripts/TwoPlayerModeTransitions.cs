@@ -177,11 +177,11 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             var finalCameraPos = new Vector3(CameraOrigPosition.x, CameraOrigPosition.y, -CameraOrigPosition.z);
             if (swingPct < 1)
             {
-                var origPointVect = new Vector3(CameraOrigPosition.x + 0.001f, 0, CameraOrigPosition.z);
+                var origPointVect = new Vector3(CameraOrigPosition.x - 0.001f, 0, CameraOrigPosition.z);
                 
                 var finalPointVect = new Vector3(finalCameraPos.x, 0, finalCameraPos.z).normalized;
                 var newVect = Vector3.Slerp(origPointVect.normalized, finalPointVect, swingPct) * origPointVect.magnitude ;
-                MainCamera.transform.position = new Vector3(newVect.x, CameraOrigPosition.y, newVect.z);
+                MainCamera.transform.position = new Vector3(-newVect.x, CameraOrigPosition.y, newVect.z);
                 MainCamera.transform.LookAt(Vector3.zero);
             }
             else
