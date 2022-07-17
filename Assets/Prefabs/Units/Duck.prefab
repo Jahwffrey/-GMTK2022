@@ -139,7 +139,7 @@ MonoBehaviour:
   DieDisplay: {fileID: 7090629560324252692}
   MainCollider: {fileID: 7687848568983298388}
   Player1: 1
-  Gust: {fileID: 9010263552069841255, guid: e7327eec24b977f4d99033bd570f0df8, type: 3}
+  Gust: {fileID: 8118198339824163214, guid: 91c12baee9f7bad4795d47e0450591ce, type: 3}
 --- !u!1001 &916960830676079044
 PrefabInstance:
   m_ObjectHideFlags: 0

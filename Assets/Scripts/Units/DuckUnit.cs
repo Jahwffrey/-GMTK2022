@@ -13,6 +13,12 @@ public class DuckUnit : DiceUnit
 
     protected bool Attacking;
 
+
+    float RandNeg()
+    {
+        return (Random.value - 0.5f) * 2f;
+    }
+
     protected override void InheritableOnTriggerStay(Collider other)
     {
         // Ducks are immune to water
@@ -42,7 +48,7 @@ public class DuckUnit : DiceUnit
                 transform.forward = vectTo;
                 Rigidbody.velocity = vectTo * MoveSpd * 2f + Vector3.up;
             }
-            ExecuteAfterTimer(StandardStepLengthSeconds - 0.33f,
+            ExecuteAfterTimer(StandardStepLengthSeconds - 0.35f,
             () =>
             {
                 Attacking = false;
@@ -55,29 +61,14 @@ public class DuckUnit : DiceUnit
 
     public override void Defend()
     {
-        GameObject gust = Instantiate(Gust);
-        gust.transform.position = transform.position + 0.5f * GetDirectionToFinishLine();
-        gust.transform.forward = GetDirectionToFinishLine();
-
         System.Action actn = () =>
         {
-            if (gust != null)
-            {
-                var fwd = GetDirectionToFinishLine();
-                var capsule = gust.GetComponentInChildren<CapsuleCollider>();
-                var hits = Physics.CapsuleCastAll(capsule.center - fwd * capsule.height, capsule.center + fwd * capsule.height, capsule.radius, fwd, 0.01f);
-                foreach (var hit in hits)
-                {
-                    if (hit.collider != null && hit.collider.gameObject != null)
-                    {
-                        var unit = hit.collider.GetComponent<DiceUnit>();
-                        if (unit != null && unit != this)
-                        {
-                            unit.TakeDamage(0f, GetDirectionToFinishLine() * MainKockback * 0.25f + Vector3.up * 0.25f);
-                        }
-                    }
-                }
-            }
+            Vector3 dir = GetDirectionToFinishLine();
+            var g = Instantiate(Gust);
+            g.transform.position = transform.position + dir * 0.25f;
+            g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
+            g.GetComponent<Rigidbody>().velocity = dir * 10f + Vector3.up * Random.value * 3f + Vector3.right * RandNeg() * 3f;
+            g.GetComponent<Projectile>().Setup(dir + Vector3.up, this);
         };
 
 
@@ -96,7 +87,6 @@ public class DuckUnit : DiceUnit
         () =>
         {
             actn();
-            Destroy(gust);
             ExecuteNextAction();
         });
     }

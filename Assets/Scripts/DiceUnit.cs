@@ -490,7 +490,7 @@ public class DiceUnit : MonoBehaviour
 
     public virtual void GotHitByProjectile(Projectile p)
     {
-        if (p.Parent.Player1 != Player1) // Dont git hit by your own team's attacks
+        if (p.Parent.Player1 != Player1 || p.HitsBothSides) // Dont git hit by your own team's attacks
         {
             TakeDamage(p.GetDamage(), p.GetKnockback());
             p.TouchedUnit(this);

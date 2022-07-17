@@ -8,6 +8,7 @@ public class Projectile : MonoBehaviour
     public float Damage;
     public float Knockback;
     public DiceUnit Parent;
+    public bool HitsBothSides;
 
     protected float TimeSpawned;
     protected Vector3 KnockbackDir;
