@@ -66,8 +66,8 @@ public class PlayerControl : MonoBehaviour
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
     public enum UnitID
     {
-        SQUIRREL,
-        BIRD,
+        WOLF = 0,
+        HARE = 1,
         NONE
     }
     
