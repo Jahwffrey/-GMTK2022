@@ -71,8 +71,6 @@ public class SnakeUnit : DiceUnit
         }
     }
 
-
-
     public override void Defend()
     {
         TurnOnShield();

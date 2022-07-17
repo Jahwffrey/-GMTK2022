@@ -505,7 +505,7 @@ public class DiceUnit : MonoBehaviour
     }
 
 
-    private void OnTriggerStay(Collider other)
+    protected virtual void InheritableOnTriggerStay(Collider other)
     {
         if (other != null && other.gameObject != null)
         {
@@ -514,5 +514,10 @@ public class DiceUnit : MonoBehaviour
                 Rigidbody.velocity = Rigidbody.velocity * 0.9f;
             }
         }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        InheritableOnTriggerStay(other);
     }
 }
