@@ -51,7 +51,7 @@ public class HareUnit : DiceUnit
 
     public override void Move()
     {
-        Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd + Vector3.right * ((Random.value - 0.5f)*6f);
+        Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd + Vector3.right * ((Random.value - 0.5f)*7f);
         transform.forward = Rigidbody.velocity.normalized;
         ExecuteAfterTimer(StandardStepLengthSeconds,
             () => {
