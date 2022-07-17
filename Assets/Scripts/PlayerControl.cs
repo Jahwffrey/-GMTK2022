@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -43,6 +45,11 @@ public class PlayerControl : MonoBehaviour
     private Camera cam;
     private float pointerAnim;
     private PlaceMode placementMode;
+
+    public GameObject textBox;
+    public GameObject infoText;
+    public GameObject diceKey;
+    public Canvas infoCanvas;
 
     private StartingSpace spaceInfo;
 
@@ -302,6 +309,8 @@ public class PlayerControl : MonoBehaviour
             uiUnits[i].Rotate( Vector3.up * elementRotateSpeed );
         }
 
+        textBox.gameObject.SetActive(false);
+
         //CHECK FOR CLICKING ON UI
         RaycastHit hit;
         Ray ray = uiCam.ScreenPointToRay( Input.mousePosition );
@@ -310,6 +319,15 @@ public class PlayerControl : MonoBehaviour
         if( Physics.Raycast( ray, out hit, float.PositiveInfinity, layerMask ) )
         {
             hit.transform.localScale = elementScalar;
+            textBox.gameObject.SetActive(true);
+            
+            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+            //TODO: CHANGE THIS ASSIGNMENT TO USE THE DESCRIPTION TEXT
+            //Use this format: <sprite="attack" index=0> to use icons
+            //valid icons are attack, defend, move, doubleattack, doublemove, nothing, heal1, hurt1, heal2
+            infoText.GetComponent<TextMeshProUGUI>().text = "Test2"; 
+            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
             if( Input.GetMouseButtonDown(0) )
             {
                 selectedElement = uiUnits.IndexOf( hit.transform );
@@ -352,6 +370,7 @@ public class PlayerControl : MonoBehaviour
             AddToUnitInventory( lastPlacedUnit );
             lastPlacedUnit = UnitID.NONE;
             SwitchPlacementMode();
+            pointer.gameObject.SetActive(false);
             return;
         }
 
@@ -420,10 +439,15 @@ public class PlayerControl : MonoBehaviour
         if(placementMode == PlaceMode.PLACE_UNIT)
         {
             placementMode = PlaceMode.PLACE_DIE;
+            diceKey.SetActive(true);
+            infoText.SetActive(false);
+            textBox.SetActive(true);
         }
         else
         {
             placementMode = PlaceMode.PLACE_UNIT;
+            infoText.SetActive(true);
+            diceKey.SetActive(false);
         }
     }
 
