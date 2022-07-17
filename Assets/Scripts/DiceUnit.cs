@@ -154,7 +154,6 @@ public class DiceUnit : MonoBehaviour
     }
 
     protected bool DiceSet = false;
-    // Start is called before the first frame update
     void Start()
     {
         if (!DiceSet)
@@ -203,6 +202,16 @@ public class DiceUnit : MonoBehaviour
 
     private void Update()
     {
+        // Soft forward/backward boundaris
+        if(transform.position.z < -5.5 && Rigidbody.velocity.z < 0)
+        {
+            Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, -Rigidbody.velocity.z);
+        }
+        if(transform.position.z > 5.5 && Rigidbody.velocity.z > 0)
+        {
+            Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, -Rigidbody.velocity.z);
+        }
+
         if (Dead)
         {
             transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f, Time.deltaTime));
