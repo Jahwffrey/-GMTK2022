@@ -125,7 +125,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.77
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -351,10 +351,10 @@ MonoBehaviour:
   DieDisplay: {fileID: 5894641070738448078}
   MainCollider: {fileID: 6420931698832661390}
   Player1: 1
-  SpawnSound: {fileID: 0}
-  HurtSound: {fileID: 0}
-  DeathSound: {fileID: 0}
-  VictorySound: {fileID: 0}
+  SpawnSound: {fileID: 8300000, guid: 1ae250260edd4bc4086ba3aed72cab10, type: 3}
+  HurtSound: {fileID: 8300000, guid: f42d6454ebdc80c4e8e39135a82d2888, type: 3}
+  DeathSound: {fileID: 8300000, guid: 3650fc5eab756444cabb525f49b078e0, type: 3}
+  VictorySound: {fileID: 8300000, guid: b6d5e9ea9637eb044a87a79355aa2408, type: 3}
   Shield: {fileID: 185815018436516884}
   Projectile: {fileID: 5405588207258556351, guid: 4a10400ff0cf4b14ebf397840fbd08f0, type: 3}
 --- !u!1001 &931410964309992496

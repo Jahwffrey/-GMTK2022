@@ -146,3 +146,6 @@ MonoBehaviour:
   placementLoop: {fileID: 8300000, guid: 03c6285f45d574941b4be0e4dd13ea48, type: 3}
   menuIntro: {fileID: 8300000, guid: b635e93e93d18dc4f8f5a367a426413f, type: 3}
   menuLoop: {fileID: 8300000, guid: 6ee9ef1c62a33ef46a6c0d5fac465436, type: 3}
+  victory: {fileID: 8300000, guid: 4b28d439570085b47822f4a5386cac4e, type: 3}
+  placement: {fileID: 8300000, guid: 1793498bef946b2419c7b45754cc2cec, type: 3}
+  blip: {fileID: 8300000, guid: 6f48da2b17639d84ba4513ae46b78bb6, type: 3}

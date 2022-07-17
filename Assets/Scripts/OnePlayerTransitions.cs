@@ -255,6 +255,7 @@ public class OnePlayerTransitions : MonoBehaviour
             case UnitController.Winner.Player1:
                 ShowAnnouncement("Victory!");
                 AddAnotherEnemyUnit();
+                MusicMaster.PlayVictory();
                 break;
             case UnitController.Winner.Player2:
                 ShowAnnouncement($"Failure\nReached Level {level}");

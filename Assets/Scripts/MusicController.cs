@@ -15,6 +15,10 @@ public class MusicController : MonoBehaviour
     public AudioClip menuIntro;
     public AudioClip menuLoop;
 
+    public AudioClip victory;
+    public AudioClip placement;
+    public AudioClip blip;
+
     private AudioClip currentClip;
     private AudioClip nextClip;
     
@@ -71,5 +75,20 @@ public class MusicController : MonoBehaviour
         speaker.Stop();
         currentClip = null;
         nextClip = null;
+    }
+    
+    public void PlayVictory()
+    {
+        speaker.PlayOneShot(victory);
+    }
+
+    public void PlayPlacement()
+    {
+        speaker.PlayOneShot(placement);
+    }
+
+    public void PlayBlip()
+    {
+        speaker.PlayOneShot(blip);
     }
 }
