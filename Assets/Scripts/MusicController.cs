@@ -19,7 +19,7 @@ public class MusicController : MonoBehaviour
     private AudioClip nextClip;
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         speaker = GetComponent<AudioSource>();
         currentClip = null;
