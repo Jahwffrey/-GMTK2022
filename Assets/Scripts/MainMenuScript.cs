@@ -7,6 +7,7 @@ public class MainMenuScript : MonoBehaviour
 {
     public int OnePlayerSceneInt;
     public int TwoPlayerSceneInt;
+    protected int TutorialSceneInt = 3;
     public MusicController MusicMaster;
 
     private void Start()
@@ -22,6 +23,11 @@ public class MainMenuScript : MonoBehaviour
     {
         SceneManager.LoadScene(TwoPlayerSceneInt);
     }
+    public void GoToTutorial()
+    {
+        SceneManager.LoadScene(TutorialSceneInt);
+    }
+
 
     private void Update()
     {

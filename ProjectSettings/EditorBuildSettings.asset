@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/TwoPlayerScene.unity
     guid: 992022a64a1db2c45a5f4fdbbe1129dc
+  - enabled: 1
+    path: Assets/Scenes/TutorialScene.unity
+    guid: 995afc326443b09429b8767f6f293041
   m_configObjects: {}
