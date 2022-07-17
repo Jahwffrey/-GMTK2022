@@ -6,15 +6,15 @@ using System;
 
 public enum DiceSides
 {
-    Attack,
-    Defend,
-    Move,
-    DoubleAttack,
-    DoubleMove,
-    Nothing,
-    Lose1Hp,
-    Lose2Hp,
-    Heal1Hp,
+    Attack = 0,
+    Defend = 1,
+    Move = 2,
+    DoubleAttack = 3,
+    DoubleMove = 4,
+    Nothing = 5,
+    Lose1Hp = 6,
+    Lose2Hp = 7,
+    Heal1Hp = 8,
 }
 
 public class Dice
@@ -74,7 +74,7 @@ public class DiceUnit : MonoBehaviour
     public static float StandardStepLengthSeconds = 2f;
     public static int DiceSidesNum = 6;
 
-    public string GeneralDesc;
+    public string UnitName;
     public string AttackDesc;
     public string MoveDesc;
     public string DefendDesc;
@@ -109,6 +109,11 @@ public class DiceUnit : MonoBehaviour
 
     protected bool Dead;
 
+    public string GetInfoText()
+    {
+        return $"{UnitName}:\n<sprite=\"attack\" index=0> {AttackDesc}\n<sprite=\"defend\" index=0> {DefendDesc}\n<sprite=\"move\" index=0> {MoveDesc}";
+    }
+
     protected virtual void InheritableAwake()
     {
 
@@ -122,6 +127,19 @@ public class DiceUnit : MonoBehaviour
     protected virtual void InheritableUpdate()
     {
 
+    }
+
+
+    protected Vector3 GetDirectionToFinishLine()
+    {
+        if (Player1)
+        {
+            return Vector3.forward;
+        }
+        else
+        {
+            return Vector3.back;
+        }
     }
 
     private void Awake()
@@ -187,6 +205,7 @@ public class DiceUnit : MonoBehaviour
         {
             transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f, Time.deltaTime));
             transform.position -= Vector3.down * Time.deltaTime;
+            DisplayHealth();
         }
 
         if(StopNextOnGound && OnGround())
@@ -214,7 +233,7 @@ public class DiceUnit : MonoBehaviour
         }
 
         // Passing finish line
-        if (!PassedFinishLine)
+        if (!PassedFinishLine && !Dead)
         {
             if (CheckIfPassedFinishLine())
             {
@@ -415,8 +434,15 @@ public class DiceUnit : MonoBehaviour
     {
         if (Health < MaxHealth && MaxHealth > 0)
         {
-            HealthBar.gameObject.SetActive(true);
-            HealthBar.DisplayAmt(Health / MaxHealth);
+            if (Dead)
+            {
+                HealthBar.DisplayAmt(0);
+            }
+            else
+            {
+                HealthBar.gameObject.SetActive(true);
+                HealthBar.DisplayAmt(Health / MaxHealth);
+            }
         }
         else
         {
@@ -426,6 +452,7 @@ public class DiceUnit : MonoBehaviour
 
     public void Die()
     {
+        DisplayHealth();
         RemoveFromConsideration();
         Dead = true;
     }
@@ -434,6 +461,7 @@ public class DiceUnit : MonoBehaviour
     {
         if(collision != null && collision.gameObject != null)
         {
+            InheritableOnTouchedCollider(collision.collider);
             var proj = collision.gameObject.GetComponent<Projectile>();
             if(proj != null)
             {
@@ -446,6 +474,7 @@ public class DiceUnit : MonoBehaviour
     {
         if (other != null && other.gameObject != null)
         {
+            InheritableOnTouchedCollider(other);
             var proj = other.gameObject.GetComponent<Projectile>();
             if (proj != null)
             {
@@ -454,9 +483,14 @@ public class DiceUnit : MonoBehaviour
         }
     }
 
+    protected virtual void InheritableOnTouchedCollider(Collider other)
+    {
+        
+    }
+
     public virtual void GotHitByProjectile(Projectile p)
     {
-        if (p.Parent.Player1 != Player1) // Dont git hit by your own team's attacks
+        if (p.Parent.Player1 != Player1 || p.HitsBothSides) // Dont git hit by your own team's attacks
         {
             TakeDamage(p.GetDamage(), p.GetKnockback());
             p.TouchedUnit(this);
@@ -476,5 +510,22 @@ public class DiceUnit : MonoBehaviour
     public virtual void Defend()
     {
 
+    }
+
+
+    protected virtual void InheritableOnTriggerStay(Collider other)
+    {
+        if (other != null && other.gameObject != null)
+        {
+            if (other.GetComponent<PuddleScript>() != null)
+            {
+                Rigidbody.velocity = Rigidbody.velocity * 0.9f;
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        InheritableOnTriggerStay(other);
     }
 }

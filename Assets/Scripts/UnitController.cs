@@ -10,6 +10,7 @@ public class UnitController : MonoBehaviour
     }
     public static List<Dice> GetAllDice()
     {
+        var allSides = System.Enum.GetValues(typeof(DiceSides)).Cast<DiceSides>().ToList();
         return new List<Dice>()
         {
             new Dice("Reckless",new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Lose1Hp, DiceSides.Lose2Hp }),
@@ -17,23 +18,25 @@ public class UnitController : MonoBehaviour
             new Dice("Scout", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack }),
             new Dice("Sprinter", new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose2Hp }),
             new Dice("Great Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Heal1Hp }),
-            new Dice("Fighter", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend }),
             new Dice("Balanced", new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move }),
-            new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
+            new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
             new Dice("Rogue", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Nothing, DiceSides.Heal1Hp }),
+            new Dice("Gladiator", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Lose1Hp }),
 
-            new Dice("Paladin", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Heal1Hp, DiceSides.Move, DiceSides.Nothing, DiceSides.Nothing }),
+            new Dice("Paladin", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Heal1Hp, DiceSides.Move, DiceSides.Defend, DiceSides.Nothing }),
             new Dice("Fencer", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Nothing }),
-            new Dice("Aggressive", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose2Hp }),
+            new Dice("Aggressive", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose1Hp }),
             new Dice("Careful", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal1Hp, DiceSides.Heal1Hp }),
-            new Dice("All Or Nothing", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Defend, DiceSides.Heal1Hp, DiceSides.Nothing, DiceSides.Nothing }),
+            new Dice("Intermittent", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleMove, DiceSides.Defend, DiceSides.Heal1Hp, DiceSides.Nothing, DiceSides.Nothing }),
 
             new Dice("Attacker", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move }),
             new Dice("Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Attack }),
             new Dice("Runner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend }),
 
-            new Dice("Commoner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Nothing, DiceSides.Nothing }),
+            new Dice("Commoner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Nothing }),
             new Dice("Squire", new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Nothing }),
+
+            new Dice("????", new List<DiceSides>(){ allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)] }),
         };
     }
 
@@ -44,7 +47,7 @@ public class UnitController : MonoBehaviour
         Tie
     }
 
-    public static int MaxNumberGameSteps = 20;
+    public static int MaxNumberGameSteps = 16;//20;
 
     public bool TwoPlayerMode;
 
@@ -209,6 +212,22 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public List<DiceUnit> GetAllEnemiesWithin(DiceUnit unit, float dist)
+    {
+        List<DiceUnit> others = new List<DiceUnit>();
+        foreach (var otherUnit in Units)
+        {
+            if (unit.Player1 != otherUnit.Player1)
+            {
+                if((unit.transform.position - otherUnit.transform.position).magnitude < dist)
+                {
+                    others.Add(otherUnit);
+                }
+            }
+        }
+        return others;
+    }
+
     public bool TryGetNearestEnemyUnit(DiceUnit unit, out DiceUnit closest)
     {
         float minDist = float.PositiveInfinity;
@@ -222,6 +241,38 @@ public class UnitController : MonoBehaviour
                 {
                     minDist = dist;
                     closest = otherUnit;
+                }
+            }
+        }
+
+        return closest != null;
+    }
+
+    public bool TryGetEnemyNearestMyFinishLine(bool player1, out DiceUnit closest)
+    {
+        float minZ = float.PositiveInfinity;
+        float maxZ = float.NegativeInfinity;
+        closest = null;
+        foreach (var otherUnit in Units)
+        {
+            if (player1 != otherUnit.Player1)
+            {
+                float z = otherUnit.transform.position.z;
+                if (player1)
+                {
+                    if (z < minZ)
+                    {
+                        minZ = z;
+                        closest = otherUnit;
+                    }
+                }
+                else
+                {
+                    if(z > maxZ)
+                    {
+                        maxZ = z;
+                        closest = otherUnit;
+                    }
                 }
             }
         }

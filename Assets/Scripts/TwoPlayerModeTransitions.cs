@@ -47,7 +47,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             DecidedUnits = true;
             UnitIds = new List<PlayerControl.UnitID>();
             Dice = new List<Dice>();
-            var numUnits = Random.Range(3, 9);
+            var numUnits = Random.Range(2, 8); // 2 - 7 units feels nice 
             var numDice = numUnits + Random.Range(0, 4);
             if (numDice > 8) numDice = 8;
             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
@@ -177,11 +177,11 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             var finalCameraPos = new Vector3(CameraOrigPosition.x, CameraOrigPosition.y, -CameraOrigPosition.z);
             if (swingPct < 1)
             {
-                var origPointVect = new Vector3(CameraOrigPosition.x + 0.001f, 0, CameraOrigPosition.z);
+                var origPointVect = new Vector3(CameraOrigPosition.x - 0.001f, 0, CameraOrigPosition.z);
                 
                 var finalPointVect = new Vector3(finalCameraPos.x, 0, finalCameraPos.z).normalized;
                 var newVect = Vector3.Slerp(origPointVect.normalized, finalPointVect, swingPct) * origPointVect.magnitude ;
-                MainCamera.transform.position = new Vector3(newVect.x, CameraOrigPosition.y, newVect.z);
+                MainCamera.transform.position = new Vector3(-newVect.x, CameraOrigPosition.y, newVect.z);
                 MainCamera.transform.LookAt(Vector3.zero);
             }
             else

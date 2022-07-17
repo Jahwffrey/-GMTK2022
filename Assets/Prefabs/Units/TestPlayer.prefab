@@ -214,7 +214,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41d7aca13a0921f44a741bc38dd4682f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GeneralDesc: Test unit for testing
+  UnitName: TestUnit1
   AttackDesc: Throw a projectile at the nearest enemy
   MoveDesc: Dashes towards the enemy side
   DefendDesc: Become invulnerable and immovable

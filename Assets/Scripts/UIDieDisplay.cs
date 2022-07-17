@@ -184,6 +184,7 @@ public class UIDieDisplay : MonoBehaviour
     void Update()
     {
         toolTip.position = transform.position + tooltipPos;
-        toolTip.rotation = Quaternion.identity;
+        //toolTip.rotation = Quaternion.identity;
+        toolTip.transform.forward = Camera.main.transform.forward;
     }
 }

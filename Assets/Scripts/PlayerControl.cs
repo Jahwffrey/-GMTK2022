@@ -66,8 +66,11 @@ public class PlayerControl : MonoBehaviour
     //Ensure this is in the same order as the unitPrefabs list in Player Perspective Prefab
     public enum UnitID
     {
-        SQUIRREL,
-        BIRD,
+        WOLF = 0,
+        HARE = 1,
+        SNAKE = 2,
+        DUCK = 3,
+        DEER = 4,
         NONE
     }
     
@@ -84,6 +87,10 @@ public class PlayerControl : MonoBehaviour
 
     public void PregameSetup()
     {
+        foreach(var space in GetComponentsInChildren<StartingSpace>())
+        {
+            space.ResetForGame();
+        }
         if (playerID == 0)
         {
             placementMode = PlaceMode.PLACE_UNIT;
@@ -327,13 +334,15 @@ public class PlayerControl : MonoBehaviour
         {
             hit.transform.localScale = elementScalar;
             textBox.gameObject.SetActive(true);
-            
-            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            //TODO: CHANGE THIS ASSIGNMENT TO USE THE DESCRIPTION TEXT
-            //Use this format: <sprite="attack" index=0> to use icons
-            //valid icons are attack, defend, move, doubleattack, doublemove, nothing, heal1, hurt1, heal2
-            infoText.GetComponent<TextMeshProUGUI>().text = "Test2"; 
-            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+            try
+            {
+                int hitElement2 = uiUnits.IndexOf(hit.transform);
+                infoText.GetComponent<TextMeshProUGUI>().text = GetUnitPrefab((UnitID)unitInventory[hitElement2]).GetComponent<DiceUnit>().GetInfoText();
+            } catch
+            {
+                // Ignore
+            }
 
             if( Input.GetMouseButtonDown(0) )
             {
