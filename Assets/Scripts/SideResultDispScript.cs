@@ -24,7 +24,7 @@ public class SideResultDispScript : MonoBehaviour
 
     private void Update()
     {
-        transform.forward = -Camera.main.transform.forward;
+        transform.forward = Camera.main.transform.forward;
 
         if(Time.time - TimeCreated < GrowDuration)
         {
