@@ -13,13 +13,15 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public GameObject HidePlayerOneObj;
     public Text AnnouncementText;
 
+    public bool AnnouncementShowing;
+
     public UnitController UnitController;
     public PlayerControl Player1Control;
     public PlayerControl Player2Control;
 
     protected Vector3 CameraOrigPosition;
     protected float TimeSwitchedToPlayer2 = -1000f;
-    protected float DurationToSwingCameraAround = 5f;
+    protected float DurationToSwingCameraAround = 2f;
     protected bool SwingingCameraAround;
 
     int TwoPlayerModeState = 0;
@@ -69,12 +71,14 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     protected void ShowAnnouncement(string text)
     {
+        AnnouncementShowing = true;
         AnnouncementObj.SetActive(true);
         AnnouncementText.text = text;
     }
 
     public void HideAnnouncement()
     {
+        AnnouncementShowing = false;
         AnnouncementObj.SetActive(false);
         if (TwoPlayerModeState == 0)
         {

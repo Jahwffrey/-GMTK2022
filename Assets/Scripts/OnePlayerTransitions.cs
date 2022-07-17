@@ -44,6 +44,8 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public MusicController MusicMaster;
 
+    public bool AnnouncementShowing;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
@@ -122,6 +124,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     protected void ShowAnnouncement(string text)
     {
+        AnnouncementShowing = true;
         AnnouncementObj.SetActive(true);
         AnnouncementText.text = text;
     }
@@ -136,6 +139,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void HideAnnouncement()
     {
+        AnnouncementShowing = false;
         AnnouncementObj.SetActive(false);
 
         if (NextPregameSetup)

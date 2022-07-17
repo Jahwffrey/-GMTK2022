@@ -94,6 +94,21 @@ public class UnitController : MonoBehaviour
         TimerUI.gameObject.SetActive(false);
     }
 
+    public bool AnnouncementShowing()
+    {
+        if(OnePlayerTransitions != null)
+        {
+            return OnePlayerTransitions.AnnouncementShowing;
+        }
+        
+        if(TwoPlayerModeTransitions != null)
+        {
+            return TwoPlayerModeTransitions.AnnouncementShowing;
+        }
+
+        return false;
+    }
+
     public void RemoveUnitFromConsideration(DiceUnit unit)
     {
         if (unit == null) return;

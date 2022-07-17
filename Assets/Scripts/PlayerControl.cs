@@ -285,7 +285,7 @@ public class PlayerControl : MonoBehaviour
 
     protected void UpdateCanvasUI()
     {
-        if (placementMode == PlaceMode.PLACE_UNIT)
+        if (placementMode == PlaceMode.PLACE_UNIT && !UnitController.AnnouncementShowing())
         {
             ReadyButton.SetActive(true);
         }
