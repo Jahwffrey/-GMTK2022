@@ -98,6 +98,8 @@ public class DiceUnit : MonoBehaviour
     protected bool DuringStep;
     protected bool StopNextOnGound;
 
+    protected AudioSource AudioSource;
+
     // Game steps work by units adding several actions to a stack
     // Once 'ExecuteNextAction' is called, the next item on the
     // stack is executed. When there are no actions left, EndStep
@@ -110,6 +112,11 @@ public class DiceUnit : MonoBehaviour
     protected Vector3 PositionWhenPassedFinishLine;
 
     protected bool Dead;
+
+    public AudioClip SpawnSound;
+    public AudioClip HurtSound;
+    public AudioClip DeathSound;
+    public AudioClip VictorySound;
 
     public string GetInfoText()
     {
@@ -149,14 +156,15 @@ public class DiceUnit : MonoBehaviour
         Rigidbody = GetComponent<Rigidbody>();
         HealthBar = GetComponentInChildren<HealthBar>();
         WhichPlayerIndicator = GetComponentInChildren<WhichPlayerIndicator>();
+        AudioSource = GetComponentInChildren<AudioSource>();
         Health = MaxHealth;
         InheritableAwake();
     }
 
     protected bool DiceSet = false;
-    // Start is called before the first frame update
     void Start()
     {
+        PlaySound(SpawnSound);
         if (!DiceSet)
         {
             Brain = UnitController.NothingDie();
@@ -203,6 +211,16 @@ public class DiceUnit : MonoBehaviour
 
     private void Update()
     {
+        // Soft forward/backward boundaris
+        if(transform.position.z < -5.5 && Rigidbody.velocity.z < 0)
+        {
+            Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, -Rigidbody.velocity.z);
+        }
+        if(transform.position.z > 5.5 && Rigidbody.velocity.z > 0)
+        {
+            Rigidbody.velocity = new Vector3(Rigidbody.velocity.x, Rigidbody.velocity.y, -Rigidbody.velocity.z);
+        }
+
         if (Dead)
         {
             transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f, Time.deltaTime));
@@ -239,6 +257,7 @@ public class DiceUnit : MonoBehaviour
         {
             if (CheckIfPassedFinishLine())
             {
+                PlaySound(VictorySound);
                 PassedFinishLine = true;
                 Controller.UnitPassedFinishLine(this);
                 PositionWhenPassedFinishLine = transform.position;
@@ -422,6 +441,11 @@ public class DiceUnit : MonoBehaviour
 
     public virtual void TakeDamage(float amt, Vector3 knockback)
     {
+        if(amt > 0)
+        {
+            PlaySound(HurtSound);
+        }
+
         Health -= amt;
         Rigidbody.velocity += knockback;
         DisplayHealth();
@@ -454,6 +478,7 @@ public class DiceUnit : MonoBehaviour
 
     public void Die()
     {
+        PlaySound(DeathSound);
         DisplayHealth();
         RemoveFromConsideration();
         Dead = true;
@@ -529,5 +554,14 @@ public class DiceUnit : MonoBehaviour
     private void OnTriggerStay(Collider other)
     {
         InheritableOnTriggerStay(other);
+    }
+
+    protected void PlaySound(AudioClip clip)
+    {
+        if(clip != null && AudioSource != null)
+        {
+            AudioSource.clip = clip;
+            AudioSource.Play();
+        }
     }
 }

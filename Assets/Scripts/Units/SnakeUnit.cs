@@ -51,7 +51,7 @@ public class SnakeUnit : DiceUnit
                 var g = Instantiate(Projectile);
                 g.transform.position = transform.position + dir * 0.25f;
                 g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
-                g.GetComponent<Rigidbody>().velocity = dir * 8f + Vector3.up * 3f;
+                g.GetComponent<Rigidbody>().velocity = dir * 9f + Vector3.up * 2f;
                 g.GetComponent<Projectile>().Setup(dir + Vector3.up, this);
             }
         };

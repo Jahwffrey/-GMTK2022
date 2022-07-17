@@ -7,6 +7,12 @@ public class MainMenuScript : MonoBehaviour
 {
     public int OnePlayerSceneInt;
     public int TwoPlayerSceneInt;
+    public MusicController MusicMaster;
+
+    private void Start()
+    {
+        MusicMaster.PlayMenuTheme();
+    }
 
     public void GoToOnePlayer()
     {
@@ -15,5 +21,13 @@ public class MainMenuScript : MonoBehaviour
     public void GoToTwoPlayer()
     {
         SceneManager.LoadScene(TwoPlayerSceneInt);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
     }
 }

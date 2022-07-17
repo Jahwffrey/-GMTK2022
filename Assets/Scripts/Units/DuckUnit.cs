@@ -27,7 +27,7 @@ public class DuckUnit : DiceUnit
     public override void Move()
     {
         transform.forward = GetDirectionToFinishLine().normalized;
-        Rigidbody.velocity += GetDirectionToFinishLine().normalized * MoveSpd * 0.75f + Vector3.up * JumpVel;
+        Rigidbody.velocity += GetDirectionToFinishLine().normalized * MoveSpd * 0.85f + Vector3.up * JumpVel;
         ExecuteAfterTimer(StandardStepLengthSeconds,
         () => {
             ExecuteNextAction();

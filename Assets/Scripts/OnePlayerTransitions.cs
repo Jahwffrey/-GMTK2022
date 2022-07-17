@@ -42,6 +42,10 @@ public class OnePlayerTransitions : MonoBehaviour
 
     protected bool NewUnitRound = true;
 
+    public MusicController MusicMaster;
+
+    public bool AnnouncementShowing;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
@@ -74,6 +78,7 @@ public class OnePlayerTransitions : MonoBehaviour
     {
         if (!DecidedUnits)
         {
+            MusicMaster.PlayChoosingTheme();
             DecidedUnits = true;
             PlayerUnitIds = new List<PlayerControl.UnitID>();
             PlayerDice = new List<Dice>();
@@ -119,6 +124,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     protected void ShowAnnouncement(string text)
     {
+        AnnouncementShowing = true;
         AnnouncementObj.SetActive(true);
         AnnouncementText.text = text;
     }
@@ -133,6 +139,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void HideAnnouncement()
     {
+        AnnouncementShowing = false;
         AnnouncementObj.SetActive(false);
 
         if (NextPregameSetup)
@@ -142,6 +149,8 @@ public class OnePlayerTransitions : MonoBehaviour
 
         if (NextIsEndRoundAndGoToNext)
         {
+            MusicMaster.PlayChoosingTheme();
+            UnitController.HideTimer();
             NextIsEndRoundAndGoToNext = false;
             switch (RoundWinner)
             {
@@ -233,6 +242,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void GameSetupFinished()
     {
+        MusicMaster.PlayBattleTheme();
         UnitController.StartGame();
     }
 
@@ -247,7 +257,7 @@ public class OnePlayerTransitions : MonoBehaviour
                 AddAnotherEnemyUnit();
                 break;
             case UnitController.Winner.Player2:
-                ShowAnnouncement($"-Failure-\nReached Level {level}");
+                ShowAnnouncement($"Failure\nReached Level {level}");
                 break;
             case UnitController.Winner.Tie:
                 ShowAnnouncement("Stalemate");
