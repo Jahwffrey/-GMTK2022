@@ -47,7 +47,7 @@ public class UnitController : MonoBehaviour
         Tie
     }
 
-    public static int MaxNumberGameSteps = 15;//20;
+    public static int MaxNumberGameSteps = 16;//20;
 
     public bool TwoPlayerMode;
 
