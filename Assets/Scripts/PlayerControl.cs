@@ -70,6 +70,7 @@ public class PlayerControl : MonoBehaviour
         HARE = 1,
         SNAKE = 2,
         DUCK = 3,
+        DEER = 4,
         NONE
     }
     

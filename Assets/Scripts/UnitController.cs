@@ -212,6 +212,22 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public List<DiceUnit> GetAllEnemiesWithin(DiceUnit unit, float dist)
+    {
+        List<DiceUnit> others = new List<DiceUnit>();
+        foreach (var otherUnit in Units)
+        {
+            if (unit.Player1 != otherUnit.Player1)
+            {
+                if((unit.transform.position - otherUnit.transform.position).magnitude < dist)
+                {
+                    others.Add(otherUnit);
+                }
+            }
+        }
+        return others;
+    }
+
     public bool TryGetNearestEnemyUnit(DiceUnit unit, out DiceUnit closest)
     {
         float minDist = float.PositiveInfinity;

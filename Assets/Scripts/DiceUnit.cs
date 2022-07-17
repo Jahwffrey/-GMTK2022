@@ -205,6 +205,7 @@ public class DiceUnit : MonoBehaviour
         {
             transform.up = Vector3.Slerp(Vector3.down, transform.up, Mathf.Min(1f, Time.deltaTime));
             transform.position -= Vector3.down * Time.deltaTime;
+            DisplayHealth();
         }
 
         if(StopNextOnGound && OnGround())
@@ -433,8 +434,15 @@ public class DiceUnit : MonoBehaviour
     {
         if (Health < MaxHealth && MaxHealth > 0)
         {
-            HealthBar.gameObject.SetActive(true);
-            HealthBar.DisplayAmt(Health / MaxHealth);
+            if (Dead)
+            {
+                HealthBar.DisplayAmt(0);
+            }
+            else
+            {
+                HealthBar.gameObject.SetActive(true);
+                HealthBar.DisplayAmt(Health / MaxHealth);
+            }
         }
         else
         {
