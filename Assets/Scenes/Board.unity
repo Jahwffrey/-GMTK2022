@@ -1471,6 +1471,14 @@ PrefabInstance:
       value: Player 1 Perspective
       objectReference: {fileID: 0}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: ReadyButton
+      value: 
+      objectReference: {fileID: 1397589464}
+    - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: UnitController
+      value: 
+      objectReference: {fileID: 445147598}
+    - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: unitPrefabs.Array.data[0]
       value: 
       objectReference: {fileID: 5026180902463019654, guid: a3b59b624425fcb429c4f91737076773, type: 3}
