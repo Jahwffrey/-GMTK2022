@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SnakeUnit : DiceUnit
 {
-    protected float MoveSpd = 1f;
+    protected float MoveSpd = 1.25f;
 
     public GameObject Shield;
     public GameObject Projectile;
@@ -30,7 +30,7 @@ public class SnakeUnit : DiceUnit
             if(Time.time - LastTimeChangedMoveSpd > IntervalChangeMoveSpd)
             {
                 LastTimeChangedMoveSpd = Time.time;
-                float horizontal = Mathf.Sin(Time.time * 2f) * MoveSpd;
+                float horizontal = Mathf.Sin(Time.time * 2f) * MoveSpd * 1.25f;
                 if (OnGround())
                 {
                     Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd + Vector3.right * horizontal;
