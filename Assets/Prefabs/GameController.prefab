@@ -45,12 +45,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5fc521a87981b4a8bd27413ed99a3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TwoPlayerMode: 0
   Player1ZCutoffObj: {fileID: 3666873769082667081}
   Player2ZCutoffObj: {fileID: 3666873769411346176}
-  WinnerUI: {fileID: 0}
   TimerUI: {fileID: 0}
   PlayerControl1: {fileID: 0}
   PlayerControl2: {fileID: 0}
+  TwoPlayerModeTransitions: {fileID: 0}
+  OnePlayerTransitions: {fileID: 0}
 --- !u!1 &3666873769082667081
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +113,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 075707449a3636147aac766a6130bf57, type: 2}
+  - {fileID: 2100000, guid: 8ebd966d90c899f4baf0077094fa9c08, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -193,7 +195,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 075707449a3636147aac766a6130bf57, type: 2}
+  - {fileID: 2100000, guid: 8ebd966d90c899f4baf0077094fa9c08, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -7,11 +7,13 @@ public class BoardGen : MonoBehaviour
     public GameObject treePrefab;
     public GameObject rockPrefab;
     public GameObject puddlePrefab;
+    public GameObject grassPrefab;
 
     public int treeCost = 2;
     public int rockCost = 4;
     public int puddleCost = 3;
     public int budget = 17;
+    public int grassCount = 20;
 
     private List<GameObject> obstacles;
     private Bounds bounds;
@@ -63,6 +65,7 @@ public class BoardGen : MonoBehaviour
         Spawn( treePrefab, treeCount );
         Spawn( rockPrefab, rockCount );
         Spawn( puddlePrefab, puddleCount );
+        Spawn( grassPrefab, grassCount );
     }
 
     //Spawn a given prefab a given amount of times

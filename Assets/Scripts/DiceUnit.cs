@@ -78,6 +78,8 @@ public class DiceUnit : MonoBehaviour
     public string AttackDesc;
     public string MoveDesc;
     public string DefendDesc;
+    
+    public GameObject UnitModel;
 
     public float MaxHealth;
     protected float Health;
