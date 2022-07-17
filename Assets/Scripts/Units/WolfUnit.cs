@@ -53,7 +53,6 @@ public class WolfUnit : DiceUnit
         Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd + Vector3.up * 0.1f;
         ExecuteAfterTimer(StandardStepLengthSeconds,
             () => {
-                EndMove();
                 ExecuteNextAction();
             }
         );
