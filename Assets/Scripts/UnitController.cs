@@ -35,7 +35,7 @@ public class UnitController : MonoBehaviour
 
             new Dice("Commoner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Nothing }),
             new Dice("Squire", new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Nothing }),
-            
+
             new Dice("????", new List<DiceSides>(){ allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)],allSides[Random.Range(0,allSides.Count)] }),
         };
     }
