@@ -51,6 +51,8 @@ public class PlayerControl : MonoBehaviour
     public GameObject diceKey;
     public Canvas infoCanvas;
 
+    public MusicController musicMaster;
+
     private StartingSpace spaceInfo;
 
     public enum PlaceMode
@@ -229,6 +231,7 @@ public class PlayerControl : MonoBehaviour
                         selectedElement = -1;
                         selectBox.SetActive(false);
                         SwitchPlacementMode();
+                        musicMaster.PlayPlacement();
                     }
                     //REMOVED A UNIT
                     else if( spaceInfo.HasUnit() )
@@ -239,6 +242,7 @@ public class PlayerControl : MonoBehaviour
                         // activeUnits.Remove( spaceInfo.GetUnit() );
                         AddToUnitInventory( (UnitID)spaceInfo.unitType );
                         spaceInfo.RemoveUnit();
+                        musicMaster.PlayBlip();
                     }
                     pointer.SetActive(false);
                     pointerGhost.SetActive(false);

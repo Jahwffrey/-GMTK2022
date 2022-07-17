@@ -143,10 +143,12 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             case UnitController.Winner.Player1:
                 Player1Wins += 1;
                 winnerStr = "Player 1 Wins!";
+                MusicMaster.PlayVictory();
                 break;
             case UnitController.Winner.Player2:
                 Player2Wins += 1;
                 winnerStr = "Player 2 Wins!";
+                MusicMaster.PlayVictory();
                 break;
             case UnitController.Winner.Tie:
                 winnerStr = "Tie!";

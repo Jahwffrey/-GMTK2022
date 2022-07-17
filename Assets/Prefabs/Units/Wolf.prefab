@@ -268,10 +268,10 @@ MonoBehaviour:
   DieDisplay: {fileID: 6887980492769110346}
   MainCollider: {fileID: 6287383852577909770}
   Player1: 1
-  SpawnSound: {fileID: 0}
-  HurtSound: {fileID: 0}
-  DeathSound: {fileID: 0}
-  VictorySound: {fileID: 0}
+  SpawnSound: {fileID: 8300000, guid: 2ecdae17c7e38a944842b14f24020de3, type: 3}
+  HurtSound: {fileID: 8300000, guid: 88a4cbebf1603e64785219427cacb095, type: 3}
+  DeathSound: {fileID: 8300000, guid: 605382879edaa1040b662a0e838cac83, type: 3}
+  VictorySound: {fileID: 8300000, guid: a468ad9d76de07145ae9be04ed33ba00, type: 3}
 --- !u!1001 &545697198553573861
 PrefabInstance:
   m_ObjectHideFlags: 0

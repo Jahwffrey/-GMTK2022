@@ -147,6 +147,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1228718188}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: musicMaster
+      value: 
+      objectReference: {fileID: 6516409098544575700}
+    - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: TwoPlayerMode
       value: 1
       objectReference: {fileID: 0}
@@ -1881,6 +1885,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1397589464}
     - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: musicMaster
+      value: 
+      objectReference: {fileID: 6516409098544575700}
+    - target: {fileID: 5016564389677211844, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: TwoPlayerMode
       value: 1
       objectReference: {fileID: 0}
@@ -2063,6 +2071,14 @@ PrefabInstance:
     - target: {fileID: 2585767287435431681, guid: 6d4a53ebc07a57543b7f2c9f36fd0cd5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808844563773210271, guid: 6d4a53ebc07a57543b7f2c9f36fd0cd5, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3808844563773210271, guid: 6d4a53ebc07a57543b7f2c9f36fd0cd5, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.000030517578
       objectReference: {fileID: 0}
     - target: {fileID: 4332458897694875907, guid: 6d4a53ebc07a57543b7f2c9f36fd0cd5, type: 3}
       propertyPath: m_Name
