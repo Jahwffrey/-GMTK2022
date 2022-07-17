@@ -91,8 +91,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         {
             if (ReloadScene)
             {
-                Scene scene = SceneManager.GetActiveScene(); 
-                SceneManager.LoadScene(scene.name);
+                //Scene scene = SceneManager.GetActiveScene(); 
+                SceneManager.LoadScene(0);// scene.name);
             }
             else
             {

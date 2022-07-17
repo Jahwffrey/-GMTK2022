@@ -196,8 +196,8 @@ public class OnePlayerTransitions : MonoBehaviour
                     break;
                 case UnitController.Winner.Player2:
                     // Lose
-                    Scene scene = SceneManager.GetActiveScene();
-                    SceneManager.LoadScene(scene.name);
+                    //Scene scene = SceneManager.GetActiveScene();
+                    SceneManager.LoadScene(0);//scene.name);
                     break;
                 case UnitController.Winner.Tie:
                     // Retry
