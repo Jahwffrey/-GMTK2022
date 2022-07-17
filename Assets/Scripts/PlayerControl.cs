@@ -87,6 +87,10 @@ public class PlayerControl : MonoBehaviour
 
     public void PregameSetup()
     {
+        foreach(var space in GetComponentsInChildren<StartingSpace>())
+        {
+            space.ResetForGame();
+        }
         if (playerID == 0)
         {
             placementMode = PlaceMode.PLACE_UNIT;

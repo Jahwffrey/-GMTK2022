@@ -45,6 +45,13 @@ public class StartingSpace : MonoBehaviour
         return true;
     }
 
+    public void ResetForGame()
+    {
+        myUnit = null;
+        unitType = -1;
+        canEdit = true;
+    }
+
     public void PlayDieEffect()
     {
         diePlaced.Play();
