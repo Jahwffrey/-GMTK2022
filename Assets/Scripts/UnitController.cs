@@ -274,6 +274,17 @@ public class UnitController : MonoBehaviour
         }
     }
 
+    public void NewUnitSelected(PlayerControl.UnitID id)
+    {
+        OnePlayerTransitions.NewUnitSelected(id);
+    }
+
+
+    public void NewDieSelected(Dice die)
+    {
+        OnePlayerTransitions.NewDieSelected(die);
+    }
+
     public void StartGame()
     {
         PlayerControl1.BeginGameplay();
@@ -281,6 +292,7 @@ public class UnitController : MonoBehaviour
         TimerUI.gameObject.SetActive(true);
         GameStepsTaken = 0;
         GameActive = true;
+        TimerUI.DisplayTime(1);
         foreach(var unit in Units)
         {
             unit.StartGame();

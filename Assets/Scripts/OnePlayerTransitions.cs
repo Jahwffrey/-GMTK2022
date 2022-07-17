@@ -10,6 +10,8 @@ public class OnePlayerTransitions : MonoBehaviour
     public Camera MainCamera;
     protected Vector3 CameraOrigPosition;
 
+    public BoardGen BoardGenerator;
+
     public GameObject EnemySpawnPointBase;
     protected float DistanceBetweenEnemies = 1;
 
@@ -19,9 +21,12 @@ public class OnePlayerTransitions : MonoBehaviour
     protected bool WaitingForFirstUpdate = true;
     protected bool DecidedUnits = false;
 
-    protected int StartingUnits = 3;
-    protected int StartingDice = 5;
+    protected int PlayerStartingUnits = 2;
+    protected int PlayerStartingDice = 4;
+    protected int EnemyStartingUnits = 1;
 
+    protected int MaxPlayerUnits = 8;
+    protected int MaxPlayerDice = 8;
 
     protected List<PlayerControl.UnitID> PlayerUnitIds;
     protected List<Dice> PlayerDice;
@@ -35,6 +40,8 @@ public class OnePlayerTransitions : MonoBehaviour
     protected int level = 0;
     protected UnitController.Winner RoundWinner;
 
+    protected bool NewUnitRound = true;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
@@ -42,6 +49,26 @@ public class OnePlayerTransitions : MonoBehaviour
 
     protected bool NextPregameSetup = false;
     protected bool NextIsEndRoundAndGoToNext = false;
+
+    protected void AddAnotherEnemyUnit()
+    {
+        var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+        var allDice = UnitController.GetAllDice();
+        EnemyUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+        EnemyDice.Add(allDice[Random.Range(0, allDice.Count)]);
+    }
+
+    public void NewUnitSelected(PlayerControl.UnitID id)
+    {
+        PlayerUnitIds.Add(id);
+        MoveToNextLevel();
+    }
+
+    public void NewDieSelected(Dice die)
+    {
+        PlayerDice.Add(die);
+        MoveToNextLevel();
+    }
 
     public void SetupGame()
     {
@@ -54,23 +81,38 @@ public class OnePlayerTransitions : MonoBehaviour
             EnemyDice = new List<Dice>();
             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
             var allDice = UnitController.GetAllDice();
-            for (int i = 0; i < StartingUnits; i++)
+            for (int i = 0; i < PlayerStartingUnits; i++)
             {
                 PlayerUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
-                EnemyUnitIds.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
             }
-            for (int i = 0; i < StartingDice; i++)
+            for (int i = 0; i < PlayerStartingDice; i++)
             {
                 PlayerDice.Add(allDice[Random.Range(0, allDice.Count)]);
-                EnemyDice.Add(allDice[Random.Range(0, allDice.Count)]);
+            }
+            for (int i = 0; i < EnemyStartingUnits; i++)
+            {
+                AddAnotherEnemyUnit();
             }
         }
 
         Player1Control.SetInventories(PlayerUnitIds, PlayerDice);
 
         // Place the enemy units
+        for(int i = 0;i < EnemyUnitIds.Count; i++)
+        {
+            var g = Instantiate(Player2Control.GetUnitPrefab(EnemyUnitIds[i]));
+            g.transform.forward = Vector3.back;
+            var u = g.GetComponent<DiceUnit>();
+            u.SetDice(EnemyDice[i]);
+            u.SetPlayer(1);
+            u.transform.position = EnemySpawnPointBase.transform.position + new Vector3((i % 10) * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
+        }
 
+        ResetCamera();
+    }
 
+    void ResetCamera()
+    {
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
     }
@@ -79,6 +121,14 @@ public class OnePlayerTransitions : MonoBehaviour
     {
         AnnouncementObj.SetActive(true);
         AnnouncementText.text = text;
+    }
+
+    public void MoveToNextLevel()
+    {
+        BoardGenerator.Cleanup();
+        BoardGenerator.PlaceObstacles();
+        UnitController.PostGameCleanup();
+        BeginNewGame();
     }
 
     public void HideAnnouncement()
@@ -97,13 +147,57 @@ public class OnePlayerTransitions : MonoBehaviour
             {
                 case UnitController.Winner.Player1:
                     // Continue
-                    UnitController.PostGameCleanup();
-                    BeginNewGame();
+                    if (NewUnitRound)
+                    {
+                        NewUnitRound = !NewUnitRound;
+                        if (PlayerUnitIds.Count < MaxPlayerUnits)
+                        {
+                            ShowAnnouncement("Select A New Creature");
+                            ResetCamera();
+
+                            // Choose two units to be able to select
+                            var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+                            var unitOptions = new List<PlayerControl.UnitID>();
+                            for (int i = 0; i < 3; i++)
+                            {
+                                unitOptions.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+                            }
+                            Player1Control.SetInventories(unitOptions, new List<Dice>());
+
+                            Player1Control.BeginSelectNewUnit();
+                        }
+                        else
+                        {
+                            MoveToNextLevel();
+                        }
+                    }
+                    else
+                    {
+                        NewUnitRound = !NewUnitRound;
+                        if (PlayerDice.Count < MaxPlayerDice)
+                        {
+                            ShowAnnouncement("Select A New Die");
+                            ResetCamera();
+
+                            var allDice = UnitController.GetAllDice();
+                            var diceOptions = new List<Dice>();
+                            for (int i = 0; i < 4; i++)
+                            {
+                                diceOptions.Add(allDice[Random.Range(0, allDice.Count - 1)]); // -1 so not NONE
+                            }
+                            Player1Control.SetInventories(new List<PlayerControl.UnitID>(), diceOptions);
+                            Player1Control.BeginSelectNewDie();
+                        }
+                        else
+                        {
+                            MoveToNextLevel();
+                        }
+                    }
                     break;
                 case UnitController.Winner.Player2:
                     // Lose
-                    Scene scene = SceneManager.GetActiveScene();
-                    SceneManager.LoadScene(scene.name);
+                    //Scene scene = SceneManager.GetActiveScene();
+                    SceneManager.LoadScene(0);//scene.name);
                     break;
                 case UnitController.Winner.Tie:
                     // Retry
@@ -150,6 +244,7 @@ public class OnePlayerTransitions : MonoBehaviour
         {
             case UnitController.Winner.Player1:
                 ShowAnnouncement("Victory!");
+                AddAnotherEnemyUnit();
                 break;
             case UnitController.Winner.Player2:
                 ShowAnnouncement($"-Failure-\nReached Level {level}");

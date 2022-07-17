@@ -24,27 +24,31 @@ public class BoardGen : MonoBehaviour
         obstacles = new List<GameObject>();
         bounds = transform.GetComponent<Collider>().bounds;
 
-        //Decide how many of each obstacle to spawn
+        PlaceObstacles();
+    }
+
+    public void PlaceObstacles()
+    {//Decide how many of each obstacle to spawn
         //This assumes that trees cost the least
         int currentBudget = budget;
-        while( currentBudget >= treeCost )
+        while (currentBudget >= treeCost)
         {
-            int choice = Random.Range(0,3);
-            switch(choice)
+            int choice = Random.Range(0, 3);
+            switch (choice)
             {
                 case 0:
                     treeCount += 1;
                     currentBudget -= treeCost;
                     break;
                 case 1:
-                    if( currentBudget >= rockCost )
+                    if (currentBudget >= rockCost)
                     {
                         rockCount += 1;
                         currentBudget -= rockCost;
                     }
                     break;
                 case 2:
-                    if( currentBudget >= puddleCost )
+                    if (currentBudget >= puddleCost)
                     {
                         puddleCount += 1;
                         currentBudget -= puddleCost;
@@ -56,11 +60,6 @@ public class BoardGen : MonoBehaviour
             }
         }
 
-        PlaceObstacles();
-    }
-
-    void PlaceObstacles()
-    {
         Spawn( treePrefab, treeCount );
         Spawn( rockPrefab, rockCount );
         Spawn( puddlePrefab, puddleCount );
@@ -91,7 +90,7 @@ public class BoardGen : MonoBehaviour
     }
 
     //Clear the board for the next game
-    void Cleanup()
+    public void Cleanup()
     {
         foreach( GameObject o in obstacles )
         {

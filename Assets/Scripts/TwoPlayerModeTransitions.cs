@@ -47,8 +47,9 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             DecidedUnits = true;
             UnitIds = new List<PlayerControl.UnitID>();
             Dice = new List<Dice>();
-            var numUnits = Random.Range(3, 7);
+            var numUnits = Random.Range(3, 9);
             var numDice = numUnits + Random.Range(0, 4);
+            if (numDice > 8) numDice = 8;
             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
             var allDice = UnitController.GetAllDice();
             for (int i = 0; i < numUnits; i++)
@@ -90,8 +91,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         {
             if (ReloadScene)
             {
-                Scene scene = SceneManager.GetActiveScene(); 
-                SceneManager.LoadScene(scene.name);
+                //Scene scene = SceneManager.GetActiveScene(); 
+                SceneManager.LoadScene(0);// scene.name);
             }
             else
             {
