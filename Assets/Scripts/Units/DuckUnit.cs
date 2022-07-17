@@ -84,7 +84,15 @@ public class DuckUnit : DiceUnit
         ExecuteAfterTimer(StandardStepLengthSeconds * 0.125f, actn);
         ExecuteAfterTimer(StandardStepLengthSeconds * 0.25f, actn);
         ExecuteAfterTimer(StandardStepLengthSeconds * 0.375f, actn);
-        ExecuteAfterTimer(StandardStepLengthSeconds * 0.5f,
+        ExecuteAfterTimer(StandardStepLengthSeconds * 0.5f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 0.625f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 0.75f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 0.875f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 1f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 1.25f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 1.5f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 1.75f, actn);
+        ExecuteAfterTimer(StandardStepLengthSeconds * 2f,
         () =>
         {
             actn();
