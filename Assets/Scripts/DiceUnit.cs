@@ -74,7 +74,7 @@ public class DiceUnit : MonoBehaviour
     public static float StandardStepLengthSeconds = 2f;
     public static int DiceSidesNum = 6;
 
-    public string GeneralDesc;
+    public string UnitName;
     public string AttackDesc;
     public string MoveDesc;
     public string DefendDesc;
@@ -108,6 +108,11 @@ public class DiceUnit : MonoBehaviour
     protected Vector3 PositionWhenPassedFinishLine;
 
     protected bool Dead;
+
+    public string GetInfoText()
+    {
+        return $"{UnitName}:\n<sprite=\"attack\" index=0> {AttackDesc}\n<sprite=\"defend\" index=0> {DefendDesc}\n<sprite=\"move\" index=0> {MoveDesc}";
+    }
 
     protected virtual void InheritableAwake()
     {

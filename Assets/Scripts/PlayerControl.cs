@@ -327,13 +327,15 @@ public class PlayerControl : MonoBehaviour
         {
             hit.transform.localScale = elementScalar;
             textBox.gameObject.SetActive(true);
-            
-            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-            //TODO: CHANGE THIS ASSIGNMENT TO USE THE DESCRIPTION TEXT
-            //Use this format: <sprite="attack" index=0> to use icons
-            //valid icons are attack, defend, move, doubleattack, doublemove, nothing, heal1, hurt1, heal2
-            infoText.GetComponent<TextMeshProUGUI>().text = "Test2"; 
-            //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+            try
+            {
+                int hitElement2 = uiUnits.IndexOf(hit.transform);
+                infoText.GetComponent<TextMeshProUGUI>().text = GetUnitPrefab((UnitID)unitInventory[hitElement2]).GetComponent<DiceUnit>().GetInfoText();
+            } catch
+            {
+                // Ignore
+            }
 
             if( Input.GetMouseButtonDown(0) )
             {
