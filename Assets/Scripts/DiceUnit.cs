@@ -502,4 +502,16 @@ public class DiceUnit : MonoBehaviour
     {
 
     }
+
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other != null && other.gameObject != null)
+        {
+            if (other.GetComponent<PuddleScript>() != null)
+            {
+                Rigidbody.velocity = Rigidbody.velocity * 0.9f;
+            }
+        }
+    }
 }

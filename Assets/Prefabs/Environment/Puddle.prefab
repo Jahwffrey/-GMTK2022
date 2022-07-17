@@ -92,6 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7496708718307081338}
   - component: {fileID: 7354384074758879778}
+  - component: {fileID: 96082413650877713}
   m_Layer: 7
   m_Name: Puddle
   m_TagString: Puddle
@@ -128,3 +129,15 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &96082413650877713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4138622463813277519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26cbccba5640a4c48a1c4610c5a1b56d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
