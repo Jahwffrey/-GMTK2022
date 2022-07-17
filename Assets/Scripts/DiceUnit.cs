@@ -120,7 +120,7 @@ public class DiceUnit : MonoBehaviour
 
     public string GetInfoText()
     {
-        return $"{UnitName}:\n<sprite=\"attack\" index=0> {AttackDesc}\n<sprite=\"defend\" index=0> {DefendDesc}\n<sprite=\"move\" index=0> {MoveDesc}";
+        return $"{UnitName} {MaxHealth}<sprite=\"heart\" index=0> :\n<sprite=\"attack\" index=0> {AttackDesc}\n<sprite=\"defend\" index=0> {DefendDesc}\n<sprite=\"move\" index=0> {MoveDesc}";
     }
 
     protected virtual void InheritableAwake()

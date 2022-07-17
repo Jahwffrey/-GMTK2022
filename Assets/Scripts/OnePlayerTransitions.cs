@@ -21,8 +21,8 @@ public class OnePlayerTransitions : MonoBehaviour
     protected bool WaitingForFirstUpdate = true;
     protected bool DecidedUnits = false;
 
-    protected int PlayerStartingUnits = 2;
-    protected int PlayerStartingDice = 4;
+    protected int PlayerStartingUnits = 3;
+    protected int PlayerStartingDice = 5;
     protected int EnemyStartingUnits = 1;
 
     protected int MaxPlayerUnits = 8;
