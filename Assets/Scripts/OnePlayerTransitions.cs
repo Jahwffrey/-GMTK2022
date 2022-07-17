@@ -257,7 +257,7 @@ public class OnePlayerTransitions : MonoBehaviour
                 AddAnotherEnemyUnit();
                 break;
             case UnitController.Winner.Player2:
-                ShowAnnouncement($"-Failure-\nReached Level {level}");
+                ShowAnnouncement($"Failure\nReached Level {level}");
                 break;
             case UnitController.Winner.Tie:
                 ShowAnnouncement("Stalemate");

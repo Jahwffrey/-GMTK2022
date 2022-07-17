@@ -32,10 +32,9 @@ public class UnitController : MonoBehaviour
             new Dice("Attacker", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move }),
             new Dice("Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Attack }),
             new Dice("Runner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend }),
-            new Dice("Attacker+", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move }),
-            new Dice("Defender+", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.DoubleMove, DiceSides.DoubleAttack }),
-            new Dice("Runner+", new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend }),
-
+            new Dice("Attacker Plus", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend, DiceSides.Defend, DiceSides.Move }),
+            new Dice("Defender Plus", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.DoubleMove, DiceSides.DoubleAttack }),
+            new Dice("Runner Plus", new List<DiceSides>() { DiceSides.DoubleMove, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Attack, DiceSides.Defend }),
 
             new Dice("Commoner", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Move, DiceSides.Attack, DiceSides.Nothing }),
             new Dice("Squire", new List<DiceSides>() { DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Nothing }),
