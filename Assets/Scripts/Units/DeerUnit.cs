@@ -29,7 +29,7 @@ public class DeerUnit : DiceUnit
         ExecuteAfterTimer(StandardStepLengthSeconds * 0.25f,
         () =>
         {
-            var others = Controller.GetAllEnemiesWithin(this, 1f);
+            var others = Controller.GetAllEnemiesWithin(this, 1.5f);
             foreach (var other in others)
             {
                 var vectTo = (other.transform.position - transform.position).normalized;
@@ -104,7 +104,7 @@ public class DeerUnit : DiceUnit
             if (Defending)
             {
                 Defending = false;
-                unit.TakeDamage(Dmg, GetDirectionToFinishLine() + Vector3.up * BiteKnockback);
+                unit.TakeDamage(Dmg, GetDirectionToFinishLine() + Vector3.up * BiteKnockback * 1.5f);
                 Target = null;
                 StopIfOnGround();
             }
