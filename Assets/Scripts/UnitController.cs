@@ -19,7 +19,7 @@ public class UnitController : MonoBehaviour
             new Dice("Great Defender", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.Move, DiceSides.Heal1Hp }),
             new Dice("Fighter", new List<DiceSides>() { DiceSides.Attack, DiceSides.Attack, DiceSides.Attack, DiceSides.Move, DiceSides.Defend, DiceSides.Defend }),
             new Dice("Balanced", new List<DiceSides>() { DiceSides.Attack, DiceSides.Defend, DiceSides.Move, DiceSides.Attack, DiceSides.Defend, DiceSides.Move }),
-            new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
+            new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
             new Dice("Rogue", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Nothing, DiceSides.Heal1Hp }),
 
             new Dice("Paladin", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Heal1Hp, DiceSides.Move, DiceSides.Defend, DiceSides.Nothing }),

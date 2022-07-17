@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class WolfUnit : DiceUnit
 {
-    protected float BiteDmg = 2;
+    protected float BiteDmg = 2.5f;
     protected float DefendDmg = 1;
-    protected float MoveSpd = 5f;
+    protected float MoveSpd = 3f;
     protected float BiteKnockback = 6f;
 
     protected DiceUnit Target;
@@ -17,7 +17,6 @@ public class WolfUnit : DiceUnit
 
     public override void Defend()
     {
-
         DiceUnit closest;
         if (Controller.TryGetEnemyNearestMyFinishLine(Player1, out closest))
         {

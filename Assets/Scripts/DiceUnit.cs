@@ -444,6 +444,7 @@ public class DiceUnit : MonoBehaviour
 
     public void Die()
     {
+        DisplayHealth();
         RemoveFromConsideration();
         Dead = true;
     }
