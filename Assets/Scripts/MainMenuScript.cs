@@ -22,4 +22,12 @@ public class MainMenuScript : MonoBehaviour
     {
         SceneManager.LoadScene(TwoPlayerSceneInt);
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
 }
