@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4494132411792708811, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5016564389677211842, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: m_Name
       value: Player 2 Perspective
