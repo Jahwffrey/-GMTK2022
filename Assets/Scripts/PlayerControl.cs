@@ -318,7 +318,7 @@ public class PlayerControl : MonoBehaviour
         for( int i = 0; i < uiUnits.Count; i++ )
         {
             float offset = i + (i * elementSpacing ) - ( ( uiUnits.Count - 1 + (uiUnits.Count - 1) * elementSpacing ) / 2 );
-            uiUnits[i].localPosition = new Vector3(offset,0,0);
+            uiUnits[i].localPosition = new Vector3(offset,-2.5f,0);
             uiUnits[i].localScale = Vector3.one;
             uiUnits[i].Rotate( Vector3.up * elementRotateSpeed );
         }
@@ -366,7 +366,7 @@ public class PlayerControl : MonoBehaviour
 
         if( selectedElement != -1 )
         {
-            selectBox.transform.position = uiUnits[selectedElement].position + Vector3.forward;
+            selectBox.transform.position = uiUnits[selectedElement].position + Vector3.forward + Vector3.up * 0.8f;
         }
     }
     
@@ -456,8 +456,8 @@ public class PlayerControl : MonoBehaviour
     {
         int id = (int)unitID;
         Transform newUiUnit = Instantiate( uiModel, unitRow, false ).transform;
-        newUiUnit.GetComponent<MeshFilter>().mesh = unitPrefabs[id].GetComponent<MeshFilter>().sharedMesh;
-        newUiUnit.GetComponent<Renderer>().material = unitPrefabs[id].GetComponent<Renderer>().sharedMaterial;
+        newUiUnit.GetComponent<MeshFilter>().mesh = unitPrefabs[id].GetComponent<DiceUnit>().UnitModel.GetComponent<MeshFilter>().sharedMesh;
+        newUiUnit.GetComponent<Renderer>().material = unitPrefabs[id].GetComponent<DiceUnit>().UnitModel.GetComponent<Renderer>().sharedMaterial;
         uiUnits.Add( newUiUnit );
         unitInventory.Add( id );
     }

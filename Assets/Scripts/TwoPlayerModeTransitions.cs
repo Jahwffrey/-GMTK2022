@@ -158,7 +158,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         }
         else
         {
-            ShowAnnouncement($"{winnerStr}\nScore:{Player1Wins} - {Player2Wins}");
+            ShowAnnouncement($"{winnerStr}\nScore:{Player1Wins} to {Player2Wins}");
         }
     }
 
