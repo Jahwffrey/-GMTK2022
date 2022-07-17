@@ -5,7 +5,7 @@ using UnityEngine;
 public class HareUnit : DiceUnit
 {
     protected float Dmg = 1f;
-    protected float MoveSpd = 4.5f;
+    protected float MoveSpd = 4.2f;
     protected float MainKockback = 3f;
     protected float JumpVel = 4f;
     protected bool Attacking;

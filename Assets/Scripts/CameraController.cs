@@ -22,6 +22,7 @@ public class CameraController : MonoBehaviour
     {
         return Camera.main;
     }
+    public GameObject EscapeMenuScript;
 
     protected Ray ray;
     protected RaycastHit hit;
@@ -40,9 +41,16 @@ public class CameraController : MonoBehaviour
         }
         else
         {*/
-            // Move camera
+        // Move camera
+        if (EscapeMenuScript.activeInHierarchy)
+        {
+            UnlockCursor();
+        }
+        else
+        {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
+        }
             CamYaw += CamSpeedH * Input.GetAxis("Mouse X");
             CamPitch -= CamSpeedV * Input.GetAxis("Mouse Y");
             if (CamPitch > 89.5f)

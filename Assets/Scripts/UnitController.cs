@@ -83,6 +83,8 @@ public class UnitController : MonoBehaviour
     protected bool GameActive = false;
     protected int GameStepsTaken;
 
+    public GameObject EscapeMenu;
+
     private void Awake()
     {
         CamControl = GetComponent<CameraController> ();
@@ -124,6 +126,11 @@ public class UnitController : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            EscapeMenu.SetActive(!EscapeMenu.activeInHierarchy);
+        }
+
         if (GameActive)
         {
             CamControl.ControlCam();
