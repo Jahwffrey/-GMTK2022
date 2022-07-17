@@ -68,6 +68,7 @@ public class PlayerControl : MonoBehaviour
     {
         WOLF = 0,
         HARE = 1,
+        SNAKE = 2,
         NONE
     }
     
