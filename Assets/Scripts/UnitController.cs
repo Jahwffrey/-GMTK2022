@@ -22,7 +22,7 @@ public class UnitController : MonoBehaviour
             new Dice("Go For Blood", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Move, DiceSides.Lose1Hp, DiceSides.Lose1Hp }),
             new Dice("Rogue", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Defend, DiceSides.Move, DiceSides.Move, DiceSides.Nothing, DiceSides.Heal1Hp }),
 
-            new Dice("Paladin", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Heal1Hp, DiceSides.Move, DiceSides.Nothing, DiceSides.Nothing }),
+            new Dice("Paladin", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Heal1Hp, DiceSides.Move, DiceSides.Defend, DiceSides.Nothing }),
             new Dice("Fencer", new List<DiceSides>() { DiceSides.Defend, DiceSides.Defend, DiceSides.Defend, DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.Nothing }),
             new Dice("Aggressive", new List<DiceSides>() { DiceSides.DoubleAttack, DiceSides.Attack, DiceSides.DoubleMove, DiceSides.Move, DiceSides.Nothing, DiceSides.Lose2Hp }),
             new Dice("Careful", new List<DiceSides>() { DiceSides.Move, DiceSides.Move, DiceSides.Defend, DiceSides.Defend, DiceSides.Heal1Hp, DiceSides.Heal1Hp }),
@@ -222,6 +222,38 @@ public class UnitController : MonoBehaviour
                 {
                     minDist = dist;
                     closest = otherUnit;
+                }
+            }
+        }
+
+        return closest != null;
+    }
+
+    public bool TryGetEnemyNearestMyFinishLine(bool player1, out DiceUnit closest)
+    {
+        float minZ = float.PositiveInfinity;
+        float maxZ = float.NegativeInfinity;
+        closest = null;
+        foreach (var otherUnit in Units)
+        {
+            if (player1 != otherUnit.Player1)
+            {
+                float z = otherUnit.transform.position.z;
+                if (player1)
+                {
+                    if (z < minZ)
+                    {
+                        minZ = z;
+                        closest = otherUnit;
+                    }
+                }
+                else
+                {
+                    if(z > maxZ)
+                    {
+                        maxZ = z;
+                        closest = otherUnit;
+                    }
                 }
             }
         }

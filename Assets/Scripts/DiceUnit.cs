@@ -129,6 +129,19 @@ public class DiceUnit : MonoBehaviour
 
     }
 
+
+    protected Vector3 GetDirectionToFinishLine()
+    {
+        if (Player1)
+        {
+            return Vector3.forward;
+        }
+        else
+        {
+            return Vector3.back;
+        }
+    }
+
     private void Awake()
     {
         Rigidbody = GetComponent<Rigidbody>();
@@ -219,7 +232,7 @@ public class DiceUnit : MonoBehaviour
         }
 
         // Passing finish line
-        if (!PassedFinishLine)
+        if (!PassedFinishLine && !Dead)
         {
             if (CheckIfPassedFinishLine())
             {
@@ -439,6 +452,7 @@ public class DiceUnit : MonoBehaviour
     {
         if(collision != null && collision.gameObject != null)
         {
+            InheritableOnTouchedCollider(collision.collider);
             var proj = collision.gameObject.GetComponent<Projectile>();
             if(proj != null)
             {
@@ -451,12 +465,18 @@ public class DiceUnit : MonoBehaviour
     {
         if (other != null && other.gameObject != null)
         {
+            InheritableOnTouchedCollider(other);
             var proj = other.gameObject.GetComponent<Projectile>();
             if (proj != null)
             {
                 GotHitByProjectile(proj);
             }
         }
+    }
+
+    protected virtual void InheritableOnTouchedCollider(Collider other)
+    {
+        
     }
 
     public virtual void GotHitByProjectile(Projectile p)

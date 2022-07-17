@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 6287383852577909771}
   - component: {fileID: 6287383852577909770}
   - component: {fileID: 6287383852577909773}
-  - component: {fileID: 6287383852577909772}
   - component: {fileID: 4127503342017423000}
   m_Layer: 0
   m_Name: Wolf
@@ -119,28 +118,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &6287383852577909772
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6287383852577909775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41d7aca13a0921f44a741bc38dd4682f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GeneralDesc: Test unit for testing
-  AttackDesc: Throw a projectile at the nearest enemy
-  MoveDesc: Dashes towards the enemy side
-  DefendDesc: Become invulnerable and immovable
-  MaxHealth: 5
-  DieDisplay: {fileID: 6887980492769110346}
-  MainCollider: {fileID: 6287383852577909770}
-  Player1: 1
-  Shield: {fileID: 0}
-  Projectile: {fileID: 5405588207258556351, guid: 4a10400ff0cf4b14ebf397840fbd08f0, type: 3}
 --- !u!114 &4127503342017423000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,14 +130,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55db226bf3eec684d8e927ba7b292b95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GeneralDesc: 
-  AttackDesc: 
-  MoveDesc: 
-  DefendDesc: 
-  MaxHealth: 0
-  DieDisplay: {fileID: 0}
-  MainCollider: {fileID: 0}
-  Player1: 0
+  UnitName: Wolf
+  AttackDesc: Dash at the nearest enemy and push them away
+  MoveDesc: Go directly for the finish line
+  DefendDesc: Dash at the enemy nearest to your finish line and throw them back
+  MaxHealth: 4
+  DieDisplay: {fileID: 6887980492769110346}
+  MainCollider: {fileID: 6287383852577909770}
+  Player1: 1
 --- !u!1001 &3551172708785282202
 PrefabInstance:
   m_ObjectHideFlags: 0
