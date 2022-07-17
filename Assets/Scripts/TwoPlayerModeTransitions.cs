@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class TwoPlayerModeTransitions : MonoBehaviour
 {
+    public MusicController MusicMaster;
     public Camera MainCamera;
     public GameObject AnnouncementObj;
     public GameObject HidePlayerOneObj;
@@ -42,6 +43,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     public void SetupGame()
     {
+        MusicMaster.PlayChoosingTheme();
         if (!DecidedUnits)
         {
             DecidedUnits = true;
@@ -85,6 +87,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         else if (TwoPlayerModeState == 2)
         {
             TwoPlayerModeState = 3;
+            MusicMaster.PlayBattleTheme();
             UnitController.StartGame();
         }
         else

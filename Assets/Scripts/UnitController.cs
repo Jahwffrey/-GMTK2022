@@ -89,6 +89,11 @@ public class UnitController : MonoBehaviour
         Units.Add(unit);
     }
 
+    public void HideTimer()
+    {
+        TimerUI.gameObject.SetActive(false);
+    }
+
     public void RemoveUnitFromConsideration(DiceUnit unit)
     {
         if (unit == null) return;

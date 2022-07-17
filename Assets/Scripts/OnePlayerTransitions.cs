@@ -42,6 +42,8 @@ public class OnePlayerTransitions : MonoBehaviour
 
     protected bool NewUnitRound = true;
 
+    public MusicController MusicMaster;
+
     private void Start()
     {
         CameraOrigPosition = MainCamera.transform.position;
@@ -74,6 +76,7 @@ public class OnePlayerTransitions : MonoBehaviour
     {
         if (!DecidedUnits)
         {
+            MusicMaster.PlayChoosingTheme();
             DecidedUnits = true;
             PlayerUnitIds = new List<PlayerControl.UnitID>();
             PlayerDice = new List<Dice>();
@@ -142,6 +145,8 @@ public class OnePlayerTransitions : MonoBehaviour
 
         if (NextIsEndRoundAndGoToNext)
         {
+            MusicMaster.PlayChoosingTheme();
+            UnitController.HideTimer();
             NextIsEndRoundAndGoToNext = false;
             switch (RoundWinner)
             {
@@ -233,6 +238,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void GameSetupFinished()
     {
+        MusicMaster.PlayBattleTheme();
         UnitController.StartGame();
     }
 

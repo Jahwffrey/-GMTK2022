@@ -50,7 +50,7 @@ public class WolfUnit : DiceUnit
     public override void Move()
     {
         transform.forward = GetDirectionToFinishLine();
-        Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd;
+        Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd + Vector3.up * 0.1f;
         ExecuteAfterTimer(StandardStepLengthSeconds,
             () => {
                 EndMove();
