@@ -6,15 +6,15 @@ using System;
 
 public enum DiceSides
 {
-    Attack,
-    Defend,
-    Move,
-    DoubleAttack,
-    DoubleMove,
-    Nothing,
-    Lose1Hp,
-    Lose2Hp,
-    Heal1Hp,
+    Attack = 0,
+    Defend = 1,
+    Move = 2,
+    DoubleAttack = 3,
+    DoubleMove = 4,
+    Nothing = 5,
+    Lose1Hp = 6,
+    Lose2Hp = 7,
+    Heal1Hp = 8,
 }
 
 public class Dice

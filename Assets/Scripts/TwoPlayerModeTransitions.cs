@@ -47,7 +47,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             DecidedUnits = true;
             UnitIds = new List<PlayerControl.UnitID>();
             Dice = new List<Dice>();
-            var numUnits = Random.Range(3, 9);
+            var numUnits = Random.Range(2, 8); // 2 - 7 units feels nice 
             var numDice = numUnits + Random.Range(0, 4);
             if (numDice > 8) numDice = 8;
             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();

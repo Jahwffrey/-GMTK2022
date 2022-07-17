@@ -430,6 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13a4449edfa77de4489fbe6142e98bae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  RollResultDisp: {fileID: 6702417535967945242, guid: 761a2310a9e6d7f4983774e42a7bf514, type: 3}
   SideDisplays:
   - {fileID: 2715845993709502481}
   - {fileID: 2715845994226784636}
@@ -810,7 +811,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.1
+      scalar: 0.02
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1273,7 +1274,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.25
+      value: 0.125
       mode: 0
       spread: 0
       speed:
