@@ -273,7 +273,7 @@ public class DiceUnit : MonoBehaviour
         {
             Rigidbody.velocity = Vector3.zero;
             transform.position = PositionWhenPassedFinishLine + Vector3.up * (Mathf.Sin(Time.time - TimeWhenPassedFinishLine) + 1f) * 0.5f;
-            transform.Rotate(Vector3.up, 1f);
+            transform.Rotate(Vector3.up, 90f * Time.deltaTime );
         }
     }
 

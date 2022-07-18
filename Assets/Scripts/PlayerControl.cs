@@ -324,7 +324,7 @@ public class PlayerControl : MonoBehaviour
             float offset = i + (i * elementSpacing ) - ( ( uiUnits.Count - 1 + (uiUnits.Count - 1) * elementSpacing ) / 2 );
             uiUnits[i].localPosition = new Vector3(offset,-2.5f,0);
             uiUnits[i].localScale = Vector3.one;
-            uiUnits[i].Rotate( Vector3.up * elementRotateSpeed );
+            uiUnits[i].Rotate( Vector3.up * elementRotateSpeed * Time.deltaTime );
         }
 
         textBox.gameObject.SetActive(false);
@@ -400,7 +400,7 @@ public class PlayerControl : MonoBehaviour
             float offset = i + (i * elementSpacing ) - ( ( diceInventory.Count - 1 + (diceInventory.Count - 1) * elementSpacing ) / 2 );
             diceInventory[i].localPosition = new Vector3(offset,0,0);
             diceInventory[i].localScale = Vector3.one;
-            diceInventory[i].Rotate( new Vector3( elementRotateSpeed, elementRotateSpeed / 2, elementRotateSpeed / 3 ) );
+            diceInventory[i].Rotate( new Vector3( elementRotateSpeed * Time.deltaTime, elementRotateSpeed * Time.deltaTime / 2, elementRotateSpeed * Time.deltaTime / 3 ) );
             diceInventory[i].GetComponent<UIDieDisplay>().HideToolTip();
         }
 
@@ -514,7 +514,7 @@ public class PlayerControl : MonoBehaviour
         float currentBounceHeight = Mathf.Abs( Mathf.Sin( pointerAnim ) ) * pointerBounceHeight;
         Vector3 addHeight = spaceFilled ? Vector3.up * spaceInfo.GetUnit().GetComponent<Collider>().bounds.size.y : Vector3.zero;
         pointer.transform.position = spaceInfo.transform.position + addHeight + Vector3.up * currentBounceHeight;;
-        pointer.transform.Rotate( 0, 0, pointerRotateSpeed );
+        pointer.transform.Rotate( 0, 0, pointerRotateSpeed * Time.deltaTime );
 
         if(showPointerGhost)
         {

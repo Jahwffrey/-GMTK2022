@@ -730,7 +730,7 @@ MonoBehaviour:
   playerID: 0
   pointer: {fileID: 7205563513663655543}
   pointerGhost: {fileID: 3611257017368349428}
-  pointerRotateSpeed: 0.25
+  pointerRotateSpeed: 180
   pointerBounceSpeed: 5
   pointerBounceHeight: 0.2
   unitPrefabs:
@@ -746,7 +746,7 @@ MonoBehaviour:
   uiCam: {fileID: 3957416966429038697}
   elementSpacing: 1
   elementHoverScale: 1.25
-  elementRotateSpeed: 0.1
+  elementRotateSpeed: 90
   pointerMesh: {fileID: -5495902117074765545, guid: 77e8f988921b79945a6fa89dce2d35b1, type: 3}
   cancelMesh: {fileID: -5495902117074765545, guid: 797311601d1e74c41bf19e2230b73b8a, type: 3}
   pointerMaterial: {fileID: 2100000, guid: 8e178dc0972237d4b8c20eb797ecad7f, type: 2}
@@ -755,6 +755,7 @@ MonoBehaviour:
   infoText: {fileID: 424180194458292535}
   diceKey: {fileID: 4145646461336972261}
   infoCanvas: {fileID: 6578659870567026914}
+  musicMaster: {fileID: 0}
 --- !u!1 &6666169293018207112
 GameObject:
   m_ObjectHideFlags: 0
