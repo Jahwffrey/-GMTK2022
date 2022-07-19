@@ -113,6 +113,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public void StartPlayerOneSetup()
     {
         Player1Control.SetInventories(UnitIds, Dice);
+        Player1Control.infoCanvas.gameObject.SetActive(true);
+        Player2Control.infoCanvas.gameObject.SetActive(false);
         Player2Control.SetInventories(UnitIds, Dice);
         TwoPlayerModeState = 0;
         HidePlayerOneObj.SetActive(false);
@@ -122,6 +124,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public void SwitchToPlayerTwoSetup()
     {
         ShowAnnouncement("Player 2 Setup\nPlayer 1, Get lost!");
+        Player1Control.infoCanvas.gameObject.SetActive(false);
+        Player2Control.infoCanvas.gameObject.SetActive(true);
         TimeSwitchedToPlayer2 = Time.time;
         SwingingCameraAround = true;
         HidePlayerOneObj.SetActive(true);
@@ -130,6 +134,10 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public void SwitchToGameSetupIsReady()
     {
         ShowAnnouncement("Begin Game?");
+        Player1Control.infoCanvas.gameObject.SetActive(false);
+        Player1Control.selectBox.gameObject.SetActive(false);
+        Player2Control.infoCanvas.gameObject.SetActive(false);
+        Player2Control.selectBox.gameObject.SetActive(false);
         HidePlayerOneObj.SetActive(false);
     }
 

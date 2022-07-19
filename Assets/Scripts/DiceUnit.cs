@@ -90,6 +90,9 @@ public class DiceUnit : MonoBehaviour
     public bool Player1;
     public bool Player2 => !Player1;
 
+    public Color player1Color;
+    public Color player2Color;
+
     protected Dice Brain;
     protected Rigidbody Rigidbody;
     protected UnitController Controller;
@@ -185,12 +188,13 @@ public class DiceUnit : MonoBehaviour
     public void SetPlayer(int playerId)
     {
         Player1 = playerId == 0;
-        WhichPlayerIndicator.Setup(this);
+        UnitModel.GetComponent<Renderer>().material.SetColor( "_Color", Player1 ? player1Color : player2Color );
+        //WhichPlayerIndicator.Setup(this);
     }
 
     public virtual void StartGame()
     {
-        WhichPlayerIndicator.gameObject.SetActive(true);
+        //WhichPlayerIndicator.gameObject.SetActive(true);
     }
 
     public void SetDice(Dice d)

@@ -268,6 +268,8 @@ MonoBehaviour:
   DieDisplay: {fileID: 6887980492769110346}
   MainCollider: {fileID: 6287383852577909770}
   Player1: 1
+  player1Color: {r: 1, g: 0.7058824, b: 0.7058824, a: 1}
+  player2Color: {r: 0.64705884, g: 0.7137255, b: 1, a: 1}
   SpawnSound: {fileID: 8300000, guid: 2ecdae17c7e38a944842b14f24020de3, type: 3}
   HurtSound: {fileID: 8300000, guid: 88a4cbebf1603e64785219427cacb095, type: 3}
   DeathSound: {fileID: 8300000, guid: 605382879edaa1040b662a0e838cac83, type: 3}

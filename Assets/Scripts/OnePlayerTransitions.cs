@@ -101,6 +101,7 @@ public class OnePlayerTransitions : MonoBehaviour
         }
 
         Player1Control.SetInventories(PlayerUnitIds, PlayerDice);
+        Player1Control.infoCanvas.gameObject.SetActive(true);
 
         // Place the enemy units
         for(int i = 0;i < EnemyUnitIds.Count; i++)
@@ -243,6 +244,7 @@ public class OnePlayerTransitions : MonoBehaviour
     public void GameSetupFinished()
     {
         MusicMaster.PlayBattleTheme();
+        Player1Control.selectBox.gameObject.SetActive(false);
         UnitController.StartGame();
     }
 

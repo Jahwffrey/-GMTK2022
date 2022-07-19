@@ -130,10 +130,42 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1424282483952709651, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 1673645747730831933, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 1819582636695997937, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 3399968513756750205, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 3647595166581323575, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 4424397507074069071, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
     - target: {fileID: 4494132411792708811, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4692164144535252715, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 4874451205110678548, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
     - target: {fileID: 5016564389677211842, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
       propertyPath: m_Name
       value: Player 2 Perspective
@@ -234,6 +266,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6438676320911104676, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
+    - target: {fileID: 7251060918478109456, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 34d55fb187602cd40b8491675c426561, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a24b77b6dbd2f9448d894b135bad13d, type: 3}
 --- !u!114 &34185488 stripped

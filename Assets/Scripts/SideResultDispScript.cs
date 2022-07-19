@@ -10,14 +10,18 @@ public class SideResultDispScript : MonoBehaviour
     protected float RiseSpeedDeceleration = 0.95f;
     protected float GrowDuration = 0.1f;
     protected float RiseDuration = 1f;
+    protected float riseHeight = 0.4f;
+    protected float riseEase = 0f;
     protected float TimeCreated;
     protected float eventualSize = 3f;
+    protected Vector3 originalPos;
 
     public void SetDisp(DiceSides side)
     {
         transform.localScale = Vector3.one * 0.01f;
         GetComponent<SpriteRenderer>().sprite = Sprites[(int)side];
         TimeCreated = Time.time;
+        originalPos = transform.position;
         RiseSpeedDeceleration = RiseSpeedDeceleration * (0.95f + 0.05f * Random.value);
         RiseSpeed = RiseSpeed + 0.1f * Random.value;
     }
@@ -37,13 +41,26 @@ public class SideResultDispScript : MonoBehaviour
 
         if(Time.time - TimeCreated < RiseDuration)
         {
-            transform.position += Vector3.up * RiseSpeed * Time.deltaTime;
-            RiseSpeed *= 0.99f;
+            riseEase += Time.deltaTime / RiseDuration;
+            float targetY = EaseOut( riseEase, 5 ) * riseHeight;
+            transform.position = originalPos + Vector3.up * targetY;
+            //transform.position += Vector3.up * RiseSpeed * Time.deltaTime;
+            //RiseSpeed *= 0.99f
             //RiseSpeed *= RiseSpeedDeceleration;
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    float Flip( float x )
+    {
+        return 1 - x;
+    }
+
+    float EaseOut( float x, float power )
+    {
+        return Flip( Mathf.Pow( Flip(x), power) );
     }
 }

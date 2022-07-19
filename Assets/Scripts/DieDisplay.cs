@@ -99,12 +99,18 @@ public class DieDisplay : MonoBehaviour
     }
 
     protected bool ShowedSideFloaty = false;
+
+    void Start()
+    {
+        transform.position = Unit.transform.position + Vector3.up * 1.25f;
+    }
+
     private void Update( )
     {
         transform.position = Unit.transform.position + Vector3.up * 1.25f;
         if (Time.time - TimeStartedAnimation > RollDurationSecs)
         {
-            Particles.gameObject.SetActive(true);
+            //Particles.gameObject.SetActive(true);
             PointSideUp(ResultAfterAnimation);
             if (!ShowedSideFloaty)
             {

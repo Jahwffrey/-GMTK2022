@@ -52,7 +52,7 @@ Shader "Custom/RockShader"
 		{
 			half dotProduct = dot( s.Normal, lightDir );
 			half dotProductInRange = ( dotProduct + 1.0 ) / 2.0;
-			half attenFixed = min( shadowAttenuation, 0.9999999 );
+			half attenFixed = min( shadowAttenuation, 0.9 );
 			half3 aR = tex2D( _AttenRamp, float2( attenFixed, 0 ) ).rgb;
 			half3 dR = tex2D( _DiffuseRamp, float2( dotProductInRange, 0 ) ).rgb;
 			half3 finalRamp = float3( min( aR.r, dR.r ), min( aR.g, dR.g ), min( aR.b, dR.b ) );

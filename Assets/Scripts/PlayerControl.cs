@@ -428,7 +428,7 @@ public class PlayerControl : MonoBehaviour
         {
             hit.transform.localScale = elementScalar;
             hit.transform.GetComponent<UIDieDisplay>().ShowToolTip();
-            if( Input.GetMouseButtonDown(0) )
+            if( Input.GetMouseButtonUp(0) )
             {
                 var selectedItem = diceInventory.IndexOf(hit.transform);
 
