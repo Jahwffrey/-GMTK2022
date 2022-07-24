@@ -488,20 +488,7 @@ public class DiceUnit : MonoBehaviour
         Dead = true;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if(collision != null && collision.gameObject != null)
-        {
-            InheritableOnTouchedCollider(collision.collider);
-            var proj = collision.gameObject.GetComponent<Projectile>();
-            if(proj != null)
-            {
-                GotHitByProjectile(proj);
-            }
-        }
-    }
-
-    private void OnTriggerEnter(Collider other)
+    protected void TouchingCollider(Collider other)
     {
         if (other != null && other.gameObject != null)
         {
@@ -512,6 +499,33 @@ public class DiceUnit : MonoBehaviour
                 GotHitByProjectile(proj);
             }
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision != null && collision.collider != null)
+        {
+            TouchingCollider(collision.collider);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision != null && collision.collider != null)
+        {
+            TouchingCollider(collision.collider);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        TouchingCollider(other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        InheritableOnTriggerStay(other);
+        TouchingCollider(other);
     }
 
     protected virtual void InheritableOnTouchedCollider(Collider other)
@@ -553,11 +567,6 @@ public class DiceUnit : MonoBehaviour
                 Rigidbody.velocity = Rigidbody.velocity * 0.9f;
             }
         }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        InheritableOnTriggerStay(other);
     }
 
     protected void PlaySound(AudioClip clip)
