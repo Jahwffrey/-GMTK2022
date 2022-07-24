@@ -12,6 +12,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public GameObject AnnouncementObj;
     public GameObject HidePlayerOneObj;
     public Text AnnouncementText;
+    public BoardGen BoardGenerator;
 
     public bool AnnouncementShowing;
 
@@ -32,6 +33,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     protected bool WaitingForFirstUpdate = true;
     protected bool DecidedUnits = false;
     protected bool ReloadScene = false;
+    protected bool RegenerateBoard = false;
 
     private void Start()
     {
@@ -103,6 +105,12 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             }
             else
             {
+                if (RegenerateBoard)
+                {
+                    BoardGenerator.Cleanup();
+                    BoardGenerator.PlaceObstacles();
+                    RegenerateBoard = false;
+                }
                 TwoPlayerModeState = 0;
                 UnitController.PostGameCleanup();
                 BeginNewGame();
@@ -112,6 +120,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     public void StartPlayerOneSetup()
     {
+        UnitController.EnableLookButton();
         Player1Control.SetInventories(UnitIds, Dice);
         Player1Control.infoCanvas.gameObject.SetActive(true);
         Player2Control.infoCanvas.gameObject.SetActive(false);
@@ -121,6 +130,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         ShowAnnouncement("Player 1 Setup\nPlayer 2, Don't look!");
     }
 
+    protected bool DuringPlayerTwoSetup = false;
     public void SwitchToPlayerTwoSetup()
     {
         ShowAnnouncement("Player 2 Setup\nPlayer 1, Get lost!");
@@ -128,12 +138,15 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         Player2Control.infoCanvas.gameObject.SetActive(true);
         TimeSwitchedToPlayer2 = Time.time;
         SwingingCameraAround = true;
+        DuringPlayerTwoSetup = true;
         HidePlayerOneObj.SetActive(true);
     }
 
     public void SwitchToGameSetupIsReady()
     {
+        DuringPlayerTwoSetup = false;
         ShowAnnouncement("Begin Game?");
+        UnitController.DisanbleLookButton();
         Player1Control.infoCanvas.gameObject.SetActive(false);
         Player1Control.selectBox.gameObject.SetActive(false);
         Player2Control.infoCanvas.gameObject.SetActive(false);
@@ -143,39 +156,65 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     protected int Player1Wins = 0;
     protected int Player2Wins = 0;
-    public void GameFinished(UnitController.Winner winner)
+    public void GameFinished(UnitController.Winner winner, bool unitsBrokeTie)
     {
         string winnerStr = "";
+        string tieStr = "";
         switch (winner)
         {
             case UnitController.Winner.Player1:
                 Player1Wins += 1;
+                if (unitsBrokeTie)
+                {
+                    tieStr = "Tie, but Player 1 has more surviving units!\n";
+                }
                 winnerStr = "Player 1 Wins!";
                 MusicMaster.PlayVictory();
+                RegenerateBoard = true;
                 break;
             case UnitController.Winner.Player2:
                 Player2Wins += 1;
+                if (unitsBrokeTie)
+                {
+                    tieStr = "Tie, but Player 2 has more surviving units!\n";
+                }
                 winnerStr = "Player 2 Wins!";
                 MusicMaster.PlayVictory();
+                RegenerateBoard = true;
                 break;
             case UnitController.Winner.Tie:
-                winnerStr = "Tie!";
+                winnerStr = "Stalemate";
                 break;
         }
 
         if (Player1Wins >= 2)
         {
-            ShowAnnouncement("Player 1 Is Victorious!");
+            ShowAnnouncement($"{tieStr}Player 1 Is Victorious!");
             ReloadScene = true;
         }
         else if (Player2Wins >= 2)
         {
-            ShowAnnouncement("Player 2 Is Victorious!");
+            ShowAnnouncement($"{tieStr}Player 2 Is Victorious!");
             ReloadScene = true;
         }
         else
         {
-            ShowAnnouncement($"{winnerStr}\nScore:{Player1Wins} to {Player2Wins}");
+            ShowAnnouncement($"{tieStr}{winnerStr}\nScore:{Player1Wins} to {Player2Wins}");
+        }
+    }
+
+    public void ResetCamera()
+    {
+        if (DuringPlayerTwoSetup)
+        {
+            var finalCameraPos = new Vector3(CameraOrigPosition.x, CameraOrigPosition.y, -CameraOrigPosition.z);
+            MainCamera.transform.position = finalCameraPos;
+            MainCamera.transform.LookAt(Vector3.zero);
+        }
+        else
+        {
+            MainCamera.transform.position = CameraOrigPosition;
+            MainCamera.transform.LookAt(Vector3.zero);
         }
     }
 

@@ -488,30 +488,44 @@ public class DiceUnit : MonoBehaviour
         Dead = true;
     }
 
-    private void OnCollisionEnter(Collision collision)
+    protected void TouchingCollider(Collider other)
     {
-        if(collision != null && collision.gameObject != null)
+        if (other != null && other.gameObject != null)
         {
-            InheritableOnTouchedCollider(collision.collider);
-            var proj = collision.gameObject.GetComponent<Projectile>();
-            if(proj != null)
+            InheritableOnTouchedCollider(other);
+            var proj = other.gameObject.GetComponent<Projectile>();
+            if (proj != null && proj.Parent != this)
             {
                 GotHitByProjectile(proj);
             }
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision != null && collision.collider != null)
+        {
+            TouchingCollider(collision.collider);
+        }
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision != null && collision.collider != null)
+        {
+            TouchingCollider(collision.collider);
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other != null && other.gameObject != null)
-        {
-            InheritableOnTouchedCollider(other);
-            var proj = other.gameObject.GetComponent<Projectile>();
-            if (proj != null)
-            {
-                GotHitByProjectile(proj);
-            }
-        }
+        TouchingCollider(other);
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        InheritableOnTriggerStay(other);
+        TouchingCollider(other);
     }
 
     protected virtual void InheritableOnTouchedCollider(Collider other)
@@ -555,11 +569,6 @@ public class DiceUnit : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider other)
-    {
-        InheritableOnTriggerStay(other);
-    }
-
     protected void PlaySound(AudioClip clip)
     {
         if(clip != null && AudioSource != null)
@@ -567,5 +576,11 @@ public class DiceUnit : MonoBehaviour
             AudioSource.clip = clip;
             AudioSource.Play();
         }
+    }
+
+    protected bool OpponentsExist()
+    {
+        DiceUnit tmp;
+        return Controller.TryGetNearestEnemyUnit(this, out tmp);
     }
 }

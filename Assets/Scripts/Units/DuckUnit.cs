@@ -36,6 +36,12 @@ public class DuckUnit : DiceUnit
 
     public override void Attack()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
 
         Attacking = true;
         Rigidbody.velocity = Vector3.up * JumpVel;
@@ -61,13 +67,19 @@ public class DuckUnit : DiceUnit
 
     public override void Defend()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
         System.Action actn = () =>
         {
             Vector3 dir = GetDirectionToFinishLine();
             var g = Instantiate(Gust);
             g.transform.position = transform.position + dir * 0.25f;
             g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
-            g.GetComponent<Rigidbody>().velocity = dir * 10f + Vector3.up * Random.value * 3f + Vector3.right * RandNeg() * 3f;
+            g.GetComponent<Rigidbody>().velocity = dir * 10f + Vector3.up * Random.value * 3f + Vector3.right * RandNeg() * 4f;
             g.GetComponent<Projectile>().Setup(dir + Vector3.up, this);
         };
 

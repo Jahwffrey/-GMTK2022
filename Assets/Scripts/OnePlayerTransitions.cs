@@ -76,6 +76,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void SetupGame()
     {
+        UnitController.EnableLookButton();
         if (!DecidedUnits)
         {
             MusicMaster.PlayChoosingTheme();
@@ -117,7 +118,7 @@ public class OnePlayerTransitions : MonoBehaviour
         ResetCamera();
     }
 
-    void ResetCamera()
+    public void ResetCamera()
     {
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
@@ -243,24 +244,39 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void GameSetupFinished()
     {
+        UnitController.DisanbleLookButton();
         MusicMaster.PlayBattleTheme();
         Player1Control.selectBox.gameObject.SetActive(false);
         UnitController.StartGame();
     }
 
-    public void GameFinished(UnitController.Winner winner)
+    public void GameFinished(UnitController.Winner winner, bool unitsBrokeTie)
     {
         NextIsEndRoundAndGoToNext = true;
         RoundWinner = winner;
         switch (winner)
         {
             case UnitController.Winner.Player1:
-                ShowAnnouncement("Victory!");
+                if (unitsBrokeTie)
+                {
+                    ShowAnnouncement("Victory!\nTie broken by number of surviving units");
+                }
+                else
+                {
+                    ShowAnnouncement("Victory!");
+                }
                 AddAnotherEnemyUnit();
                 MusicMaster.PlayVictory();
                 break;
             case UnitController.Winner.Player2:
-                ShowAnnouncement($"Failure\nReached Level {level}");
+                if (unitsBrokeTie)
+                {
+                    ShowAnnouncement($"Failure\nTie broken by number of surviving units\nReached Level {level}");
+                }
+                else
+                {
+                    ShowAnnouncement($"Failure\nReached Level {level}");
+                }
                 break;
             case UnitController.Winner.Tie:
                 ShowAnnouncement("Stalemate");
