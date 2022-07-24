@@ -41,6 +41,12 @@ public class SnakeUnit : DiceUnit
 
     public override void Attack()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
         System.Action actn = () =>
         {
             DiceUnit closest;
@@ -73,6 +79,12 @@ public class SnakeUnit : DiceUnit
 
     public override void Defend()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
         TurnOnShield();
         InvulnPos = transform.position;
         Invulnerable = true;

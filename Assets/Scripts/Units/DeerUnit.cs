@@ -19,6 +19,12 @@ public class DeerUnit : DiceUnit
 
     public override void Attack()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
         DiceUnit closest;
         if (Controller.TryGetNearestEnemyUnit(this, out closest))
         {
@@ -66,6 +72,12 @@ public class DeerUnit : DiceUnit
 
     public override void Defend()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
         DiceUnit closest;
         if (Controller.TryGetEnemyNearestMyFinishLine(Player1, out closest))
         {

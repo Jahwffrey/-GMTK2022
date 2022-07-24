@@ -577,4 +577,10 @@ public class DiceUnit : MonoBehaviour
             AudioSource.Play();
         }
     }
+
+    protected bool OpponentsExist()
+    {
+        DiceUnit tmp;
+        return Controller.TryGetNearestEnemyUnit(this, out tmp);
+    }
 }

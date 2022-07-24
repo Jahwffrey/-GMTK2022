@@ -36,6 +36,12 @@ public class DuckUnit : DiceUnit
 
     public override void Attack()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
 
         Attacking = true;
         Rigidbody.velocity = Vector3.up * JumpVel;
@@ -61,6 +67,12 @@ public class DuckUnit : DiceUnit
 
     public override void Defend()
     {
+        if (!OpponentsExist())
+        {
+            ExecuteAfterTimer(0.1f, ExecuteNextAction);
+            return;
+        }
+
         System.Action actn = () =>
         {
             Vector3 dir = GetDirectionToFinishLine();
