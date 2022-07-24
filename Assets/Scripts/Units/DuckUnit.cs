@@ -67,7 +67,7 @@ public class DuckUnit : DiceUnit
             var g = Instantiate(Gust);
             g.transform.position = transform.position + dir * 0.25f;
             g.transform.forward = new Vector3(Random.value, Random.value, Random.value).normalized;
-            g.GetComponent<Rigidbody>().velocity = dir * 10f + Vector3.up * Random.value * 3f + Vector3.right * RandNeg() * 3f;
+            g.GetComponent<Rigidbody>().velocity = dir * 10f + Vector3.up * Random.value * 3f + Vector3.right * RandNeg() * 4f;
             g.GetComponent<Projectile>().Setup(dir + Vector3.up, this);
         };
 

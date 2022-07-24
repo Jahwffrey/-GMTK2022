@@ -494,7 +494,7 @@ public class DiceUnit : MonoBehaviour
         {
             InheritableOnTouchedCollider(other);
             var proj = other.gameObject.GetComponent<Projectile>();
-            if (proj != null)
+            if (proj != null && proj.Parent != this)
             {
                 GotHitByProjectile(proj);
             }
