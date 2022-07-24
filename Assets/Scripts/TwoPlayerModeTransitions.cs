@@ -12,6 +12,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     public GameObject AnnouncementObj;
     public GameObject HidePlayerOneObj;
     public Text AnnouncementText;
+    public BoardGen BoardGenerator;
 
     public bool AnnouncementShowing;
 
@@ -32,6 +33,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
     protected bool WaitingForFirstUpdate = true;
     protected bool DecidedUnits = false;
     protected bool ReloadScene = false;
+    protected bool RegenerateBoard = false;
 
     private void Start()
     {
@@ -103,6 +105,12 @@ public class TwoPlayerModeTransitions : MonoBehaviour
             }
             else
             {
+                if (RegenerateBoard)
+                {
+                    BoardGenerator.Cleanup();
+                    BoardGenerator.PlaceObstacles();
+                    RegenerateBoard = false;
+                }
                 TwoPlayerModeState = 0;
                 UnitController.PostGameCleanup();
                 BeginNewGame();
@@ -152,11 +160,13 @@ public class TwoPlayerModeTransitions : MonoBehaviour
                 Player1Wins += 1;
                 winnerStr = "Player 1 Wins!";
                 MusicMaster.PlayVictory();
+                RegenerateBoard = true;
                 break;
             case UnitController.Winner.Player2:
                 Player2Wins += 1;
                 winnerStr = "Player 2 Wins!";
                 MusicMaster.PlayVictory();
+                RegenerateBoard = true;
                 break;
             case UnitController.Winner.Tie:
                 winnerStr = "Tie!";

@@ -405,6 +405,7 @@ MonoBehaviour:
   AnnouncementObj: {fileID: 332227595}
   HidePlayerOneObj: {fileID: 906189854}
   AnnouncementText: {fileID: 8845925471331828091}
+  BoardGenerator: {fileID: 9161376729066590387}
   AnnouncementShowing: 0
   UnitController: {fileID: 445147598}
   Player1Control: {fileID: 5016564390052196746}
@@ -2381,3 +2382,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 08adcdf57ece687478b66dcddfbee829, type: 3}
+--- !u!114 &9161376729066590387 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9184481956068739966, guid: 08adcdf57ece687478b66dcddfbee829, type: 3}
+  m_PrefabInstance: {fileID: 9161376729066590386}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 241707529b9b1bb4fa101fbba6e39181, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
