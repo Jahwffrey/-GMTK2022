@@ -76,6 +76,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void SetupGame()
     {
+        UnitController.EnableLookButton();
         if (!DecidedUnits)
         {
             MusicMaster.PlayChoosingTheme();
@@ -117,7 +118,7 @@ public class OnePlayerTransitions : MonoBehaviour
         ResetCamera();
     }
 
-    void ResetCamera()
+    public void ResetCamera()
     {
         MainCamera.transform.position = CameraOrigPosition;
         MainCamera.transform.LookAt(Vector3.zero);
@@ -243,6 +244,7 @@ public class OnePlayerTransitions : MonoBehaviour
 
     public void GameSetupFinished()
     {
+        UnitController.DisanbleLookButton();
         MusicMaster.PlayBattleTheme();
         Player1Control.selectBox.gameObject.SetActive(false);
         UnitController.StartGame();

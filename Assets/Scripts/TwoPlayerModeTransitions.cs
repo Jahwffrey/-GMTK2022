@@ -120,6 +120,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     public void StartPlayerOneSetup()
     {
+        UnitController.EnableLookButton();
         Player1Control.SetInventories(UnitIds, Dice);
         Player1Control.infoCanvas.gameObject.SetActive(true);
         Player2Control.infoCanvas.gameObject.SetActive(false);
@@ -129,6 +130,7 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         ShowAnnouncement("Player 1 Setup\nPlayer 2, Don't look!");
     }
 
+    protected bool DuringPlayerTwoSetup = false;
     public void SwitchToPlayerTwoSetup()
     {
         ShowAnnouncement("Player 2 Setup\nPlayer 1, Get lost!");
@@ -136,12 +138,15 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         Player2Control.infoCanvas.gameObject.SetActive(true);
         TimeSwitchedToPlayer2 = Time.time;
         SwingingCameraAround = true;
+        DuringPlayerTwoSetup = true;
         HidePlayerOneObj.SetActive(true);
     }
 
     public void SwitchToGameSetupIsReady()
     {
+        DuringPlayerTwoSetup = false;
         ShowAnnouncement("Begin Game?");
+        UnitController.DisanbleLookButton();
         Player1Control.infoCanvas.gameObject.SetActive(false);
         Player1Control.selectBox.gameObject.SetActive(false);
         Player2Control.infoCanvas.gameObject.SetActive(false);
@@ -195,6 +200,21 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         else
         {
             ShowAnnouncement($"{tieStr}{winnerStr}\nScore:{Player1Wins} to {Player2Wins}");
+        }
+    }
+
+    public void ResetCamera()
+    {
+        if (DuringPlayerTwoSetup)
+        {
+            var finalCameraPos = new Vector3(CameraOrigPosition.x, CameraOrigPosition.y, -CameraOrigPosition.z);
+            MainCamera.transform.position = finalCameraPos;
+            MainCamera.transform.LookAt(Vector3.zero);
+        }
+        else
+        {
+            MainCamera.transform.position = CameraOrigPosition;
+            MainCamera.transform.LookAt(Vector3.zero);
         }
     }
 
