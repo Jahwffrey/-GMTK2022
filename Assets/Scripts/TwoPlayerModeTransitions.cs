@@ -151,41 +151,50 @@ public class TwoPlayerModeTransitions : MonoBehaviour
 
     protected int Player1Wins = 0;
     protected int Player2Wins = 0;
-    public void GameFinished(UnitController.Winner winner)
+    public void GameFinished(UnitController.Winner winner, bool unitsBrokeTie)
     {
         string winnerStr = "";
+        string tieStr = "";
         switch (winner)
         {
             case UnitController.Winner.Player1:
                 Player1Wins += 1;
+                if (unitsBrokeTie)
+                {
+                    tieStr = "Tie, but Player 1 has more surviving units!\n";
+                }
                 winnerStr = "Player 1 Wins!";
                 MusicMaster.PlayVictory();
                 RegenerateBoard = true;
                 break;
             case UnitController.Winner.Player2:
                 Player2Wins += 1;
+                if (unitsBrokeTie)
+                {
+                    tieStr = "Tie, but Player 2 has more surviving units!\n";
+                }
                 winnerStr = "Player 2 Wins!";
                 MusicMaster.PlayVictory();
                 RegenerateBoard = true;
                 break;
             case UnitController.Winner.Tie:
-                winnerStr = "Tie!";
+                winnerStr = "Stalemate";
                 break;
         }
 
         if (Player1Wins >= 2)
         {
-            ShowAnnouncement("Player 1 Is Victorious!");
+            ShowAnnouncement($"{tieStr}Player 1 Is Victorious!");
             ReloadScene = true;
         }
         else if (Player2Wins >= 2)
         {
-            ShowAnnouncement("Player 2 Is Victorious!");
+            ShowAnnouncement($"{tieStr}Player 2 Is Victorious!");
             ReloadScene = true;
         }
         else
         {
-            ShowAnnouncement($"{winnerStr}\nScore:{Player1Wins} to {Player2Wins}");
+            ShowAnnouncement($"{tieStr}{winnerStr}\nScore:{Player1Wins} to {Player2Wins}");
         }
     }
 

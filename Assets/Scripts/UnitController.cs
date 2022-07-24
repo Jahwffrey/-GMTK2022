@@ -173,21 +173,50 @@ public class UnitController : MonoBehaviour
         }
 
         Winner winner = Winner.Tie;
-        if (player1Wins > player2Wins) winner = Winner.Player1;
-        if (player2Wins > player1Wins) winner = Winner.Player2;
-
-        ShowWinner(winner);
-    }
-
-    protected void ShowWinner(Winner winner)
-    {
-        if (TwoPlayerMode)
+        bool unitsBrokeTie = false;
+        if (player1Wins != player2Wins)
         {
-            TwoPlayerModeTransitions.GameFinished(winner);
+            // If one player got more units across the finish line, that player wins
+            if (player1Wins > player2Wins) winner = Winner.Player1;
+            if (player2Wins > player1Wins) winner = Winner.Player2;
         }
         else
         {
-            OnePlayerTransitions.GameFinished(winner);
+            // Otherwise, the player with more suriving units wins
+            int player1Units = 0;
+            int player2Units = 0;
+            foreach(var unit in Units)
+            {
+                if (unit.Player1)
+                {
+                    player1Units += 1;
+                } 
+                else
+                {
+                    player2Units += 1;
+                }
+            }
+
+            if (player1Units != player2Units)
+            {
+                unitsBrokeTie = true;
+                if (player1Units > player2Units) winner = Winner.Player1;
+                if (player2Units > player1Units) winner = Winner.Player2;
+            }
+        }
+
+        ShowWinner(winner, unitsBrokeTie);
+    }
+
+    protected void ShowWinner(Winner winner, bool unitsBrokeTie)
+    {
+        if (TwoPlayerMode)
+        {
+            TwoPlayerModeTransitions.GameFinished(winner, unitsBrokeTie);
+        }
+        else
+        {
+            OnePlayerTransitions.GameFinished(winner, unitsBrokeTie);
         }
     }
 
