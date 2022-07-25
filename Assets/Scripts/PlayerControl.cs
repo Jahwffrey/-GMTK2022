@@ -146,7 +146,6 @@ public class PlayerControl : MonoBehaviour
             AddToUnitInventory(unit);
         }
 
-
         foreach (var die in dice)
         {
             AddToDiceInventory(die);

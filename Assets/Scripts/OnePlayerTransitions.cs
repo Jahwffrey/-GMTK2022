@@ -105,14 +105,29 @@ public class OnePlayerTransitions : MonoBehaviour
         Player1Control.infoCanvas.gameObject.SetActive(true);
 
         // Place the enemy units
+        int spaces = 10;
+        List<int> choices = new List<int>();
         for(int i = 0;i < EnemyUnitIds.Count; i++)
         {
+            if (i % spaces == 0)
+            {
+                choices.Clear();
+                while(choices.Count < spaces)
+                {
+                    var choice = Random.Range(0, 10);
+                    if (!choices.Contains(choice))
+                    {
+                        choices.Add(choice);
+                    }
+                }
+            }
+            int pos = choices[i % spaces];
             var g = Instantiate(Player2Control.GetUnitPrefab(EnemyUnitIds[i]));
             g.transform.forward = Vector3.back;
             var u = g.GetComponent<DiceUnit>();
             u.SetDice(EnemyDice[i]);
             u.SetPlayer(1);
-            u.transform.position = EnemySpawnPointBase.transform.position + new Vector3((i % 10) * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
+            u.transform.position = EnemySpawnPointBase.transform.position + new Vector3(pos * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
         }
 
         ResetCamera();
