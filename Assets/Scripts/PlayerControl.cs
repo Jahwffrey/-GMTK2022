@@ -402,8 +402,12 @@ public class PlayerControl : MonoBehaviour
         //PLACE UI ELEMENTS
         for ( int i = 0; i < diceInventory.Count; i++ )
         {
-            float offset = i + (i * elementSpacing ) - ( ( diceInventory.Count - 1 + (diceInventory.Count - 1) * elementSpacing ) / 2 );
-            diceInventory[i].localPosition = new Vector3(offset,0,0);
+            int xPos = i % UnitsPerUiRow;
+            int yPos = i / UnitsPerUiRow;
+            int yRows = diceInventory.Count / UnitsPerUiRow;
+            int countOnThisRow = (yPos == yRows) ? diceInventory.Count - yRows * UnitsPerUiRow : UnitsPerUiRow;
+            float offset = xPos + (xPos * elementSpacing ) - ( (countOnThisRow - 1 + (countOnThisRow - 1) * elementSpacing ) / 2 );
+            diceInventory[i].localPosition = new Vector3(offset,-2f * yPos, 0);
             diceInventory[i].localScale = Vector3.one;
             diceInventory[i].Rotate( new Vector3( elementRotateSpeed * Time.deltaTime, elementRotateSpeed * Time.deltaTime / 2, elementRotateSpeed * Time.deltaTime / 3 ) );
             diceInventory[i].GetComponent<UIDieDisplay>().HideToolTip();

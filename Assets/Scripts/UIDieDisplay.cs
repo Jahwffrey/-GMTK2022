@@ -33,7 +33,7 @@ public class UIDieDisplay : MonoBehaviour
     public float toolTipIconSpacing = 0.2f;
 
     private Dice die = null;
-    private Vector3 tooltipPos;
+    //private Vector3 tooltipPos;
     private float lineOn = 0;
     private float columnOn = 0;
     private int[] sideCounts;
@@ -176,15 +176,15 @@ public class UIDieDisplay : MonoBehaviour
 
     void Start()
     {
-        tooltipPos = toolTip.localPosition;
+        //tooltipPos = toolTip.localPosition;
         HideToolTip();
     }
 
     // Update is called once per frame
     void Update()
     {
-        toolTip.position = transform.position + tooltipPos;
         //toolTip.rotation = Quaternion.identity;
         toolTip.transform.forward = Camera.main.transform.forward;
+        toolTip.position = transform.position + new Vector3(0f,-2f,0f) - Camera.main.transform.forward * 1f;
     }
 }
