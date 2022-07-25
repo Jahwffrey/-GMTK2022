@@ -344,6 +344,11 @@ public class DiceUnit : MonoBehaviour
 
     public virtual void StartGameStep()
     {
+        if(CurrentRollResultDisplay != null)
+        {
+            Destroy(CurrentRollResultDisplay.gameObject);
+        }
+
         StopIfOnGround();
         DuringStep = true;
         int res = Brain.Roll();
@@ -582,5 +587,13 @@ public class DiceUnit : MonoBehaviour
     {
         DiceUnit tmp;
         return Controller.TryGetNearestEnemyUnit(this, out tmp);
+    }
+
+
+    protected SideResultDispScript CurrentRollResultDisplay;
+    
+    public void SetCurrentRollDisplay(SideResultDispScript disp)
+    {
+        CurrentRollResultDisplay = disp;
     }
 }

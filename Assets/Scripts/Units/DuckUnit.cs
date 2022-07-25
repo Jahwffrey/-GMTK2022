@@ -60,7 +60,7 @@ public class DuckUnit : DiceUnit
                 Attacking = false;
                 transform.forward = GetDirectionToFinishLine();
                 StopIfOnGround();
-                ExecuteNextAction();
+                ExecuteAfterTimer(0.01f, ExecuteNextAction);
             });
         });
     }

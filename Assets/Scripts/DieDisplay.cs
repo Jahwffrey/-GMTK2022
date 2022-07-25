@@ -75,9 +75,9 @@ public class DieDisplay : MonoBehaviour
     public void ShowRoll(DiceSides[] sides, int result) 
     {
         var rollVect = new Vector3(RangNed(), RangNed(), RangNed()).normalized;
-        XRotSpd = rollVect.x * 3f;
-        YRotSpd = rollVect.y * 3f;
-        ZRotSpd = rollVect.z * 3f;
+        XRotSpd = rollVect.x * 720f;
+        YRotSpd = rollVect.y * 720f;
+        ZRotSpd = rollVect.z * 720f;
 
         for (int i = 0;i < DiceUnit.DiceSidesNum; i++)
         {
@@ -117,15 +117,16 @@ public class DieDisplay : MonoBehaviour
                 ShowedSideFloaty = true;
                 SideResultDispScript srds = Instantiate(RollResultDisp).GetComponent<SideResultDispScript>();
                 srds.transform.position = transform.position + Vector3.up * 0.2f;
-                srds.SetDisp(SideResult);
+                srds.SetDisp(SideResult, Unit);
+                Unit.SetCurrentRollDisplay(srds);
             }
         }
         else
         {
             ShowedSideFloaty = false;
-            transform.Rotate(Vector3.up, YRotSpd);
-            transform.Rotate(Vector3.right, XRotSpd);
-            transform.Rotate(Vector3.forward, ZRotSpd);
+            transform.Rotate(Vector3.up, YRotSpd * Time.deltaTime);
+            transform.Rotate(Vector3.right, XRotSpd * Time.deltaTime);
+            transform.Rotate(Vector3.forward, ZRotSpd * Time.deltaTime);
         }
     }
 }
