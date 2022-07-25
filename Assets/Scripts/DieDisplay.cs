@@ -117,7 +117,8 @@ public class DieDisplay : MonoBehaviour
                 ShowedSideFloaty = true;
                 SideResultDispScript srds = Instantiate(RollResultDisp).GetComponent<SideResultDispScript>();
                 srds.transform.position = transform.position + Vector3.up * 0.2f;
-                srds.SetDisp(SideResult);
+                srds.SetDisp(SideResult, Unit);
+                Unit.SetCurrentRollDisplay(srds);
             }
         }
         else
