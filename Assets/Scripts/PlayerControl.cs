@@ -315,14 +315,19 @@ public class PlayerControl : MonoBehaviour
         placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
     }
 
+    private int UnitsPerUiRow = 8;
     //CALLED WHEN SELECTING UNITS
     void UpdateUnitUI()
     {
         //PLACE UI ELEMENTS
         for( int i = 0; i < uiUnits.Count; i++ )
         {
-            float offset = i + (i * elementSpacing ) - ( ( uiUnits.Count - 1 + (uiUnits.Count - 1) * elementSpacing ) / 2 );
-            uiUnits[i].localPosition = new Vector3(offset,-2.5f,0);
+            int xPos = i % UnitsPerUiRow;
+            int yPos = i / UnitsPerUiRow;
+            int yRows = uiUnits.Count / UnitsPerUiRow;
+            int countOnThisRow = (yPos == yRows) ? uiUnits.Count - yRows * UnitsPerUiRow : UnitsPerUiRow;
+            float offset = xPos + (xPos * elementSpacing ) - ( (countOnThisRow - 1 + (countOnThisRow - 1) * elementSpacing ) / 2 );
+            uiUnits[i].localPosition = new Vector3(offset,-2.5f - 2f * yPos,0);
             uiUnits[i].localScale = Vector3.one;
             uiUnits[i].Rotate( Vector3.up * elementRotateSpeed * Time.deltaTime );
         }
