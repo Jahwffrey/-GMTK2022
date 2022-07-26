@@ -310,8 +310,8 @@ public class DiceUnit : MonoBehaviour
         {
             coll.enabled = false;
         }
-        EndStep();
         Controller.RemoveUnitFromConsideration(this);
+        EndStep();
     }
 
     protected bool CheckIfPassedFinishLine()
