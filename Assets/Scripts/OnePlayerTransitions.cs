@@ -25,8 +25,8 @@ public class OnePlayerTransitions : MonoBehaviour
     protected int PlayerStartingDice = 5;
     protected int EnemyStartingUnits = 1;
 
-    protected int MaxPlayerUnits = 8;
-    protected int MaxPlayerDice = 8;
+    protected int MaxPlayerUnits = 10;
+    protected int MaxPlayerDice = 14;
 
     protected List<PlayerControl.UnitID> PlayerUnitIds;
     protected List<Dice> PlayerDice;
@@ -105,14 +105,30 @@ public class OnePlayerTransitions : MonoBehaviour
         Player1Control.infoCanvas.gameObject.SetActive(true);
 
         // Place the enemy units
+        int spaces = 10;
+        List<int> choices = new List<int>();
         for(int i = 0;i < EnemyUnitIds.Count; i++)
         {
+            if (i % spaces == 0)
+            {
+                choices.Clear();
+                while(choices.Count < spaces)
+                {
+                    var choice = Random.Range(0, 10);
+                    if (!choices.Contains(choice))
+                    {
+                        choices.Add(choice);
+                    }
+                }
+            }
+            int pos = choices[i % spaces];
             var g = Instantiate(Player2Control.GetUnitPrefab(EnemyUnitIds[i]));
             g.transform.forward = Vector3.back;
             var u = g.GetComponent<DiceUnit>();
             u.SetDice(EnemyDice[i]);
             u.SetPlayer(1);
-            u.transform.position = EnemySpawnPointBase.transform.position + new Vector3((i % 10) * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
+            u.DontPlaySpawnSound = true;
+            u.transform.position = EnemySpawnPointBase.transform.position + new Vector3(pos * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
         }
 
         ResetCamera();
@@ -169,9 +185,13 @@ public class OnePlayerTransitions : MonoBehaviour
                             // Choose two units to be able to select
                             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
                             var unitOptions = new List<PlayerControl.UnitID>();
-                            for (int i = 0; i < 3; i++)
+                            while(unitOptions.Count < 3)
                             {
-                                unitOptions.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+                                var newUnit = allUnits[Random.Range(0, allUnits.Count - 1)]; // -1 so not NONE
+                                if (!unitOptions.Contains(newUnit))
+                                {
+                                    unitOptions.Add(newUnit);
+                                }
                             }
                             Player1Control.SetInventories(unitOptions, new List<Dice>());
 
@@ -192,9 +212,21 @@ public class OnePlayerTransitions : MonoBehaviour
 
                             var allDice = UnitController.GetAllDice();
                             var diceOptions = new List<Dice>();
-                            for (int i = 0; i < 4; i++)
+                            int diceNum = 4;
+
+                            List<int> selections = new List<int>();
+                            while(selections.Count < diceNum)
                             {
-                                diceOptions.Add(allDice[Random.Range(0, allDice.Count - 1)]); // -1 so not NONE
+                                int nextDie = Random.Range(0, allDice.Count - 1);
+                                if (!selections.Contains(nextDie))
+                                {
+                                    selections.Add(nextDie);
+                                }
+                            }
+
+                            for (int i = 0; i < selections.Count; i++)
+                            {
+                                diceOptions.Add(allDice[selections[i]]);
                             }
                             Player1Control.SetInventories(new List<PlayerControl.UnitID>(), diceOptions);
                             Player1Control.BeginSelectNewDie();
@@ -250,6 +282,7 @@ public class OnePlayerTransitions : MonoBehaviour
         UnitController.StartGame();
     }
 
+    protected bool LostThisLevelOnce = false;
     public void GameFinished(UnitController.Winner winner, bool unitsBrokeTie)
     {
         NextIsEndRoundAndGoToNext = true;
@@ -257,6 +290,7 @@ public class OnePlayerTransitions : MonoBehaviour
         switch (winner)
         {
             case UnitController.Winner.Player1:
+                LostThisLevelOnce = false;
                 if (unitsBrokeTie)
                 {
                     ShowAnnouncement("Victory!\nTie broken by number of surviving units");
@@ -269,13 +303,29 @@ public class OnePlayerTransitions : MonoBehaviour
                 MusicMaster.PlayVictory();
                 break;
             case UnitController.Winner.Player2:
-                if (unitsBrokeTie)
+                if (!LostThisLevelOnce)
                 {
-                    ShowAnnouncement($"Failure\nTie broken by number of surviving units\nReached Level {level}");
+                    LostThisLevelOnce = true;
+                    RoundWinner = UnitController.Winner.Tie;
+                    if (unitsBrokeTie)
+                    {
+                        ShowAnnouncement($"Failure\nTie broken by number of surviving units\nOne more chance!");
+                    }
+                    else
+                    {
+                        ShowAnnouncement($"Failure\nOne more chance!");
+                    }
                 }
                 else
                 {
-                    ShowAnnouncement($"Failure\nReached Level {level}");
+                    if (unitsBrokeTie)
+                    {
+                        ShowAnnouncement($"Failure\nTie broken by number of surviving units\nReached Level {level}");
+                    }
+                    else
+                    {
+                        ShowAnnouncement($"Failure\nReached Level {level}");
+                    }
                 }
                 break;
             case UnitController.Winner.Tie:

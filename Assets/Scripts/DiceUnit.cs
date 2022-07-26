@@ -165,9 +165,13 @@ public class DiceUnit : MonoBehaviour
     }
 
     protected bool DiceSet = false;
+    public bool DontPlaySpawnSound = false;
     void Start()
     {
-        PlaySound(SpawnSound);
+        if (!DontPlaySpawnSound)
+        {
+            PlaySound(SpawnSound);
+        }
         if (!DiceSet)
         {
             Brain = UnitController.NothingDie();
