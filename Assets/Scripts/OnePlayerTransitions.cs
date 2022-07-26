@@ -127,6 +127,7 @@ public class OnePlayerTransitions : MonoBehaviour
             var u = g.GetComponent<DiceUnit>();
             u.SetDice(EnemyDice[i]);
             u.SetPlayer(1);
+            u.DontPlaySpawnSound = true;
             u.transform.position = EnemySpawnPointBase.transform.position + new Vector3(pos * DistanceBetweenEnemies, 0f, (i / 10) * DistanceBetweenEnemies);
         }
 
