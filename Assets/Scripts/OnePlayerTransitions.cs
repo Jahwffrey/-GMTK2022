@@ -185,9 +185,13 @@ public class OnePlayerTransitions : MonoBehaviour
                             // Choose two units to be able to select
                             var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
                             var unitOptions = new List<PlayerControl.UnitID>();
-                            for (int i = 0; i < 3; i++)
+                            while(unitOptions.Count < 3)
                             {
-                                unitOptions.Add(allUnits[Random.Range(0, allUnits.Count - 1)]); // -1 so not NONE
+                                var newUnit = allUnits[Random.Range(0, allUnits.Count - 1)]; // -1 so not NONE
+                                if (!unitOptions.Contains(newUnit))
+                                {
+                                    unitOptions.Add(newUnit);
+                                }
                             }
                             Player1Control.SetInventories(unitOptions, new List<Dice>());
 
@@ -208,9 +212,21 @@ public class OnePlayerTransitions : MonoBehaviour
 
                             var allDice = UnitController.GetAllDice();
                             var diceOptions = new List<Dice>();
-                            for (int i = 0; i < 4; i++)
+                            int diceNum = 4;
+
+                            List<int> selections = new List<int>();
+                            while(selections.Count < diceNum)
                             {
-                                diceOptions.Add(allDice[Random.Range(0, allDice.Count - 1)]); // -1 so not NONE
+                                int nextDie = Random.Range(0, allDice.Count - 1);
+                                if (!selections.Contains(nextDie))
+                                {
+                                    selections.Add(nextDie);
+                                }
+                            }
+
+                            for (int i = 0; i < selections.Count; i++)
+                            {
+                                diceOptions.Add(allDice[selections[i]]);
                             }
                             Player1Control.SetInventories(new List<PlayerControl.UnitID>(), diceOptions);
                             Player1Control.BeginSelectNewDie();
