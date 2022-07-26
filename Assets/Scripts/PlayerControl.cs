@@ -480,7 +480,7 @@ public class PlayerControl : MonoBehaviour
                 }
             }
 
-            if(FreePlayMode)
+            if( FreePlayMode )
             {
                 if( Input.mousePosition.x < Screen.width/2 && Input.mousePosition.y < Screen.height * 0.8f )
                 {
@@ -492,7 +492,7 @@ public class PlayerControl : MonoBehaviour
                 }
             }
         }
-        else
+        else if( FreePlayMode )
         {
             textBox.SetActive(true);
         }
