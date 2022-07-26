@@ -266,6 +266,7 @@ public class OnePlayerTransitions : MonoBehaviour
         UnitController.StartGame();
     }
 
+    protected bool LostThisLevelOnce = false;
     public void GameFinished(UnitController.Winner winner, bool unitsBrokeTie)
     {
         NextIsEndRoundAndGoToNext = true;
@@ -273,6 +274,7 @@ public class OnePlayerTransitions : MonoBehaviour
         switch (winner)
         {
             case UnitController.Winner.Player1:
+                LostThisLevelOnce = false;
                 if (unitsBrokeTie)
                 {
                     ShowAnnouncement("Victory!\nTie broken by number of surviving units");
@@ -285,13 +287,29 @@ public class OnePlayerTransitions : MonoBehaviour
                 MusicMaster.PlayVictory();
                 break;
             case UnitController.Winner.Player2:
-                if (unitsBrokeTie)
+                if (!LostThisLevelOnce)
                 {
-                    ShowAnnouncement($"Failure\nTie broken by number of surviving units\nReached Level {level}");
+                    LostThisLevelOnce = true;
+                    RoundWinner = UnitController.Winner.Tie;
+                    if (unitsBrokeTie)
+                    {
+                        ShowAnnouncement($"Failure\nTie broken by number of surviving units\nOne more chance!");
+                    }
+                    else
+                    {
+                        ShowAnnouncement($"Failure\nOne more chance!");
+                    }
                 }
                 else
                 {
-                    ShowAnnouncement($"Failure\nReached Level {level}");
+                    if (unitsBrokeTie)
+                    {
+                        ShowAnnouncement($"Failure\nTie broken by number of surviving units\nReached Level {level}");
+                    }
+                    else
+                    {
+                        ShowAnnouncement($"Failure\nReached Level {level}");
+                    }
                 }
                 break;
             case UnitController.Winner.Tie:

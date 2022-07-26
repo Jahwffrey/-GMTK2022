@@ -81,8 +81,10 @@ public class BoardGen : MonoBehaviour
             float randomRotation = Random.Range( 0.0f, 360.0f );
             float randomX = Random.Range( bounds.center.x - bounds.extents.x + halfX, bounds.center.x + bounds.extents.x - halfX );
             float randomZ = Random.Range( bounds.center.z - bounds.extents.z + halfZ, bounds.center.z + bounds.extents.z - halfZ );
-            while( Physics.CheckBox( new Vector3(randomX, objBounds.center.y, randomZ), objBounds.extents*2f, Quaternion.identity, layerMask, QueryTriggerInteraction.Collide ) )
+            int safety = 10000;
+            while (safety > 0 && Physics.CheckBox( new Vector3(randomX, objBounds.center.y, randomZ), objBounds.extents*2f, Quaternion.identity, layerMask, QueryTriggerInteraction.Collide ) )
             {
+                safety -= 1;
                 randomX = Random.Range( bounds.center.x - bounds.extents.x + halfX, bounds.center.x + bounds.extents.x - halfX );
                 randomZ = Random.Range( bounds.center.z - bounds.extents.z + halfZ, bounds.center.z + bounds.extents.z - halfZ );
             }
