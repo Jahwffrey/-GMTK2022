@@ -242,6 +242,11 @@ public class DiceUnit : MonoBehaviour
             StopNextOnGound = false;
         }
 
+        if(MainCollider.isTrigger && Rigidbody.velocity.y < 0)
+        {
+            MainCollider.isTrigger = false;
+        }
+
         // Execute any waiting actions
         float secondsPassed = Time.deltaTime;
         List<ActionAfterTime> completedActions = new List<ActionAfterTime>();
@@ -461,6 +466,14 @@ public class DiceUnit : MonoBehaviour
 
         Health -= amt;
         Rigidbody.velocity += knockback;
+
+        // Briefly disable collider when knocked back to prevent odd instances where knockback doesnt seem to happen
+        if(knockback.magnitude > 0.01f && knockback.y > 0)
+        {
+            MainCollider.isTrigger = true;
+            ExecuteAfterTimer(0.02f, () => { MainCollider.isTrigger = false; });
+        }
+
         DisplayHealth();
 
         if (Health <= 0)

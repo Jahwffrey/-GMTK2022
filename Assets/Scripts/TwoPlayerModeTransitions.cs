@@ -6,7 +6,7 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class TwoPlayerModeTransitions : MonoBehaviour
-{
+{   
     public MusicController MusicMaster;
     public Camera MainCamera;
     public GameObject AnnouncementObj;
@@ -124,6 +124,8 @@ public class TwoPlayerModeTransitions : MonoBehaviour
         Player1Control.infoCanvas.gameObject.SetActive(true);
         Player2Control.infoCanvas.gameObject.SetActive(false);
         Player2Control.SetInventories(UnitIds, Dice);
+        Player1Control.FreePlayModeHack();
+        Player2Control.FreePlayModeHack();
         TwoPlayerModeState = 0;
         HidePlayerOneObj.SetActive(false);
         ShowAnnouncement("Player 1 Setup\nPlayer 2, Don't look!");

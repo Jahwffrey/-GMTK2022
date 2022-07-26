@@ -101,7 +101,7 @@ public class WolfUnit : DiceUnit
                 Attacking = false;
                 unit.TakeDamage(BiteDmg,((unit.transform.position - transform.position).normalized + Vector3.up).normalized * BiteKnockback);
                 Target = null;
-                StopIfOnGround();
+                //StopIfOnGround();
             }
 
             if (Defending)
@@ -109,7 +109,7 @@ public class WolfUnit : DiceUnit
                 Defending = false;
                 unit.TakeDamage(DefendDmg, GetDirectionToFinishLine() + Vector3.up * BiteKnockback);
                 Target = null;
-                StopIfOnGround();
+                //StopIfOnGround();
             }
         }
     }

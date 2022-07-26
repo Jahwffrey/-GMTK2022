@@ -118,7 +118,7 @@ public class DeerUnit : DiceUnit
                 Defending = false;
                 unit.TakeDamage(Dmg, GetDirectionToFinishLine() + Vector3.up * BiteKnockback * 1.5f);
                 Target = null;
-                StopIfOnGround();
+                //StopIfOnGround();
             }
         }
     }
