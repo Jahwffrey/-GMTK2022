@@ -117,7 +117,7 @@ public class DuckUnit : DiceUnit
             {
                 Attacking = false;
                 unit.TakeDamage(Dmg, ((unit.transform.position - transform.position).normalized + Vector3.up).normalized * MainKockback);
-                StopIfOnGround();
+                //StopIfOnGround();
             }
         }
     }
