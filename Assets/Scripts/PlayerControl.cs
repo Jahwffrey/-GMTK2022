@@ -244,11 +244,14 @@ public class PlayerControl : MonoBehaviour
                     //REMOVED A UNIT
                     else if( spaceInfo.HasUnit() )
                     {
-                        AddToDiceInventory(spaceInfo.GetUnit().GetDice());
+                        if( !FreePlayMode )
+                        {
+                            AddToDiceInventory(spaceInfo.GetUnit().GetDice());
+                            AddToUnitInventory( (UnitID)spaceInfo.unitType );
+                        }
                         spaceInfo.GetUnit().DoDestroy();
                         //DoDestroy already does this remove so we dont have to
                         // activeUnits.Remove( spaceInfo.GetUnit() );
-                        AddToUnitInventory( (UnitID)spaceInfo.unitType );
                         spaceInfo.RemoveUnit();
                         musicMaster.PlayBlip();
                     }
@@ -476,6 +479,22 @@ public class PlayerControl : MonoBehaviour
                     }
                 }
             }
+
+            if(FreePlayMode)
+            {
+                if( Input.mousePosition.x < Screen.width/2 && Input.mousePosition.y < Screen.height * 0.8f )
+                {
+                    textBox.SetActive(false);
+                }
+                else
+                {
+                    textBox.SetActive(true);
+                }
+            }
+        }
+        else
+        {
+            textBox.SetActive(true);
         }
 
         if( selectedElement != -1 )

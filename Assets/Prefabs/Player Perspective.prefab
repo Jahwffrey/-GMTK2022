@@ -737,6 +737,7 @@ MonoBehaviour:
   - {fileID: 5026180902463019654, guid: a3b59b624425fcb429c4f91737076773, type: 3}
   - {fileID: 5026180902463019654, guid: a3b59b624425fcb429c4f91737076773, type: 3}
   UnitController: {fileID: 0}
+  FreePlayMode: 0
   ReadyButton: {fileID: 0}
   unitRow: {fileID: 6886740481154556658}
   diceRow: {fileID: 3330090743966146833}

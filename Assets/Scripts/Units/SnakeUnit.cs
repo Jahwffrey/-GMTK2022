@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SnakeUnit : DiceUnit
 {
-    protected float MoveSpd = 1.25f;
+    protected float MoveSpd = 1.17f;
 
     public GameObject Shield;
     public GameObject Projectile;
@@ -15,8 +15,14 @@ public class SnakeUnit : DiceUnit
     protected bool Moving;
     protected float LastTimeChangedMoveSpd;
     protected float IntervalChangeMoveSpd = 0.1f;
+    protected float moveOffset = 0f;
 
-
+    protected override void InheritableAwake()
+    {
+        base.InheritableAwake();
+        moveOffset = Random.Range( 0f, 2*Mathf.PI );
+    }
+    
     protected override void InheritableUpdate()
     {
         base.InheritableUpdate();
@@ -30,7 +36,7 @@ public class SnakeUnit : DiceUnit
             if(Time.time - LastTimeChangedMoveSpd > IntervalChangeMoveSpd)
             {
                 LastTimeChangedMoveSpd = Time.time;
-                float horizontal = Mathf.Sin(Time.time * 2f) * MoveSpd * 1.25f;
+                float horizontal = Mathf.Sin(Time.time * 2f + moveOffset) * MoveSpd * 1.25f;
                 if (OnGround())
                 {
                     Rigidbody.velocity = GetDirectionToFinishLine() * MoveSpd + Vector3.right * horizontal;
@@ -127,6 +133,7 @@ public class SnakeUnit : DiceUnit
         base.AllUnitsStepEnded();
         Invulnerable = false;
         Moving = false;
+        moveOffset = Random.Range( 0f, 2*Mathf.PI );
         TurnOffShield();
         EndMove();
     }
