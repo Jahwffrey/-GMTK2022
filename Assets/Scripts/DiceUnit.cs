@@ -92,6 +92,7 @@ public class DiceUnit : MonoBehaviour
 
     public Color player1Color;
     public Color player2Color;
+    public GameObject scarf;
 
     protected Dice Brain;
     protected Rigidbody Rigidbody;
@@ -193,6 +194,7 @@ public class DiceUnit : MonoBehaviour
     {
         Player1 = playerId == 0;
         UnitModel.GetComponent<Renderer>().material.SetColor( "_Color", Player1 ? player1Color : player2Color );
+        scarf.GetComponent<Renderer>().material.SetColor( "_Color", Player1 ? player1Color*player1Color*player1Color*player1Color : player2Color*player2Color*player2Color*player2Color );
         //WhichPlayerIndicator.Setup(this);
     }
 

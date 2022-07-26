@@ -12,6 +12,8 @@ public class DeerUnit : DiceUnit
     protected float GoForTargetInterval = 0.25f;
     protected float BiteKnockback = 4f;
 
+    public DeerAttackVisual attackVisual;
+
     float RandNeg ()
     {
         return (Random.value - 0.5f)*1f;
@@ -35,6 +37,7 @@ public class DeerUnit : DiceUnit
         ExecuteAfterTimer(StandardStepLengthSeconds * 0.25f,
         () =>
         {
+            attackVisual.PlayAnim( StandardStepLengthSeconds * 0.125f );
             var others = Controller.GetAllEnemiesWithin(this, 1.5f);
             foreach (var other in others)
             {
