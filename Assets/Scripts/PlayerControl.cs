@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Linq;
 
 public class PlayerControl : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class PlayerControl : MonoBehaviour
     public float pointerBounceHeight = 0.1f;
     public List<GameObject> unitPrefabs;
     public UnitController UnitController;
+    public bool FreePlayMode = false;
 
     [Header("UI")]
     public GameObject ReadyButton;
@@ -96,6 +98,7 @@ public class PlayerControl : MonoBehaviour
         if (playerID == 0)
         {
             placementMode = PlaceMode.PLACE_UNIT;
+            SetBothInventoriesForFreePlayMode();
         }
         else
         {
@@ -116,6 +119,7 @@ public class PlayerControl : MonoBehaviour
         selectedElement = -1;
         selectBox.SetActive(false);
         placementMode = PlaceMode.PLACE_UNIT;
+        SetBothInventoriesForFreePlayMode();
         lastPlacedUnit = UnitID.NONE;
         spaceInfo = null;
     }
@@ -135,6 +139,11 @@ public class PlayerControl : MonoBehaviour
     public void PostgameCleanup()
     {
         ClearBothInventories();
+    }
+
+    public void FreePlayModeHack()
+    {
+        SetBothInventoriesForFreePlayMode();
     }
 
     public void SetInventories(List<UnitID> units, List<Dice> dice)
@@ -307,11 +316,22 @@ public class PlayerControl : MonoBehaviour
         else
         {
             placementMode = PlaceMode.PLACE_UNIT;
+            SetBothInventoriesForFreePlayMode();
         }
     }
     public void PlayerTwoReady()
     {
         placementMode = PlaceMode.WAIT_FOR_OTHER_PLAYER;
+    }
+
+    protected void SetBothInventoriesForFreePlayMode()
+    {
+        if (FreePlayMode)
+        {
+            var allUnits = System.Enum.GetValues(typeof(PlayerControl.UnitID)).Cast<PlayerControl.UnitID>().ToList();
+            allUnits.RemoveAt(allUnits.Count - 1); // Remove the NONE unit
+            SetInventories(allUnits, UnitController.GetAllDice());
+        }
     }
 
     private int UnitsPerUiRow = 8;
@@ -501,6 +521,7 @@ public class PlayerControl : MonoBehaviour
         if(placementMode == PlaceMode.PLACE_UNIT)
         {
             placementMode = PlaceMode.PLACE_DIE;
+            SetBothInventoriesForFreePlayMode();
             diceKey.SetActive(true);
             infoText.SetActive(false);
             textBox.SetActive(true);
@@ -508,6 +529,7 @@ public class PlayerControl : MonoBehaviour
         else
         {
             placementMode = PlaceMode.PLACE_UNIT;
+            SetBothInventoriesForFreePlayMode();
             infoText.SetActive(true);
             diceKey.SetActive(false);
         }
