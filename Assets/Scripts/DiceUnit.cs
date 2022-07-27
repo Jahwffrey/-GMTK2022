@@ -272,6 +272,10 @@ public class DiceUnit : MonoBehaviour
         {
             if (CheckIfPassedFinishLine())
             {
+                if (CurrentRollResultDisplay != null)
+                {
+                    Destroy(CurrentRollResultDisplay.gameObject);
+                }
                 PlaySound(VictorySound);
                 PassedFinishLine = true;
                 Controller.UnitPassedFinishLine(this);
